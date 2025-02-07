@@ -8,3 +8,10 @@ langchain-community
 langchain-openai
 langchain-chroma
 python-dotenv
+llama-cloud-services 
+llama-index-core 
+llama-index-readers-file
+torch 
+transformers 
+python-pptx 
+Pillow
