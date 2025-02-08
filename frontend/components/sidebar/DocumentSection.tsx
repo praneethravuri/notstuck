@@ -1,6 +1,8 @@
 "use client";
-import { Database, FolderIcon } from "lucide-react";
+import { useState } from "react";
+import { Database, FolderIcon, Search } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Input } from "@/components/ui/input";
 
 interface PdfFile {
   name: string; // e.g. "doc1.pdf"
@@ -11,41 +13,64 @@ interface DocumentsSectionProps {
 }
 
 export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter files based on search query
+  const filteredFiles = files.filter((file) =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="p-4 border-b border-gray-800 flex-1 overflow-y-auto">
+    <div className="p-4 border-b border-gray-800 h-1/2 overflow-y-auto">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
         <Database className="h-4 w-4 text-blue-400" />
         <span>Documents</span>
       </h2>
-      <Accordion type="single" collapsible className="w-full space-y-1">
-        {files.map((file, index) => (
-          <AccordionItem
-            key={index}
-            value={`pdf-${index}`}
-            className="border-0 mb-1 overflow-hidden rounded-lg hover:bg-gray-800/50"
-          >
-            <AccordionTrigger className="rounded-lg px-3 py-2">
-              <div className="flex items-center space-x-3">
-                <FolderIcon className="h-4 w-4 text-blue-400" />
-                <span className="text-sm text-gray-200">{file.name}</span>
-              </div>
-            </AccordionTrigger>
 
-            <AccordionContent>
-              <div style={{ height: "500px", overflowY: "auto" }}>
-                {/* 
-                  Render a PDF in an iframe. 
-                  The browser will natively handle display if it supports PDF embedding.
-                */}
-                <iframe
-                  src={`http://localhost:8000/api/get-pdfs?filename=${file.name}`}
-                  style={{ width: "100%", height: "100%", border: "none" }}
-                />
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      {/* Search Bar */}
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search documents..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-gray-800 border-gray-700 focus:border-blue-400 focus:ring-0"
+          />
+        </div>
+      </div>
+
+      {/* Files List */}
+      {filteredFiles.length === 0 ? (
+        <div className="text-sm text-gray-400 px-3 py-2">No matching files found</div>
+      ) : (
+        <Accordion type="single" collapsible className="w-full space-y-1">
+          {filteredFiles.map((file, index) => (
+            <AccordionItem
+              key={index}
+              value={`pdf-${index}`}
+              className="border-0 mb-1 overflow-hidden rounded-lg hover:bg-gray-800/50"
+            >
+              <AccordionTrigger className="rounded-lg px-3 py-2">
+                <div className="flex items-center space-x-3">
+                  <FolderIcon className="h-4 w-4 text-blue-400" />
+                  <span className="text-sm text-gray-200">{file.name}</span>
+                </div>
+              </AccordionTrigger>
+
+              <AccordionContent>
+                <div style={{ height: "500px", overflowY: "auto" }}>
+                  <iframe
+                    src={`http://localhost:8000/api/get-pdfs?filename=${file.name}`}
+                    style={{ width: "100%", height: "100%", border: "none" }}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
     </div>
   );
 };

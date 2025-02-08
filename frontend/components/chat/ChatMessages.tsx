@@ -1,23 +1,25 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+"use client";
+import React from "react";
 
 interface ChatMessagesProps {
   messages: string[];
 }
 
-export default function ChatMessages({ messages }: ChatMessagesProps) {
+export const ChatMessages = ({ messages }: ChatMessagesProps) => {
   return (
-    <ScrollArea className="flex-1 p-4">
-      <div className="max-w-4xl mx-auto space-y-4">
-        {messages.map((message, index) => (
-          <div
-            key={index}
-            className="p-4 bg-gray-800/50 rounded-lg border border-gray-800 hover:border-gray-700 transition-colors backdrop-blur-sm 
-            max-w-[50%] ml-auto"
-          >
-            <p className="text-gray-200 whitespace-pre-wrap">{message}</p>
-          </div>
-        ))}
-      </div>
-    </ScrollArea>
+    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {messages.map((message, index) => (
+        <div
+          key={index}
+          className={`p-3 rounded-lg max-w-[80%] ${
+            message.startsWith("You:")
+              ? "bg-blue-600/10 text-blue-200 ml-auto"
+              : "bg-gray-800/50 text-gray-200"
+          }`}
+        >
+          <p className="text-sm">{message}</p>
+        </div>
+      ))}
+    </div>
   );
-}
+};

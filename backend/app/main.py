@@ -1,6 +1,7 @@
+# uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
 from typing import Optional
 import os
-
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
