@@ -23,7 +23,7 @@ def main():
         if filename.lower().endswith(".pdf"):
             pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)
             docs = load_and_split_pdf(pdf_path)
-            print(f"✅ Chunked '{filename}' into {len(docs)} LangChain Document objects.")
+            print(f"Chunked '{filename}' into {len(docs)} LangChain Document objects.")
 
 if __name__ == "__main__":
     main()

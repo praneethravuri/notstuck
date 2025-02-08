@@ -4,3 +4,4 @@ python-dotenv # for environment variables
 langchain
 langchain-community
 langchain-openai
+pypdf
