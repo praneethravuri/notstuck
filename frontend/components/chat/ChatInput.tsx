@@ -25,7 +25,7 @@ export default function ChatInput({ onSendMessage }: ChatInputProps) {
   };
 
   return (
-    <div className="p-4 border-t border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+    <div className="p-4">
       <div className="flex items-center gap-2 max-w-4xl mx-auto bg-gray-800 rounded-lg p-2">
         <Textarea
           value={inputValue}
