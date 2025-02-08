@@ -11,7 +11,7 @@ from PIL import Image
 
 # Import your paths from config.py
 # Adjust this import path based on your actual project structure
-from backend.config import RAW_DATA_PATH, PROCESSED_DATA_PATH
+from ..config import RAW_DATA_PATH, PROCESSED_DATA_PATH
 
 
 def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:

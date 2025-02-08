@@ -3,7 +3,7 @@
 import os
 
 # Import paths from your config
-from backend.config import PROCESSED_DATA_PATH
+from ..config import RAW_DATA_PATH, PROCESSED_DATA_PATH 
 
 # Import the functions from your pipeline modules
 from .document_converter import convert_all_docs_in_raw_folder

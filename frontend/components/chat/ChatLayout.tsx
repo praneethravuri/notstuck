@@ -3,14 +3,39 @@ import { useState } from "react";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import ChatMessages from "./ChatMessages";
 import ChatInput from "./ChatInput";
-import CustomSidebar from '@/components/sidebar/CustomSidebar';
+import CustomSidebar from "@/components/sidebar/CustomSidebar";
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState<string[]>([]);
 
-  const handleSendMessage = (message: string) => {
-    if (message.trim()) {
-      setMessages([...messages, message]);
+  const handleSendMessage = async (message: string) => {
+    if (!message.trim()) return;
+
+    // 1) Store the user’s message
+    setMessages((prev) => [...prev, `You: ${message}`]);
+
+    try {
+      // 2) Send POST request to Next.js route -> which calls FastAPI
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: message }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to get answer. Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      // data should look like { answer: "... from FastAPI ..." }
+
+      // 3) Append AI’s answer to the conversation
+      setMessages((prev) => [...prev, `AI: ${data.answer}`]);
+    } catch (error) {
+      console.error("Error fetching from /api/ask:", error);
+      setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
     }
   };
 

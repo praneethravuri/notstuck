@@ -13,7 +13,7 @@ from ..pinecone_db.main import init_pinecone
 # from langchain.chat_models import ChatOpenAI
 
 # Import your config variables
-from backend.config import (
+from ..config import (
     PINECONE_API_KEY,
     PINECONE_ENV,
     PINECONE_INDEX_NAME,

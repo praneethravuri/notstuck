@@ -8,7 +8,7 @@ from typing import List, Optional, Dict
 from pinecone import Pinecone, ServerlessSpec
 
 # Local imports from your existing code
-from backend.config import (
+from ..config import (
     RAW_DATA_PATH,
     PROCESSED_DATA_PATH,
     PINECONE_API_KEY,
