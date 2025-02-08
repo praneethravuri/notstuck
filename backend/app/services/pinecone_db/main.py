@@ -1,9 +1,11 @@
-# backend/app/services/pinecone_db.py
+# backend/app/services/pinecone_db/main.py
 
 import os
 import uuid
-import pinecone
 from typing import List
+
+# Pinecone v2 imports
+from pinecone import Pinecone, ServerlessSpec
 
 # Import your config parameters
 from backend.config import (
@@ -23,23 +25,36 @@ from ..embeddings.generate_embeddings import get_embedding_function
 
 def init_pinecone():
     """
-    Initialize Pinecone using credentials from config.
+    Initializes Pinecone v2 using credentials from config.
     Creates (or retrieves) the index if it doesn't exist yet.
     Returns a Pinecone 'Index' object for upserts/queries.
     """
     if not PINECONE_API_KEY or not PINECONE_ENV:
-        raise ValueError("Missing Pinecone credentials. Please check your config or environment variables.")
+        raise ValueError("Missing Pinecone credentials. Check your config or environment variables.")
 
-    pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
-
-    if PINECONE_INDEX_NAME not in pinecone.list_indexes():
-        # Create an index if it doesn't exist
-        pinecone.create_index(
-            name=PINECONE_INDEX_NAME,
-            dimension=PINECONE_EMBEDDING_DIMENSIONS
-        )
+    # Create a Pinecone client instance
+    pc = Pinecone(api_key=PINECONE_API_KEY)
     
-    return pinecone.Index(PINECONE_INDEX_NAME)
+    # List existing indexes. (pc.list_indexes() returns a list of IndexSummary objects.)
+    existing_indexes = [idx.name for idx in pc.list_indexes()]
+    
+    if PINECONE_INDEX_NAME not in existing_indexes:
+        # Create the index if it doesn't exist
+        print(f"Index '{PINECONE_INDEX_NAME}' not found. Creating...")
+        pc.create_index(
+            name=PINECONE_INDEX_NAME,
+            dimension=PINECONE_EMBEDDING_DIMENSIONS,
+            metric="cosine",   # or "dotproduct", "euclidean"
+            # Provide a ServerlessSpec with region = PINECONE_ENV
+            # The default cloud is 'aws' so you typically only need region
+            spec=ServerlessSpec(
+                region=PINECONE_ENV,  
+                cloud="aws"
+            )
+        )
+
+    # Return an Index object from this Pinecone client
+    return pc.Index(PINECONE_INDEX_NAME)
 
 def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
     """
@@ -58,7 +73,7 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
     # Get embedding function from your generate_embeddings.py
     embedding_func = get_embedding_function()
 
-    # Initialize Pinecone index
+    # Initialize Pinecone index (v2 style)
     index = init_pinecone()
 
     vectors_to_upsert = []
@@ -67,9 +82,8 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
         if not chunk_text:
             continue
         
-        # The embed function from langchain_community.embeddings.openai typically:
-        #   embedding_func.embed_documents([chunk_text])[0]
-        # or you can use embed_query(chunk_text)
+        # Use .embed_documents([text]) or .embed_query(text)
+        # depending on your embedding library
         try:
             embedding = embedding_func.embed_documents([chunk_text])[0]
         except Exception as e:
@@ -82,7 +96,7 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
         # Create a unique ID for this chunk
         vector_id = str(uuid.uuid4())
 
-        # You can store additional metadata—like the PDF file name, page, etc.
+        # Additional metadata you might want to store
         chunk_metadata = {
             "source_file": os.path.basename(pdf_path),
             "text": chunk_text
