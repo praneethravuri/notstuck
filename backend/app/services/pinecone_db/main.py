@@ -14,18 +14,14 @@ from backend.config import (
     PINECONE_API_KEY,
     PINECONE_ENV,
     PINECONE_INDEX_NAME,
-    PINECONE_EMBEDDING_DIMENSIONS
+    PINECONE_EMBEDDING_DIMENSIONS,
+    SIMILARITY_THRESHOLD,
+    EXACT_MATCH_THRESHOLD,
 )
 
 from ..document_pipeline.document_converter import convert_all_docs_in_raw_folder
 from ..document_pipeline.document_chunker import load_and_split_pdf
 from ..embeddings.generate_embeddings import get_embedding_function
-
-############################################
-# GLOBAL THRESHOLDS
-############################################
-SIMILARITY_THRESHOLD = 0.99999  # 99.999% similar
-EXACT_MATCH_THRESHOLD = 1.0     # 100% similar
 
 ############################################
 # PINECONE INITIALIZATION (v2)

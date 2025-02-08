@@ -7,6 +7,8 @@ from pinecone import Pinecone, ServerlessSpec
 # If you are using langchain_community for ChatOpenAI:
 from langchain_community.chat_models import ChatOpenAI
 
+from ..pinecone_db.main import init_pinecone
+
 # Or, if you're using official LangChain:
 # from langchain.chat_models import ChatOpenAI
 
@@ -22,36 +24,6 @@ from backend.config import (
 # Import your existing embedding function
 # e.g. from backend/app/services/embeddings/generate_embeddings.py
 from ..embeddings.generate_embeddings import get_embedding_function
-
-#############################################################################
-# PINECONE INITIALIZATION (V2)
-#############################################################################
-
-def init_pinecone():
-    """
-    Creates a Pinecone client using PINECONE_API_KEY and PINECONE_ENV,
-    ensures the index exists, and returns a handle to that index.
-    """
-    if not PINECONE_API_KEY or not PINECONE_ENV:
-        raise ValueError("Missing PINECONE_API_KEY or PINECONE_ENV.")
-
-    pc = Pinecone(api_key=PINECONE_API_KEY)
-
-    # Check if index already exists
-    existing_indexes = [idx.name for idx in pc.list_indexes()]
-    if PINECONE_INDEX_NAME not in existing_indexes:
-        print(f"Index '{PINECONE_INDEX_NAME}' not found. Creating...")
-        pc.create_index(
-            name=PINECONE_INDEX_NAME,
-            dimension=PINECONE_EMBEDDING_DIMENSIONS,
-            metric="cosine",   # or "dotproduct"/"euclidean" if needed
-            spec=ServerlessSpec(
-                region=PINECONE_ENV,
-                cloud='aws'
-            )
-        )
-
-    return pc.Index(PINECONE_INDEX_NAME)
 
 #############################################################################
 # MAIN FUNCTION: ANSWER A QUESTION
@@ -141,7 +113,7 @@ Provide the answer in Markdown format.
 
 if __name__ == "__main__":
     # Example question
-    sample_question = "What did praneeth write?"
+    sample_question = "how to win at game of life?"
     answer = answer_question(
         question=sample_question,
         top_k=5,
