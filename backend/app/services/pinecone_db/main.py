@@ -2,12 +2,12 @@
 
 import os
 import uuid
-from typing import List
+from typing import List, Optional, Dict
 
 # Pinecone v2 imports
 from pinecone import Pinecone, ServerlessSpec
 
-# Import your config parameters
+# Local imports from your existing code
 from backend.config import (
     RAW_DATA_PATH,
     PROCESSED_DATA_PATH,
@@ -17,52 +17,119 @@ from backend.config import (
     PINECONE_EMBEDDING_DIMENSIONS
 )
 
-# Import the chunking and embedding functions
-# Adjust these paths if your actual structure is different
-from ..document_pipeline.document_chunker import load_and_split_pdf
 from ..document_pipeline.document_converter import convert_all_docs_in_raw_folder
+from ..document_pipeline.document_chunker import load_and_split_pdf
 from ..embeddings.generate_embeddings import get_embedding_function
 
+############################################
+# GLOBAL THRESHOLDS
+############################################
+SIMILARITY_THRESHOLD = 0.99999  # 99.999% similar
+EXACT_MATCH_THRESHOLD = 1.0     # 100% similar
+
+############################################
+# PINECONE INITIALIZATION (v2)
+############################################
 def init_pinecone():
     """
-    Initializes Pinecone v2 using credentials from config.
-    Creates (or retrieves) the index if it doesn't exist yet.
-    Returns a Pinecone 'Index' object for upserts/queries.
+    Initializes a Pinecone client using your API key and environment from config.
+    Creates (or retrieves) the index if needed, returning a pinecone.Index object.
     """
     if not PINECONE_API_KEY or not PINECONE_ENV:
-        raise ValueError("Missing Pinecone credentials. Check your config or environment variables.")
+        raise ValueError("Missing Pinecone credentials. Check config or environment variables.")
 
-    # Create a Pinecone client instance
     pc = Pinecone(api_key=PINECONE_API_KEY)
-    
-    # List existing indexes. (pc.list_indexes() returns a list of IndexSummary objects.)
+
+    # Check existing indexes
     existing_indexes = [idx.name for idx in pc.list_indexes()]
-    
     if PINECONE_INDEX_NAME not in existing_indexes:
-        # Create the index if it doesn't exist
-        print(f"Index '{PINECONE_INDEX_NAME}' not found. Creating...")
+        print(f"Index '{PINECONE_INDEX_NAME}' not found. Creating it now...")
         pc.create_index(
             name=PINECONE_INDEX_NAME,
             dimension=PINECONE_EMBEDDING_DIMENSIONS,
-            metric="cosine",   # or "dotproduct", "euclidean"
-            # Provide a ServerlessSpec with region = PINECONE_ENV
-            # The default cloud is 'aws' so you typically only need region
+            metric="cosine",  # or "dotproduct", "euclidean" as needed
             spec=ServerlessSpec(
-                region=PINECONE_ENV,  
-                cloud="aws"
+                region=PINECONE_ENV,
+                cloud="aws"      # default is 'aws'
             )
         )
-
-    # Return an Index object from this Pinecone client
     return pc.Index(PINECONE_INDEX_NAME)
 
-def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
+
+############################################
+# SIMILARITY-CHECK UPSERT
+############################################
+def upsert_chunk_with_similarity_check(
+    index,
+    embedding: List[float],
+    chunk_text: str,
+    metadata: Optional[Dict] = None,
+    namespace: Optional[str] = None
+):
     """
-    1. Loads & splits the given PDF into chunks.
-    2. Embeds each chunk using OpenAI embeddings.
-    3. Upserts each chunk (embedding + metadata) into the Pinecone index.
+    Query Pinecone for the most similar chunk to 'embedding'.
+      - If similarity == 1.0, skip (identical chunk already exists).
+      - If similarity >= 0.99999, upsert using the existing ID (update).
+      - Otherwise, insert a new ID.
     """
-    # Load and split PDF into chunks
+    if not embedding:
+        print("No embedding provided. Skipping.")
+        return
+
+    # Query top 1 to see if there's an almost-identical vector
+    query_result = index.query(
+        vector=embedding,
+        top_k=1,
+        include_metadata=True,
+        namespace=namespace
+    )
+
+    matched_id = None
+    matched_score = 0.0
+
+    if query_result and "matches" in query_result and query_result["matches"]:
+        best_match = query_result["matches"][0]
+        matched_id = best_match["id"]
+        matched_score = best_match["score"]
+
+    # Decide how to upsert based on matched_score
+    if matched_score >= EXACT_MATCH_THRESHOLD:
+        # If score == 1.0, skip
+        print(f"Skipping chunk (score=1.0). Identical chunk exists.")
+        return
+    elif matched_score >= SIMILARITY_THRESHOLD:
+        # If score >= 0.99999 (and < 1.0), update the existing chunk
+        vector_id = matched_id
+        print(f"Updating chunk (score={matched_score:.5f}) with existing ID={vector_id}.")
+    else:
+        # Otherwise, insert a new vector
+        vector_id = str(uuid.uuid4())
+        print(f"Inserting new chunk (score={matched_score:.5f}). ID={vector_id}.")
+
+    # Construct the vector data
+    upsert_vector = {
+        "id": vector_id,
+        "values": embedding,
+        "metadata": {
+            "text": chunk_text
+        }
+    }
+    if metadata:
+        upsert_vector["metadata"].update(metadata)
+
+    # Upsert to Pinecone (insert or update)
+    index.upsert(vectors=[upsert_vector], namespace=namespace)
+
+
+############################################
+# EMBED + UPSERT (WITH SIMILARITY CHECK)
+############################################
+def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
+    """
+    1. Splits the PDF into chunks (via load_and_split_pdf).
+    2. Embeds each chunk using get_embedding_function().
+    3. Calls upsert_chunk_with_similarity_check for each chunk.
+    """
     docs = load_and_split_pdf(pdf_path)
     if not docs:
         print(f"No chunks created or error reading PDF: {pdf_path}")
@@ -70,71 +137,58 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: str = None):
 
     print(f"Loaded and split '{os.path.basename(pdf_path)}' into {len(docs)} chunks.")
 
-    # Get embedding function from your generate_embeddings.py
     embedding_func = get_embedding_function()
-
-    # Initialize Pinecone index (v2 style)
     index = init_pinecone()
 
-    vectors_to_upsert = []
     for doc in docs:
         chunk_text = doc.page_content.strip()
         if not chunk_text:
             continue
-        
-        # Use .embed_documents([text]) or .embed_query(text)
-        # depending on your embedding library
+
         try:
+            # embed_documents returns a list of embeddings, we want the first
             embedding = embedding_func.embed_documents([chunk_text])[0]
         except Exception as e:
             print(f"Error embedding chunk: {e}")
             continue
 
-        if not embedding:
-            continue
+        if embedding:
+            # Provide optional metadata
+            chunk_metadata = {"source_file": os.path.basename(pdf_path)}
+            upsert_chunk_with_similarity_check(
+                index=index,
+                embedding=embedding,
+                chunk_text=chunk_text,
+                metadata=chunk_metadata,
+                namespace=namespace
+            )
 
-        # Create a unique ID for this chunk
-        vector_id = str(uuid.uuid4())
 
-        # Additional metadata you might want to store
-        chunk_metadata = {
-            "source_file": os.path.basename(pdf_path),
-            "text": chunk_text
-        }
-
-        vectors_to_upsert.append({
-            "id": vector_id,
-            "values": embedding,
-            "metadata": chunk_metadata
-        })
-
-    # Upsert into Pinecone
-    if vectors_to_upsert:
-        index.upsert(vectors=vectors_to_upsert, namespace=namespace)
-        print(f"Upserted {len(vectors_to_upsert)} chunks from '{os.path.basename(pdf_path)}' into Pinecone (namespace='{namespace}').")
-    else:
-        print(f"No vectors to upsert for '{os.path.basename(pdf_path)}'.")
-
-def process_and_push_all_pdfs(namespace: str = None):
+############################################
+# MAIN PIPELINE
+############################################
+def process_and_push_all_pdfs(namespace: Optional[str] = None):
     """
-    High-level pipeline:
-      1. Convert non-PDF docs from RAW_DATA_PATH -> PDF in PROCESSED_DATA_PATH
-      2. For each PDF in PROCESSED_DATA_PATH, embed and upsert chunks into Pinecone
+    1. Convert raw docs (docx/img -> PDF) to the processed folder.
+    2. For each PDF in processed, embed & upsert chunks into Pinecone with similarity checks.
     """
-    # 1) Convert all raw docs (docx/img -> pdf) and move to processed
-    print(f"Converting files in '{RAW_DATA_PATH}' to PDF (if needed) and moving them to '{PROCESSED_DATA_PATH}'...")
+    # 1) Convert all raw docs to PDF in processed
+    print(f"[STEP 1] Converting documents from '{RAW_DATA_PATH}' to '{PROCESSED_DATA_PATH}'...")
     convert_all_docs_in_raw_folder()
 
-    # 2) Iterate over PDFs in processed, embed & upsert to Pinecone
-    print(f"\nEmbedding and uploading PDFs from '{PROCESSED_DATA_PATH}'...")
+    # 2) Embed + upsert each PDF
+    print(f"\n[STEP 2] Embedding & upserting PDFs from '{PROCESSED_DATA_PATH}' into Pinecone...")
     for filename in os.listdir(PROCESSED_DATA_PATH):
         if filename.lower().endswith(".pdf"):
             pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)
             embed_and_upsert_chunks(pdf_path, namespace=namespace)
-    print("\n✅ All PDFs processed and uploaded.")
+    print("\n✅ Done. All PDFs processed and uploaded to Pinecone.")
 
+
+############################################
+# CLI ENTRY POINT
+############################################
 if __name__ == "__main__":
-    # Example usage:
-    # Run this file as a script to process all documents in RAW_DATA_PATH,
-    # convert them to PDF, chunk, embed, and upload to Pinecone.
+    # Run as: python -m backend.app.services.pinecone_db.main
+    # This will process all docs in RAW_DATA_PATH and push them into Pinecone.
     process_and_push_all_pdfs(namespace="my-namespace")
