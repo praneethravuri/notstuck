@@ -17,11 +17,9 @@ from backend.config import (
 
 # Import the chunking and embedding functions
 # Adjust these paths if your actual structure is different
-# from document_pipeline.document_chunker import load_and_split_pdf
-# from document_pipeline.document_converter import convert_all_docs_in_raw_folder
-from document_chunker import load_and_split_pdf
-from document_converter import convert_all_docs_in_raw_folder
-from .embeddings.generate_embeddings import get_embedding_function
+from ..document_pipeline.document_chunker import load_and_split_pdf
+from ..document_pipeline.document_converter import convert_all_docs_in_raw_folder
+from ..embeddings.generate_embeddings import get_embedding_function
 
 def init_pinecone():
     """

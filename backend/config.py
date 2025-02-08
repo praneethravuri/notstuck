@@ -1,5 +1,7 @@
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 # Paths
 RAW_DATA_PATH = os.path.join(os.path.dirname(__file__), "data/raw")
 PROCESSED_DATA_PATH = os.path.join(os.path.dirname(__file__), "data/processed")
