@@ -1,17 +1,6 @@
-pypdf
+docx2pdf # convert all docx to pdf
+Pillow # for document conversion
+python-dotenv # for environment variables
 langchain
-chromadb # Vector storage
-pytest
-boto3
-openai
 langchain-community
 langchain-openai
-langchain-chroma
-python-dotenv
-llama-cloud-services 
-llama-index-core 
-llama-index-readers-file
-torch 
-transformers 
-python-pptx 
-Pillow
