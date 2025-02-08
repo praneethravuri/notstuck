@@ -9,6 +9,13 @@ import RightSidebar from "@/components/sidebar/RightSidebar"
 export default function ChatLayout() {
   const [messages, setMessages] = useState<string[]>([])
 
+  // State for settings
+  const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
+  const [similarResults, setSimilarResults] = useState([7]);
+  const [temperature, setTemperature] = useState([0.5]);
+  const [maxTokens, setMaxTokens] = useState([2000]);
+  const [responseStyle, setResponseStyle] = useState("detailed");
+
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return
 
@@ -22,7 +29,14 @@ export default function ChatLayout() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ question: message }),
+        body: JSON.stringify({ 
+          question: message,
+          similarityThreshold: similarityThreshold[0],
+          similarResults: similarResults[0],
+          temperature: temperature[0],
+          maxTokens: maxTokens[0],
+          responseStyle: responseStyle
+        }),
       })
 
       if (!res.ok) {
@@ -45,7 +59,18 @@ export default function ChatLayout() {
       {/* Left Sidebar */}
       <Sidebar side="left" className="w-80 flex-shrink-0 border-r border-gray-800 overflow-y-auto">
         <SidebarContent>
-          <LeftSidebar />
+          <LeftSidebar 
+            similarityThreshold={similarityThreshold}
+            setSimilarityThreshold={setSimilarityThreshold}
+            similarResults={similarResults}
+            setSimilarResults={setSimilarResults}
+            temperature={temperature}
+            setTemperature={setTemperature}
+            maxTokens={maxTokens}
+            setMaxTokens={setMaxTokens}
+            responseStyle={responseStyle}
+            setResponseStyle={setResponseStyle}
+          />
         </SidebarContent>
       </Sidebar>
 
@@ -75,4 +100,3 @@ export default function ChatLayout() {
     </div>
   )
 }
-

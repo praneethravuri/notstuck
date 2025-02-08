@@ -19,6 +19,14 @@ PROCESSED_DIR = os.path.join(
 )
 PROCESSED_DIR = os.path.abspath(PROCESSED_DIR)
 
+class QuestionPayload(BaseModel):
+    question: str
+    similarityThreshold: float
+    similarResults: int
+    temperature: float
+    maxTokens: int
+    responseStyle: str
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,13 +35,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class QuestionPayload(BaseModel):
-    question: str
-
 @app.post("/api/ask")
 def ask_question(payload: QuestionPayload):
     question_text = payload.question
-    answer = answer_question(question=question_text, top_k=5, threshold=0.9, namespace="my-namespace")
+    similarity_threshold = payload.similarityThreshold
+    similar_results = payload.similarResults
+    temperature = payload.temperature
+    max_tokens = payload.maxTokens
+    response_style = payload.responseStyle
+
+    answer = answer_question(
+        question=question_text,
+        top_k=similar_results,
+        threshold=similarity_threshold,
+        namespace="my-namespace"
+    )
     return {"answer": answer}
 
 @app.get("/api/get-pdfs")
