@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
 import { ChatMessages } from "./ChatMessages";
@@ -7,16 +6,14 @@ import LeftSidebar from "@/components/sidebar/LeftSidebar";
 import RightSidebar from "@/components/sidebar/RightSidebar";
 
 export default function ChatLayout() {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState([]);
 
-  const handleSendMessage = async (message: string) => {
+  const handleSendMessage = async (message) => {
     if (!message.trim()) return;
 
-    // 1) Store the user’s message
     setMessages((prev) => [...prev, `You: ${message}`]);
 
     try {
-      // 2) Send POST request to Next.js route -> which calls FastAPI
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: {
@@ -30,9 +27,6 @@ export default function ChatLayout() {
       }
 
       const data = await res.json();
-      // data should look like { answer: "... from FastAPI ..." }
-
-      // 3) Append AI’s answer to the conversation
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
@@ -41,33 +35,41 @@ export default function ChatLayout() {
   };
 
   return (
-    <div className="flex w-full bg-gray-900/50">
+    <div className="flex h-screen w-full overflow-hidden bg-gray-900">
       {/* Left Sidebar */}
-      <Sidebar side="left" className="w-80 border-r border-gray-800">
+      <Sidebar side="left" className="w-80 min-w-80 border-r border-gray-800">
         <SidebarContent>
-          <RightSidebar />
+          <div className="h-full overflow-y-auto">
+            <LeftSidebar />
+          </div>
         </SidebarContent>
       </Sidebar>
 
       {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col">
-        {/* Greetings Header */}
-        <div className="p-4 border-b border-gray-800">
+      <main className="flex flex-1 flex-col min-w-0 bg-gray-900">
+        {/* Header */}
+        <div className="flex-none p-4 border-b border-gray-800">
           <h1 className="text-xl font-semibold text-gray-200">Hey Oleve!</h1>
           <p className="text-sm text-gray-400">How can I assist you today?</p>
         </div>
 
-        {/* Chat Messages */}
-        <ChatMessages messages={messages} />
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <ChatMessages messages={messages} />
+        </div>
 
-        {/* Chat Input */}
-        <ChatInput onSendMessage={handleSendMessage} />
+        {/* Input Area */}
+        <div className="flex-none p-4 border-t border-gray-800">
+          <ChatInput onSendMessage={handleSendMessage} />
+        </div>
       </main>
 
       {/* Right Sidebar */}
-      <Sidebar side="right" className="w-80 border-l border-gray-800">
+      <Sidebar side="right" className="w-80 min-w-80 border-l border-gray-800">
         <SidebarContent>
-          <LeftSidebar />
+          <div className="h-full overflow-y-auto">
+            <RightSidebar />
+          </div>
         </SidebarContent>
       </Sidebar>
     </div>
