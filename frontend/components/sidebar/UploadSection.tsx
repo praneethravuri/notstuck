@@ -2,7 +2,7 @@ import { Upload } from "lucide-react";
 import axios from 'axios';
 
 export const UploadSection = () => {
-  const handleFileUpload = async (files) => {
+  const handleFileUpload = async (files: FileList) => {
     try {
       const formData = new FormData();
       Array.from(files).forEach(file => {
@@ -32,7 +32,9 @@ export const UploadSection = () => {
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
-          handleFileUpload(e.dataTransfer.files);
+          if (e.dataTransfer.files) {
+            handleFileUpload(e.dataTransfer.files);
+          }
         }}
       >
         <input
@@ -40,7 +42,11 @@ export const UploadSection = () => {
           type="file"
           className="hidden"
           multiple
-          onChange={(e) => handleFileUpload(e.target.files)}
+          onChange={(e) => {
+            if (e.target.files) {
+              handleFileUpload(e.target.files);
+            }
+          }}
         />
         <label htmlFor="file-upload" className="cursor-pointer">
           <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
