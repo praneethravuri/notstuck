@@ -85,4 +85,5 @@ jobs:
         run: |
           terraform init
           terraform plan -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
-          terraform apply -auto-approve
+          terraform apply -auto-approve -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
+    
