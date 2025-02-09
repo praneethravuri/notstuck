@@ -79,6 +79,9 @@ jobs:
       # Run Terraform to deploy your infrastructure
       - name: Terraform Init, Plan and Apply
         working-directory: ./terraform
+        env:
+          TF_LOG: DEBUG
+          TF_INPUT: "false"
         run: |
           terraform init
           terraform plan -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
