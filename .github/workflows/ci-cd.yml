@@ -33,18 +33,23 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/notstuck:latest
 
-      # Authenticate with GCP using the auth action.
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      # Set up Cloud SDK (note: no service_account_key or export_default_credentials here)
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
 
+      # Set up Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.5.0'  # Use the desired version
+
+      # Create/Update GCP Secrets for Environment Variables
       - name: Create/Update GCP Secrets for Environment Variables
         run: |
           # --- OPENAI_API_KEY ---
@@ -71,7 +76,8 @@ jobs:
           fi
           echo -n "${{ secrets.PINECONE_INDEX_NAME }}" | gcloud secrets versions add pinecone-index-name --data-file=-
 
-      - name: Run Terraform
+      # Run Terraform to deploy your infrastructure
+      - name: Terraform Init, Plan and Apply
         working-directory: ./terraform
         run: |
           terraform init
