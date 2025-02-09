@@ -1,11 +1,12 @@
 "use client";
+
 import { useState } from "react";
 import { Database, FolderIcon, Search } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Input } from "@/components/ui/input";
 
 interface PdfFile {
-  name: string; // e.g. "doc1.pdf"
+  name: string;
 }
 
 interface DocumentsSectionProps {
@@ -64,6 +65,7 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
                   <iframe
                     src={`http://localhost:8000/api/get-pdfs?filename=${file.name}`}
                     style={{ width: "100%", height: "100%", border: "none" }}
+                    title={file.name}
                   />
                 </div>
               </AccordionContent>

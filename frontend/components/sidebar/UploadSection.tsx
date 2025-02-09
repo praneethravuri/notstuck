@@ -1,22 +1,29 @@
+"use client";
 import { Upload } from "lucide-react";
-import axios from 'axios';
+import axios from "axios";
 
-export const UploadSection = () => {
+interface UploadSectionProps {
+  // Optional custom upload handler.
+  uploadHandler?: (files: FileList) => Promise<void>;
+}
+
+export const UploadSection = ({ uploadHandler }: UploadSectionProps) => {
   const handleFileUpload = async (files: FileList) => {
+    if (uploadHandler) {
+      await uploadHandler(files);
+      return;
+    }
     try {
       const formData = new FormData();
-      Array.from(files).forEach(file => {
-        formData.append('files', file);
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
       });
-
-      const response = await axios.post('http://localhost:8000/api/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+      const response = await axios.post("/api/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log('Upload successful:', response.data);
+      console.log("Upload successful:", response.data);
     } catch (error) {
-      console.error('Upload failed:', error);
+      console.error("Upload failed:", error);
     }
   };
 
@@ -26,7 +33,7 @@ export const UploadSection = () => {
         <Upload className="h-4 w-4 text-blue-400" />
         <span>Upload Documents</span>
       </h2>
-      
+
       <div
         className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200 cursor-pointer"
         onDragOver={(e) => e.preventDefault()}
@@ -58,5 +65,3 @@ export const UploadSection = () => {
     </div>
   );
 };
-
-export default UploadSection;

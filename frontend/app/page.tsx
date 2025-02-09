@@ -1,8 +1,8 @@
 "use client"
-import ChatLayout from "@/components/chat/ChatLayout"
+import ChatLayout from "@/app/(chat)/ChatLayout"
 
 export default function Home() {
   return (
-      <ChatLayout />
+    <ChatLayout />
   )
 }

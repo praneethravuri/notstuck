@@ -14,7 +14,6 @@ export const SourcesSection = ({ sources }: SourcesSectionProps) => {
         <span>Active Context Sources</span>
       </h2>
 
-      {/* Display Sources */}
       {sources.length === 0 ? (
         <div className="text-sm text-gray-400 px-3 py-2">No active sources</div>
       ) : (
@@ -35,8 +34,9 @@ export const SourcesSection = ({ sources }: SourcesSectionProps) => {
               <AccordionContent>
                 <div style={{ height: "200px", overflowY: "auto" }}>
                   <iframe
-                    src={`http://localhost:8000/api/get-pdfs?filename=${source}`}
+                    src={`/api/get-pdfs?filename=${source}`}
                     style={{ width: "100%", height: "100%", border: "none" }}
+                    title={source}
                   />
                 </div>
               </AccordionContent>
