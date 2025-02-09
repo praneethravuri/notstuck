@@ -7,4 +7,5 @@ backend/.venv
 .gitignore
 .dockerignore
 README.md
+.next/cache
 frontend/node_modules
