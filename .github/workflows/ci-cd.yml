@@ -7,34 +7,68 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-push:
+  build-deploy:
     runs-on: ubuntu-latest
-    
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    
+      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+      GCP_REGION: "us-central1"
     steps:
-      - name: Check out code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
-      - name: Login to Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Create env file
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > backend/.env
-
-      - name: Build and push Docker image
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/notstuck:latest
-          secrets: |
-            "env_file=backend/.env"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Create/Update GCP Secrets for Environment Variables
+        run: |
+          # --- OPENAI_API_KEY ---
+          if ! gcloud secrets describe openai-api-key --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
+            gcloud secrets create openai-api-key --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
+          fi
+          echo -n "${{ secrets.OPENAI_API_KEY }}" | gcloud secrets versions add openai-api-key --data-file=-
+
+          # --- PINECONE_API_KEY ---
+          if ! gcloud secrets describe pinecone-api-key --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
+            gcloud secrets create pinecone-api-key --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
+          fi
+          echo -n "${{ secrets.PINECONE_API_KEY }}" | gcloud secrets versions add pinecone-api-key --data-file=-
+
+          # --- PINECONE_ENV ---
+          if ! gcloud secrets describe pinecone-env --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
+            gcloud secrets create pinecone-env --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
+          fi
+          echo -n "${{ secrets.PINECONE_ENV }}" | gcloud secrets versions add pinecone-env --data-file=-
+
+          # --- PINECONE_INDEX_NAME ---
+          if ! gcloud secrets describe pinecone-index-name --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
+            gcloud secrets create pinecone-index-name --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
+          fi
+          echo -n "${{ secrets.PINECONE_INDEX_NAME }}" | gcloud secrets versions add pinecone-index-name --data-file=-
+
+      - name: Run Terraform
+        working-directory: ./terraform
+        run: |
+          terraform init
+          terraform plan -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
+          terraform apply -auto-approve
