@@ -10,3 +10,4 @@ pinecone-client
 fastapi
 pydantic
 uvicorn
+python-multipart
