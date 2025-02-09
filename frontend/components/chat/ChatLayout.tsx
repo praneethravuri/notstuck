@@ -1,10 +1,8 @@
 "use client"
 import { useState } from "react"
-import { Sidebar, SidebarContent } from "@/components/ui/sidebar"
 import { ChatMessages } from "./ChatMessages"
 import { ChatInput } from "./ChatInput"
-import LeftSidebar from "@/components/sidebar/LeftSidebar"
-import RightSidebar from "@/components/sidebar/RightSidebar"
+import CustomSidebar from "../sidebar/CustomSidebar"
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState<string[]>([])
@@ -29,7 +27,7 @@ export default function ChatLayout() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           question: message,
           similarityThreshold: similarityThreshold[0],
           similarResults: similarResults[0],
@@ -57,22 +55,7 @@ export default function ChatLayout() {
   return (
     <div className="flex min-h-screen w-full bg-gray-900/50">
       {/* Left Sidebar */}
-      <Sidebar side="left" className="w-80 flex-shrink-0 border-r border-gray-800 overflow-y-auto">
-        <SidebarContent>
-          <LeftSidebar 
-            similarityThreshold={similarityThreshold}
-            setSimilarityThreshold={setSimilarityThreshold}
-            similarResults={similarResults}
-            setSimilarResults={setSimilarResults}
-            temperature={temperature}
-            setTemperature={setTemperature}
-            maxTokens={maxTokens}
-            setMaxTokens={setMaxTokens}
-            responseStyle={responseStyle}
-            setResponseStyle={setResponseStyle}
-          />
-        </SidebarContent>
-      </Sidebar>
+      <CustomSidebar position="left" />
 
       {/* Main Chat Area */}
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -83,7 +66,7 @@ export default function ChatLayout() {
         </div>
 
         {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-hidden">
           <ChatMessages messages={messages} />
         </div>
 
@@ -92,11 +75,20 @@ export default function ChatLayout() {
       </main>
 
       {/* Right Sidebar */}
-      <Sidebar side="right" className="w-80 flex-shrink-0 border-l border-gray-800 overflow-y-auto">
-        <SidebarContent>
-          <RightSidebar />
-        </SidebarContent>
-      </Sidebar>
+      
+      <CustomSidebar
+        position="right"
+        similarityThreshold={similarityThreshold}
+        setSimilarityThreshold={setSimilarityThreshold}
+        similarResults={similarResults}
+        setSimilarResults={setSimilarResults}
+        temperature={temperature}
+        setTemperature={setTemperature}
+        maxTokens={maxTokens}
+        setMaxTokens={setMaxTokens}
+        responseStyle={responseStyle}
+        setResponseStyle={setResponseStyle}
+      />
     </div>
   )
 }
