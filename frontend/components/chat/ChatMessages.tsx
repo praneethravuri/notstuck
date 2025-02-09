@@ -14,10 +14,10 @@ const MarkdownRenderer = ({ content }: { content: string }) => (
       ul: ({ children }) => <ul className="list-disc ml-4 mb-4">{children}</ul>,
       ol: ({ children }) => <ol className="list-decimal ml-4 mb-4">{children}</ol>,
       li: ({ children }) => <li className="mb-1">{children}</li>,
-      code: ({ inline, className, children }) => {
-        if (inline) {
-          return <code className=" rounded  font-mono text-sm">{children}</code>;
-        }
+      code: ({ className, children }) => {
+        // if (inline) {
+        //   return <code className=" rounded  font-mono text-sm">{children}</code>;
+        // }
         return (
           <pre className=" rounded-lg my-4 font-mono text-sm overflow-x-auto">
             <code className={className}>{children}</code>

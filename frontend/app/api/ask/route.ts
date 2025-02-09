@@ -31,9 +31,13 @@ export async function POST(req: NextRequest) {
         const data = await backendResponse.json();
         return NextResponse.json(data);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Return an error response
         console.log(error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        let errorMessage = "An unexpected error occurred";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
     }
 }
