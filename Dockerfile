@@ -15,9 +15,9 @@ RUN npm run build
 # Final image
 FROM node:20-slim
 
-# Install Python
+# Install Python and required packages
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
+    apt-get install -y python3 python3-pip python3-venv && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -28,17 +28,22 @@ COPY --from=frontend-build /app/frontend/public /app/frontend/public
 COPY --from=frontend-build /app/frontend/package*.json /app/frontend/
 COPY --from=frontend-build /app/frontend/node_modules /app/frontend/node_modules
 
-# Install Python dependencies
+# Set up Python virtual environment and install dependencies
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies in virtual environment
 COPY backend/requirements.txt .
-RUN pip3 install -r requirements.txt
+RUN . /opt/venv/bin/activate && pip install -r requirements.txt
 
 # Copy backend code
 COPY backend/ ./backend/
 
 # Create a script to run both services
 RUN echo '#!/bin/bash\n\
+source /opt/venv/bin/activate\n\
 cd /app/backend\n\
-python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &\n\
+python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 &\n\
 cd /app/frontend\n\
 npm run start' > /app/start.sh
 
