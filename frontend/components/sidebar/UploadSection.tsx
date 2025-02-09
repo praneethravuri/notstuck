@@ -1,33 +1,56 @@
 import { Upload } from "lucide-react";
+import axios from 'axios';
 
 export const UploadSection = () => {
+  const handleFileUpload = async (files) => {
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach(file => {
+        formData.append('files', file);
+      });
+
+      const response = await axios.post('http://localhost:8000/api/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      console.log('Upload successful:', response.data);
+    } catch (error) {
+      console.error('Upload failed:', error);
+    }
+  };
+
   return (
     <div className="p-4 border-t border-gray-800">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
         <Upload className="h-4 w-4 text-blue-400" />
         <span>Upload Documents</span>
       </h2>
-      <div 
+      
+      <div
         className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200 cursor-pointer"
         onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          handleFileUpload(e.dataTransfer.files);
+        }}
       >
         <input
           id="file-upload"
           type="file"
           className="hidden"
           multiple
-          onChange={(e) => {
-            console.log(e.target.files);
-          }}
+          onChange={(e) => handleFileUpload(e.target.files)}
         />
-        <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-        <p className="text-sm text-gray-400">
-          Drag and drop files here or <span className="text-blue-400">browse</span>
-        </p>
-        <p className="text-xs text-gray-500 mt-1">
-          Supports PDF, TXT, DOC, DOCX
-        </p>
+        <label htmlFor="file-upload" className="cursor-pointer">
+          <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+          <p className="text-sm text-gray-400">
+            Drag and drop files here or <span className="text-blue-400">browse</span>
+          </p>
+        </label>
       </div>
     </div>
   );
 };
+
+export default UploadSection;
