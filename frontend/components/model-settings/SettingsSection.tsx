@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Wrench } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -29,12 +28,6 @@ export const SettingsSection = ({
   responseStyle,
   setResponseStyle,
 }: SettingsSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   return (
     <div className="h-screen bg-stone-950 flex flex-col">
       <div className="flex items-center space-x-2 p-4">
