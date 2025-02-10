@@ -1,12 +1,12 @@
 "use client";
-import React, { useRef, useEffect } from "react";
-import { Send, PaperclipIcon, Smile, Mic } from "lucide-react";
 
+import React, { useRef, useEffect } from "react";
+import { Send } from "lucide-react";
 
 export const ChatInput = ({ onSendMessage }: { onSendMessage: (message: string) => void }) => {
   const [message, setMessage] = React.useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
@@ -30,53 +30,33 @@ export const ChatInput = ({ onSendMessage }: { onSendMessage: (message: string) 
   }, [message]);
 
   return (
-    <div className="border-t border-gray-800 bg-gray-900/50 p-4">
-      <form onSubmit={handleSubmit} className="flex items-end gap-2 max-w-4xl mx-auto">
-        <button
-          type="button"
-          className="p-2 text-gray-400 hover:text-gray-300 transition-colors"
-        >
-          <PaperclipIcon className="h-5 w-5" />
-        </button>
-        
-        <div className="flex-1 relative">
+    <div className="fixed bottom-0 left-0 w-full  p-4 ">
+      <form onSubmit={handleSubmit} className="flex justify-center items-center max-w-4xl mx-auto">
+        <div className="flex gap-2 items-end w-full max-w-[600px]">
           <textarea
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message..."
+            placeholder="Write a message here..."
             rows={1}
-            className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 pr-12 text-sm text-gray-200 
-                     focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400
-                     placeholder-gray-500 resize-none max-h-[150px]"
+            className="flex-1 bg-stone-800 border border-green-800 focus:border-green-800 focus:ring-0 rounded-xl 
+                     px-4 py-3 text-sm text-gray-200 focus:outline-none overflow-hidden
+                     placeholder-gray-400 resize-none max-h-[150px]"
           />
+          
           <button
-            type="button"
-            className="absolute right-3 bottom-3 text-gray-400 hover:text-gray-300 transition-colors"
+            type="submit"
+            disabled={!message.trim()}
+            className={`p-3 rounded-xl transition-all duration-200 border border-green-800 ${
+              message.trim()
+                ? 'bg-green-600 text-white hover:bg-green-800'
+                : 'bg-stone-800 text-gray-500 cursor-not-allowed'
+            }`}
           >
-            <Smile className="h-5 w-5" />
+            <Send className="h-5 w-5" />
           </button>
         </div>
-
-        <button
-          type="button"
-          className="p-2 text-gray-400 hover:text-gray-300 transition-colors"
-        >
-          <Mic className="h-5 w-5" />
-        </button>
-        
-        <button
-          type="submit"
-          disabled={!message.trim()}
-          className={`p-3 rounded-xl transition-all duration-200 ${
-            message.trim() 
-              ? 'bg-blue-600 text-white hover:bg-blue-700' 
-              : 'bg-gray-800 text-gray-500 cursor-not-allowed'
-          }`}
-        >
-          <Send className="h-5 w-5" />
-        </button>
       </form>
     </div>
   );

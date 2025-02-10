@@ -3,44 +3,29 @@
 import React, { useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
 
-// MarkdownRenderer Component
 const MarkdownRenderer = ({ content }: { content: string }) => (
   <ReactMarkdown
     components={{
-      p: ({ children }) => <p className="text-sm leading-relaxed mb-2">{children}</p>,
-      h1: ({ children }) => <h1 className="text-xl font-bold mb-4 mt-2">{children}</h1>,
-      h2: ({ children }) => <h2 className="text-lg font-bold mb-3 mt-2">{children}</h2>,
-      h3: ({ children }) => <h3 className="text-base font-bold mb-2 mt-2">{children}</h3>,
-      ul: ({ children }) => <ul className="list-disc ml-4 mb-4">{children}</ul>,
-      ol: ({ children }) => <ol className="list-decimal ml-4 mb-4">{children}</ol>,
+      p: ({ children }) => <p className="text-sm text-gray-200 leading-relaxed mb-2">{children}</p>,
+      h1: ({ children }) => <h1 className="text-lg font-semibold text-gray-200 mb-3">{children}</h1>,
+      h2: ({ children }) => <h2 className="text-base font-semibold text-gray-200 mb-2">{children}</h2>,
+      h3: ({ children }) => <h3 className="text-sm font-semibold text-gray-200 mb-2">{children}</h3>,
+      ul: ({ children }) => <ul className="list-disc ml-4 mb-3 text-gray-200">{children}</ul>,
+      ol: ({ children }) => <ol className="list-decimal ml-4 mb-3 text-gray-200">{children}</ol>,
       li: ({ children }) => <li className="mb-1">{children}</li>,
-      code: ({ className, children }) => {
-        // if (inline) {
-        //   return <code className=" rounded  font-mono text-sm">{children}</code>;
-        // }
-        return (
-          <pre className=" rounded-lg my-4 font-mono text-sm overflow-x-auto">
-            <code className={className}>{children}</code>
-          </pre>
-        );
-      },
+      code: ({ children }) => (
+        <pre className="bg-stone-950 rounded-lg p-3 my-2 font-mono text-sm text-gray-200 overflow-x-auto">
+          <code>{children}</code>
+        </pre>
+      ),
       blockquote: ({ children }) => (
-        <blockquote className="border-l-4 border-gray-400/50 pl-4 italic my-4">{children}</blockquote>
+        <blockquote className="border-l-4 border-gray-700 pl-4 italic my-3 text-gray-300">{children}</blockquote>
       ),
       a: ({ children, href }) => (
-        <a href={href} className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
+        <a href={href} className="text-green-600 hover:underline" target="_blank" rel="noopener noreferrer">
           {children}
         </a>
       ),
-      table: ({ children }) => (
-        <div className="overflow-x-auto my-4">
-          <table className="min-w-full border border-gray-700 rounded">{children}</table>
-        </div>
-      ),
-      thead: ({ children }) => <thead className="">{children}</thead>,
-      tr: ({ children }) => <tr className="border-b border-gray-700">{children}</tr>,
-      th: ({ children }) => <th className="px-4 py-2 text-left border-r border-gray-700 last:border-r-0">{children}</th>,
-      td: ({ children }) => <td className="px-4 py-2 border-r border-gray-700 last:border-r-0">{children}</td>,
     }}
   >
     {content}
@@ -60,8 +45,8 @@ export const ChatMessages = ({ messages }: { messages: string[] }) => {
   }, [messages]);
 
   return (
-    <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
-      <div className="flex flex-col p-4 space-y-6">
+    <div className="flex-1 overflow-y-auto p-4 pb-24"> {/* Ensures proper scrolling and input space */}
+      <div className="flex flex-col space-y-6">
         {messages.map((message, index) => {
           const isUser = message.startsWith("You:");
           const text = message.replace(/^(You:|AI:)\s*/, '');
@@ -69,28 +54,22 @@ export const ChatMessages = ({ messages }: { messages: string[] }) => {
           return (
             <div
               key={index}
-              className={`flex ${isUser ? 'justify-end' : 'justify-start'} animate-fadeIn`}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
             >
               <div
                 className={`
-                  relative group flex flex-col
-                  max-w-[85%] rounded-2xl p-4
+                  max-w-[85%] rounded-xl p-4
                   ${isUser
-                    ? 'bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-br-sm'
-                    : 'bg-gray-700 text-gray-100 rounded-bl-sm'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-stone-950 text-gray-200'
                   }
-                  shadow-lg
-                  transition-all duration-200
-                  hover:shadow-xl
                 `}
               >
-                <div className="prose prose-invert max-w-none">
-                  {isUser ? (
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{text}</p>
-                  ) : (
-                    <MarkdownRenderer content={text} />
-                  )}
-                </div>
+                {isUser ? (
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{text}</p>
+                ) : (
+                  <MarkdownRenderer content={text} />
+                )}
               </div>
             </div>
           );

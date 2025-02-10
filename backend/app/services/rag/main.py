@@ -90,7 +90,7 @@ Provide the answer in Markdown format.
 
     llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY,
-        model="gpt-3.5-turbo",
+        model="gpt-4o",
         temperature=temperature,
         max_tokens=max_tokens
     )
