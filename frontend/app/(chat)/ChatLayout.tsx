@@ -54,6 +54,25 @@ export default function ChatLayout() {
   }, []);
 
   // Custom upload handler using the Next.js API route
+  // const handleFileUpload = async (files: FileList) => {
+  //   try {
+  //     const formData = new FormData();
+  //     Array.from(files).forEach((file) => {
+  //       formData.append("files", file);
+  //     });
+
+  //     // Instead of posting directly to FastAPI, post to our API route.
+  //     const response = await axios.post("/api/upload", formData, {
+  //       headers: { "Content-Type": "multipart/form-data" },
+  //     });
+  //     console.log("Upload successful:", response.data);
+  //     // Optionally, you can refresh the file list here.
+  //   } catch (error) {
+  //     console.error("Upload failed:", error);
+  //   }
+  // };
+
+
   const handleFileUpload = async (files: FileList) => {
     try {
       const formData = new FormData();
@@ -61,16 +80,16 @@ export default function ChatLayout() {
         formData.append("files", file);
       });
 
-      // Instead of posting directly to FastAPI, post to our API route.
-      const response = await axios.post("/api/upload", formData, {
+      const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
-      // Optionally, you can refresh the file list here.
+      // Optionally, you can refresh your file list here.
     } catch (error) {
       console.error("Upload failed:", error);
     }
   };
+
 
   // Handle sending a chat message using the /api/ask route
   const handleSendMessage = async (message: string) => {
