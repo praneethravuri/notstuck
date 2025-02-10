@@ -26,13 +26,15 @@ export default function ChatLayout() {
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<string[]>([]);
 
-  // Fetch PDF files via API (replace URL as needed)
+  // Fetch PDF files via Next.js API route
   useEffect(() => {
     async function loadFiles() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/get-pdfs");
+        // Now calls the Next.js API route rather than FastAPI directly.
+        const res = await fetch("/api/get-pdfs");
         if (!res.ok) throw new Error("Failed to fetch PDF list");
         const data = await res.json();
+        // Assumes the API returns an object with a "files" array.
         setFiles(data.files.map((filename: string) => ({ name: filename })));
       } catch (err) {
         console.error("Error fetching PDF list:", err);
@@ -44,14 +46,14 @@ export default function ChatLayout() {
   // Simulate fetching active context sources.
   useEffect(() => {
     async function fetchSources() {
-      // Replace with your own API call if needed.
+      // Replace this with a call to your own API if needed.
       const exampleSources = ["doc1.pdf", "report.pdf"];
       setSources(exampleSources);
     }
     fetchSources();
   }, []);
 
-  // Custom upload handler (can also be passed down to UploadSection)
+  // Custom upload handler using the Next.js API route
   const handleFileUpload = async (files: FileList) => {
     try {
       const formData = new FormData();
@@ -59,24 +61,26 @@ export default function ChatLayout() {
         formData.append("files", file);
       });
 
-      const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, {
+      // Instead of posting directly to FastAPI, post to our API route.
+      const response = await axios.post("/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
-      // Optionally, you can refresh your file list here.
+      // Optionally, you can refresh the file list here.
     } catch (error) {
       console.error("Upload failed:", error);
     }
   };
 
-  // Handle sending a chat message
+  // Handle sending a chat message using the /api/ask route
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
 
-    // Append the user's message
+    // Append the user's message to state
     setMessages((prev) => [...prev, `You: ${message}`]);
 
     try {
+      // Now calling our own API route which forwards the request to FastAPI.
       const res = await fetch("/api/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
