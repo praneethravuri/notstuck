@@ -1,8 +1,10 @@
 "use client";
-
+import { useState } from "react";
 import { DocumentsSection } from "./DocumentSection";
 import { SourcesSection } from "./SourcesSection";
 import { UploadSection } from "./UploadSection";
+
+import { MessageSquare, Home, Database, Sliders, BookOpen, Settings, Users, CreditCard, FileText } from "lucide-react";
 
 interface PdfFile {
   name: string;
@@ -11,23 +13,33 @@ interface PdfFile {
 interface CustomSidebarProps {
   files: PdfFile[];
   sources: string[];
-  // Optionally, the parent can pass a custom upload handler.
   uploadHandler?: (files: FileList) => Promise<void>;
 }
 
 const CustomSidebar = ({ files, sources, uploadHandler }: CustomSidebarProps) => {
   return (
-    <div className="w-80 h-screen bg-gray-900/50 backdrop-blur-sm flex flex-col overflow-y-auto">
-      {/* Documents Section */}
-      <DocumentsSection files={files} />
+    <div className="h-screen bg-stone-950 flex flex-col">
+      {/* Logo Section */}
+      <div className="p-4 flex items-center space-x-2">
+        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+          <MessageSquare className="h-5 w-5 text-white" />
+        </div>
+        <span className="font-semibold text-gray-200">NotStuck</span>
+      </div>
 
-      {/* Sources Section */}
-      <SourcesSection sources={sources} />
+      <div className="h-screen  flex flex-col justify-between overflow-y-auto">
+        {/* Documents Section */}
+        <DocumentsSection files={files} />
 
-      {/* Upload Section */}
-      <UploadSection uploadHandler={uploadHandler} />
+        {/* Sources Section */}
+        <SourcesSection sources={sources} />
+
+        {/* Upload Section */}
+        <UploadSection uploadHandler={uploadHandler} />
+      </div>
     </div>
   );
 };
+
 
 export default CustomSidebar;

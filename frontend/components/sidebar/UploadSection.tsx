@@ -30,12 +30,12 @@ export const UploadSection = ({ uploadHandler }: UploadSectionProps) => {
   return (
     <div className="p-4 border-t border-gray-800">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
-        <Upload className="h-4 w-4 text-blue-400" />
+        <Upload className="h-4 w-4 text-green-600" />
         <span>Upload Documents</span>
       </h2>
 
       <div
-        className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200 cursor-pointer"
+        className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-green-600 transition-colors duration-200 cursor-pointer"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
@@ -58,7 +58,7 @@ export const UploadSection = ({ uploadHandler }: UploadSectionProps) => {
         <label htmlFor="file-upload" className="cursor-pointer">
           <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
           <p className="text-sm text-gray-400">
-            Drag and drop files here or <span className="text-blue-400">browse</span>
+            Drag and drop files here or <span className="text-green-600">browse</span>
           </p>
         </label>
       </div>

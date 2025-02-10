@@ -10,7 +10,7 @@ export const SourcesSection = ({ sources }: SourcesSectionProps) => {
   return (
     <div className="p-4 h-1/2">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
-        <FileText className="h-4 w-4 text-blue-400" />
+        <FileText className="h-4 w-4 text-green-600" />
         <span>Active Context Sources</span>
       </h2>
 
@@ -26,7 +26,7 @@ export const SourcesSection = ({ sources }: SourcesSectionProps) => {
             >
               <AccordionTrigger className="rounded-lg px-3 py-2">
                 <div className="flex items-center space-x-3">
-                  <FileText className="h-4 w-4 text-blue-400" />
+                  <FileText className="h-4 w-4 text-green-600" />
                   <span className="text-sm text-gray-200">{source}</span>
                 </div>
               </AccordionTrigger>
