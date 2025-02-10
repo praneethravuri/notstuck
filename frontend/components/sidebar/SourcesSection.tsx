@@ -8,7 +8,7 @@ interface SourcesSectionProps {
 
 export const SourcesSection = ({ sources }: SourcesSectionProps) => {
   return (
-    <div className="p-4 h-1/2">
+    <div className="p-4 h-1/2 border-t border-zinc-800 overflow-y-auto">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
         <FileText className="h-4 w-4 text-green-600" />
         <span>Active Context Sources</span>

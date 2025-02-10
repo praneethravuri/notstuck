@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Settings, ChevronDown } from "lucide-react";
+import { Wrench } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 
@@ -36,32 +36,20 @@ export const SettingsSection = ({
   };
 
   return (
-    <div className="relative p-4 border-b border-gray-800">
-      {/* Dropdown trigger */}
-      <button
-        onClick={toggleDropdown}
-        className="flex items-center justify-between w-full bg-gray-800 p-2 rounded text-sm font-semibold text-gray-200"
-      >
-        <div className="flex items-center space-x-2">
-          <Settings className="h-4 w-4 text-blue-400" />
-          <span>Settings</span>
+    <div className="h-screen bg-stone-950 flex flex-col">
+      <div className="flex items-center space-x-2 p-4">
+        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center ">
+          <Wrench className="h-5 w-5 text-white" />
         </div>
-        <ChevronDown
-          className={`h-4 w-4 transition-transform ${
-            isOpen ? "rotate-180" : "rotate-0"
-          }`}
-        />
-      </button>
-
-      {/* Dropdown content */}
-      {isOpen && (
-        <div className="absolute top-full mt-2 left-0 w-full bg-gray-900 border border-gray-800 rounded shadow-lg z-10 p-4">
+        <span className="font-semibold text-gray-200">Fine Tuning</span>
+      </div>
+      <div className="border-t border-zinc-800 p-4">
           <div className="space-y-4">
             {/* Model Selection */}
             <div>
               <label className="text-sm text-gray-400 mb-2 block">Model</label>
               <Select defaultValue="gpt-4o">
-                <SelectTrigger className="w-full bg-gray-800 border-gray-700">
+                <SelectTrigger className="w-full bg-stone-900 focus:border-green-800 focus:ring-0">
                   <SelectValue placeholder="Select model" />
                 </SelectTrigger>
                 <SelectContent>
@@ -78,7 +66,7 @@ export const SettingsSection = ({
             <div>
               <label className="text-sm text-gray-400 mb-2 block">Response Style</label>
               <Select value={responseStyle} onValueChange={setResponseStyle}>
-                <SelectTrigger className="w-full bg-gray-800 border-gray-700">
+                <SelectTrigger className="w-full  bg-stone-900 focus:border-green-800 focus:ring-0">
                   <SelectValue placeholder="Select style" />
                 </SelectTrigger>
                 <SelectContent>
@@ -99,7 +87,7 @@ export const SettingsSection = ({
                 min={0}
                 max={1}
                 step={0.1}
-                className="w-full"
+                className="w-full  bg-green-600"
               />
               <span className="text-sm text-gray-400 mt-1 block">{temperature[0]}</span>
             </div>
@@ -113,7 +101,7 @@ export const SettingsSection = ({
                 min={500}
                 max={4000}
                 step={100}
-                className="w-full"
+                className="w-full bg-green-600"
               />
               <span className="text-sm text-gray-400 mt-1 block">{maxTokens[0]}</span>
             </div>
@@ -127,7 +115,7 @@ export const SettingsSection = ({
                 min={0}
                 max={1}
                 step={0.1}
-                className="w-full"
+                className="w-full bg-green-600"
               />
               <span className="text-sm text-gray-400 mt-1 block">{similarityThreshold[0]}</span>
             </div>
@@ -141,13 +129,12 @@ export const SettingsSection = ({
                 min={5}
                 max={15}
                 step={1}
-                className="w-full"
+                className="w-full bg-green-600"
               />
               <span className="text-sm text-gray-400 mt-1 block">{similarResults[0]}</span>
             </div>
           </div>
         </div>
-      )}
     </div>
   );
 };

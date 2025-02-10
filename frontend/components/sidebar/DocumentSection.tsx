@@ -22,7 +22,7 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
   );
 
   return (
-    <div className="p-4 border-b border-gray-800 h-1/2 overflow-y-auto">
+    <div className="p-4 border-t border-zinc-800 h-1/2 overflow-y-auto">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
         <Database className="h-4 w-4 text-green-600" />
         <span>Documents</span>

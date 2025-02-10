@@ -152,8 +152,8 @@ export default function ChatLayout() {
       </main>
 
       {/* Right Sidebar: Settings Section */}
-      <aside className="w-80 border-l border-gray-800">
-        <div className="p-4">
+      <aside className="">
+        <div className="w-80 border-l border-gray-800">
           <SettingsSection
             similarityThreshold={similarityThreshold}
             setSimilarityThreshold={setSimilarityThreshold}
