@@ -1,10 +1,9 @@
 "use client";
-import { useState } from "react";
 import { DocumentsSection } from "./DocumentSection";
 import { SourcesSection } from "./SourcesSection";
 import { UploadSection } from "./UploadSection";
 
-import { MessageSquare, Home, Database, Sliders, BookOpen, Settings, Users, CreditCard, FileText } from "lucide-react";
+import { MessageSquare} from "lucide-react";
 
 interface PdfFile {
   name: string;
