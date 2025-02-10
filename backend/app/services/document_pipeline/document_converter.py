@@ -4,19 +4,17 @@ import os
 import shutil
 from typing import Optional
 
-# Make sure to install 'docx2pdf' and 'Pillow' (PIL) if you want to support .docx and image -> PDF conversion.
+# Make sure to install 'docx2pdf' and 'Pillow' if you want to support DOCX and image -> PDF conversion.
 # pip install docx2pdf Pillow
 from docx2pdf import convert as docx2pdf_convert
 from PIL import Image
 
-# Import your paths from config.py
-# Adjust this import path based on your actual project structure
-from ..config import RAW_DATA_PATH, PROCESSED_DATA_PATH
-
+# Import your paths from config.py; note that here we only need RAW_DATA_PATH for conversion.
+from ..config import RAW_DATA_PATH
 
 def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
     """
-    Converts a single file to PDF, if it's not already a PDF.
+    Converts a single file to PDF if needed.
     Returns the path to the converted PDF (or the existing PDF if no conversion was needed).
     Returns None if conversion was not possible.
     """
@@ -24,16 +22,14 @@ def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
     file_root, file_ext = os.path.splitext(filename)
     file_ext_lower = file_ext.lower()
 
-    # If it's already PDF, just copy it to output_dir.
+    # If it's already a PDF, we could simply return the path.
     if file_ext_lower == ".pdf":
-        output_path = os.path.join(output_dir, filename)
-        shutil.copy2(input_path, output_path)
-        return output_path
+        # (Optionally, you might want to skip copying if input and output are the same.)
+        return os.path.join(output_dir, filename)
 
     # Handle DOCX files
     if file_ext_lower == ".docx":
-        # docx2pdf will create a PDF in the same folder with the same name (except for .pdf extension)
-        # e.g., "document.docx" -> "document.pdf"
+        # docx2pdf converts and writes the PDF to the output directory.
         docx2pdf_convert(input_path, output_dir)
         pdf_filename = file_root + ".pdf"
         output_path = os.path.join(output_dir, pdf_filename)
@@ -45,7 +41,6 @@ def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
         output_path = os.path.join(output_dir, output_filename)
         try:
             with Image.open(input_path) as img:
-                # Convert to RGB in case it’s a mode that can’t directly be saved as PDF
                 rgb_img = img.convert('RGB')
                 rgb_img.save(output_path, "PDF", resolution=100.0)
             return output_path if os.path.exists(output_path) else None
@@ -53,36 +48,34 @@ def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
             print(f"Error converting image '{filename}' to PDF: {e}")
             return None
 
-    # Otherwise, no conversion rule is defined here.
     print(f"No conversion rule for file type: {file_ext_lower}. Skipping.")
     return None
-
 
 def convert_all_docs_in_raw_folder():
     """
     Goes through all files in RAW_DATA_PATH.
-    Converts any non-PDF files to PDF if supported,
-    then places them (or the original PDF) in PROCESSED_DATA_PATH.
-    Finally, deletes the original file from RAW_DATA_PATH if conversion is successful.
+    For files that are not PDFs, converts them to PDFs and saves the result in RAW_DATA_PATH.
+    Deletes the original non-PDF file after a successful conversion.
     """
-    if not os.path.exists(PROCESSED_DATA_PATH):
-        os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
-
     for filename in os.listdir(RAW_DATA_PATH):
         full_path = os.path.join(RAW_DATA_PATH, filename)
-
         # Skip directories
         if os.path.isdir(full_path):
             continue
 
-        converted_path = convert_to_pdf(full_path, PROCESSED_DATA_PATH)
+        file_root, file_ext = os.path.splitext(filename)
+        file_ext_lower = file_ext.lower()
+
+        if file_ext_lower == ".pdf":
+            # Already a PDF – no conversion needed.
+            continue
+
+        converted_path = convert_to_pdf(full_path, RAW_DATA_PATH)
         if converted_path:
-            print(f"Converted (or copied) -> {converted_path}")
-            
-            # Remove the original file from RAW_DATA_PATH
+            print(f"Converted '{filename}' to PDF -> {converted_path}")
             try:
                 os.remove(full_path)
-                print(f"Deleted raw file: {full_path}")
+                print(f"Deleted original file: {full_path}")
             except Exception as e:
                 print(f"Error deleting raw file '{full_path}': {e}")
         else:
