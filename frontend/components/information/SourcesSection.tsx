@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
-} from "@/components/ui/accordion";
+} from "../ui/accordion";
 
 interface SourcesSectionProps {
   relevantChunks: string[];
