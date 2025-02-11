@@ -74,7 +74,7 @@ export default function ChatLayout() {
       const response = await axios.post(`${apiUrl}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Upload successful:", response.data);
+      console.log("Upload is successful:", response.data);
   
       // toast({
       //   title: "Upload Successful",
