@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ChatMessages } from "@/components/chat/ChatMessages";
-import { ChatInput } from "@/components/chat/ChatInput";
-import CustomSidebar from "@/components/sidebar/CustomSidebar";
-import { SettingsSection } from "@/components/model-settings/SettingsSection";
+import { ChatMessages } from "../../components/chat/ChatMessages";
+import { ChatInput } from "../../components/chat/ChatInput";
+import CustomSidebar from "../../components/sidebar/CustomSidebar";
+import { SettingsSection } from "../../components/model-settings/SettingsSection";
 // import { useToast } from "@/hooks/use-toast";
-import { DocumentsSection } from "@/components/information/DocumentSection";
-import { SourcesSection } from "@/components/information/SourcesSection";
-import { UploadSection } from "@/components/information/UploadSection";
+import { DocumentsSection } from "../../components/information/DocumentSection";
+import { SourcesSection } from "../../components/information/SourcesSection";
+import { UploadSection } from "../../components/information/UploadSection";
 import { MessageSquare } from "lucide-react";
 
 interface PdfFile {
