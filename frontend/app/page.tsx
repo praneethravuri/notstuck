@@ -1,5 +1,5 @@
 "use client"
-import ChatLayout from "@/app/(chat)/ChatLayout"
+import ChatLayout from "./(chat)/ChatLayout"
 
 export default function Home() {
   return (
