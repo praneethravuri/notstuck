@@ -16,6 +16,9 @@ interface PdfFile {
   name: string;
 }
 
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+
 export default function ChatLayout() {
   // Chat messages state
   const [messages, setMessages] = useState<string[]>([]);
@@ -68,7 +71,7 @@ export default function ChatLayout() {
         formData.append("files", file);
       });
 
-      const response = await axios.post("http://localhost:8000/api/upload", formData, {
+      const response = await axios.post(`${apiUrl}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);

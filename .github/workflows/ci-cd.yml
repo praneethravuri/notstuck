@@ -33,57 +33,5 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/notstuck:latest
 
-      # - name: Authenticate to Google Cloud
-      #   uses: google-github-actions/auth@v1
-      #   with:
-      #     credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
-      # - name: Set up Cloud SDK
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #     project_id: ${{ secrets.GCP_PROJECT }}
-
-      # # Set up Terraform
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
-      #   with:
-      #     terraform_version: '1.5.0'  # Use the desired version
-
-      # # Create/Update GCP Secrets for Environment Variables
-      # - name: Create/Update GCP Secrets for Environment Variables
-      #   run: |
-      #     # --- OPENAI_API_KEY ---
-      #     if ! gcloud secrets describe openai-api-key --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
-      #       gcloud secrets create openai-api-key --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
-      #     fi
-      #     echo -n "${{ secrets.OPENAI_API_KEY }}" | gcloud secrets versions add openai-api-key --data-file=-
-
-      #     # --- PINECONE_API_KEY ---
-      #     if ! gcloud secrets describe pinecone-api-key --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
-      #       gcloud secrets create pinecone-api-key --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
-      #     fi
-      #     echo -n "${{ secrets.PINECONE_API_KEY }}" | gcloud secrets versions add pinecone-api-key --data-file=-
-
-      #     # --- PINECONE_ENV ---
-      #     if ! gcloud secrets describe pinecone-env --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
-      #       gcloud secrets create pinecone-env --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
-      #     fi
-      #     echo -n "${{ secrets.PINECONE_ENV }}" | gcloud secrets versions add pinecone-env --data-file=-
-
-      #     # --- PINECONE_INDEX_NAME ---
-      #     if ! gcloud secrets describe pinecone-index-name --project=${{ secrets.GCP_PROJECT }} > /dev/null 2>&1; then
-      #       gcloud secrets create pinecone-index-name --replication-policy="automatic" --project=${{ secrets.GCP_PROJECT }}
-      #     fi
-      #     echo -n "${{ secrets.PINECONE_INDEX_NAME }}" | gcloud secrets versions add pinecone-index-name --data-file=-
-
-      # # Run Terraform to deploy your infrastructure
-      # - name: Terraform Init, Plan and Apply
-      #   working-directory: ./terraform
-      #   env:
-      #     TF_LOG: DEBUG
-      #     TF_INPUT: "false"
-      #   run: |
-      #     terraform init
-      #     terraform plan -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
-      #     terraform apply -auto-approve -var="project=${{ secrets.GCP_PROJECT }}" -var="region=${{ env.GCP_REGION }}" -var="docker_username=${{ env.DOCKER_USERNAME }}"
+    
     
