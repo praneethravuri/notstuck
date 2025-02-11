@@ -64,7 +64,7 @@ export default function ChatLayout() {
       title: "Uploading File",
       description: "Your file is being uploaded and your knowledge is expanding...",
     });
-
+  
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
@@ -75,12 +75,12 @@ export default function ChatLayout() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
-
+  
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
       });
-
+  
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -93,6 +93,7 @@ export default function ChatLayout() {
       setIsUploading(false);
     }
   };
+  
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
