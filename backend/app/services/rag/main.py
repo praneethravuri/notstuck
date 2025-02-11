@@ -5,7 +5,7 @@ from typing import Optional, List
 from pinecone import Pinecone, ServerlessSpec
 
 # If you are using langchain_community for ChatOpenAI:
-from langchain_community.chat_models import ChatOpenAI
+from openai import OpenAI
 
 from ..pinecone_db.main import init_pinecone
 
@@ -28,6 +28,9 @@ from ..embeddings.generate_embeddings import get_embedding_function
 #############################################################################
 # MAIN FUNCTION: ANSWER A QUESTION
 #############################################################################
+
+client = OpenAI()
+client.api_key = OPENAI_API_KEY
 
 def answer_question(question,
                     top_k,
@@ -102,20 +105,25 @@ def answer_question(question,
 
     user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
 
-    llm = ChatOpenAI(
-        openai_api_key=OPENAI_API_KEY,
-        model=model_name,
-        temperature=temperature,
-        max_tokens=max_tokens
-    )
-
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
-
-    response = llm.invoke(messages)
-    final_answer = getattr(response, "content", str(response))
+    
+    final_answer = ""
+    try:
+        print("here")
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+            temperature=temperature,
+            max_completion_tokens=max_tokens
+        )
+            
+        final_answer = response.choices[0].message.content
+    except Exception as e:
+        print(f"Error calling OpenAI API: {e}")
+        return "There was an error calling the OpenAI API."
 
     return final_answer.strip()
 
@@ -130,7 +138,12 @@ if __name__ == "__main__":
         question=sample_question,
         top_k=5,
         threshold=0.9,
-        namespace="my-namespace"
+        temperature=0.7,
+        max_tokens=150,
+        response_style="detailed",
+        namespace="my-namespace",
+        model_name="gpt-3.5-turbo",  # Replace with the actual model name if needed
+        reasoning=True
     )
     print("\nFINAL ANSWER (Markdown):\n")
     print(answer)

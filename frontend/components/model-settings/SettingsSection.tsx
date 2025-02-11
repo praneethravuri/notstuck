@@ -21,9 +21,6 @@ interface SettingsSectionProps {
 const models = [
   { modelName: "gpt-4o", displayName: "GPT-4o" },
   { modelName: "gpt-4o-mini", displayName: "GPT-4.0-Mini" },
-  { modelName: "o1", displayName: "o1" },
-  { modelName: "o1-mini", displayName: "o1-mini" },
-  { modelName: "o3-mini", displayName: "o3-mini" },
 ];
 
 const responseStyles = [

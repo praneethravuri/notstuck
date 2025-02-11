@@ -28,18 +28,20 @@ export default function ChatLayout() {
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<string[]>([]);
 
-  // Fetch PDF files via Next.js API route
-  useEffect(() => {
-    async function loadFiles() {
-      try {
-        const res = await fetch("/api/get-pdfs");
-        if (!res.ok) throw new Error("Failed to fetch PDF list");
-        const data = await res.json();
-        setFiles(data.files.map((filename: string) => ({ name: filename })));
-      } catch (err) {
-        console.error("Error fetching PDF list:", err);
-      }
+  // Function to fetch PDF files via Next.js API route
+  const loadFiles = async () => {
+    try {
+      const res = await fetch("/api/get-pdfs");
+      if (!res.ok) throw new Error("Failed to fetch PDF list");
+      const data = await res.json();
+      setFiles(data.files.map((filename: string) => ({ name: filename })));
+    } catch (err) {
+      console.error("Error fetching PDF list:", err);
     }
+  };
+
+  // Initial load of PDF files
+  useEffect(() => {
     loadFiles();
   }, []);
 
@@ -52,7 +54,7 @@ export default function ChatLayout() {
     fetchSources();
   }, []);
 
-  // Handle file upload
+  // Handle file upload and refresh files list after successful upload
   const handleFileUpload = async (files: FileList) => {
     try {
       const formData = new FormData();
@@ -64,6 +66,9 @@ export default function ChatLayout() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
+
+      // After successful upload, refresh the PDF files list.
+      loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
     }
@@ -73,7 +78,7 @@ export default function ChatLayout() {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
     setMessages((prev) => [...prev, `You: ${message}`]);
-    setIsLoading(true); // Set loading to true when sending a message
+    setIsLoading(true);
 
     try {
       const res = await fetch("/api/ask", {
@@ -100,7 +105,7 @@ export default function ChatLayout() {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
     } finally {
-      setIsLoading(false); // Set loading to false after receiving the response
+      setIsLoading(false);
     }
   };
 
