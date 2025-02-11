@@ -1,9 +1,10 @@
+// CustomSidebar.tsx
 "use client";
+
 import { DocumentsSection } from "./DocumentSection";
 import { SourcesSection } from "./SourcesSection";
 import { UploadSection } from "./UploadSection";
-
-import { MessageSquare} from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
 interface PdfFile {
   name: string;
@@ -11,11 +12,12 @@ interface PdfFile {
 
 interface CustomSidebarProps {
   files: PdfFile[];
-  sources: string[];
+  sources: string[]; // if needed elsewhere (e.g., for file names)
   uploadHandler?: (files: FileList) => Promise<void>;
+  relevantChunks: string[]; // NEW prop for the chunks from the backend
 }
 
-const CustomSidebar = ({ files, sources, uploadHandler }: CustomSidebarProps) => {
+const CustomSidebar = ({ files, uploadHandler, relevantChunks }: CustomSidebarProps) => {
   return (
     <div className="h-screen bg-stone-950 flex flex-col">
       {/* Logo Section */}
@@ -26,12 +28,12 @@ const CustomSidebar = ({ files, sources, uploadHandler }: CustomSidebarProps) =>
         <span className="font-semibold text-gray-200">NotStuck</span>
       </div>
 
-      <div className="h-screen  flex flex-col justify-between overflow-y-auto">
+      <div className="h-screen flex flex-col justify-between overflow-y-auto">
         {/* Documents Section */}
         <DocumentsSection files={files} />
 
-        {/* Sources Section */}
-        <SourcesSection sources={sources} />
+        {/* Sources Section – pass the relevant chunks to be displayed as cards */}
+        <SourcesSection relevantChunks={relevantChunks} />
 
         {/* Upload Section */}
         <UploadSection uploadHandler={uploadHandler} />
@@ -39,6 +41,5 @@ const CustomSidebar = ({ files, sources, uploadHandler }: CustomSidebarProps) =>
     </div>
   );
 };
-
 
 export default CustomSidebar;

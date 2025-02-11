@@ -18,7 +18,7 @@ class QuestionPayload(BaseModel):
 @router.post("/ask")
 def ask_question(payload: QuestionPayload):
     try:
-        answer = answer_question(
+        result = answer_question(
             question=payload.question,
             top_k=payload.similarResults,
             threshold=payload.similarityThreshold,
@@ -28,6 +28,6 @@ def ask_question(payload: QuestionPayload):
             namespace="my-namespace",
             model_name=payload.modelName
         )
-        return {"answer": answer}
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

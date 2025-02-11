@@ -49,6 +49,19 @@ def init_pinecone():
         )
     return pc.Index(PINECONE_INDEX_NAME)
 
+def delete_all_data(namespace: Optional[str] = None):
+    """
+    Deletes all vectors in the Pinecone index.
+    
+    If a namespace is provided, only the vectors in that namespace will be deleted.
+    If namespace is None, it will delete all vectors in the entire index.
+    """
+    index = init_pinecone()  # Get the index from your initialization function
+    index.delete(delete_all=True, namespace=namespace)
+    print(f"Deleted all data{' in namespace ' + namespace if namespace else ''}.")
+
+
+
 ############################################
 # SIMILARITY-CHECK UPSERT
 ############################################
@@ -179,4 +192,7 @@ def process_and_push_all_pdfs(namespace: Optional[str] = None):
 ############################################
 if __name__ == "__main__":
     # Run as: python -m backend.app.services.pinecone_db.main
-    process_and_push_all_pdfs(namespace="my-namespace")
+    # process_and_push_all_pdfs(namespace="my-namespace")
+    
+    delete_all_data(namespace="my-namespace")
+

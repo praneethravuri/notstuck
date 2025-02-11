@@ -85,6 +85,8 @@ def answer_question(question,
         context_text = "\n\n---\n\n".join(relevant_chunks)
     else:
         context_text = ""
+        
+    print(f"Relevant chunks: {relevant_chunks}")    
 
     # Adjust system prompt based on response_style and reasoning
     if response_style == "concise":
@@ -125,7 +127,7 @@ def answer_question(question,
         print(f"Error calling OpenAI API: {e}")
         return "There was an error calling the OpenAI API."
 
-    return final_answer.strip()
+    return {"answer": final_answer.strip(), "relevant_chunks": relevant_chunks}
 
 #############################################################################
 # SAMPLE USAGE (CLI)

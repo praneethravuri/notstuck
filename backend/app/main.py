@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 # Import the routers
-from app.routes import ask, pdfs, upload
+from app.routes import ask, pdfs, upload, reset_db
 
 app = FastAPI()
 
@@ -21,3 +21,4 @@ app.add_middleware(
 app.include_router(ask.router, prefix="/api")
 app.include_router(pdfs.router, prefix="/api")
 app.include_router(upload.router, prefix="/api")
+app.include_router(reset_db.router, prefix="/api")

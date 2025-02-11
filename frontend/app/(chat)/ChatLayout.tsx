@@ -6,7 +6,6 @@ import { ChatMessages } from "@/components/chat/ChatMessages";
 import { ChatInput } from "@/components/chat/ChatInput";
 import CustomSidebar from "@/components/sidebar/CustomSidebar";
 import { SettingsSection } from "@/components/model-settings/SettingsSection";
-// Import the toast hook from shadcn (adjust the path based on your project structure)
 import { useToast } from "@/hooks/use-toast";
 
 interface PdfFile {
@@ -19,7 +18,7 @@ export default function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Loading state for file uploads
-  const [uploading, setUploading] = useState(false);
+  const [, setUploading] = useState(false);
 
   // Settings state
   const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
@@ -32,11 +31,11 @@ export default function ChatLayout() {
   // Sidebar data state
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<string[]>([]);
+  // New state for relevant chunks from the backend
+  const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
 
-  // Get the toast function from shadcn
   const { toast } = useToast();
 
-  // Function to fetch PDF files via Next.js API route
   const loadFiles = async () => {
     try {
       const res = await fetch("/api/get-pdfs");
@@ -48,12 +47,10 @@ export default function ChatLayout() {
     }
   };
 
-  // Initial load of PDF files
   useEffect(() => {
     loadFiles();
   }, []);
 
-  // Simulate fetching active context sources.
   useEffect(() => {
     async function fetchSources() {
       const exampleSources = ["doc1.pdf", "report.pdf"];
@@ -62,9 +59,7 @@ export default function ChatLayout() {
     fetchSources();
   }, []);
 
-  // Handle file upload and refresh files list after successful upload
   const handleFileUpload = async (files: FileList) => {
-    // Set loading state for upload and show a loading toast notification.
     setUploading(true);
     toast({
       title: "Uploading File",
@@ -82,17 +77,14 @@ export default function ChatLayout() {
       });
       console.log("Upload successful:", response.data);
 
-      // Show a success toast notification.
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
       });
 
-      // After successful upload, refresh the PDF files list.
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
-      // Show an error toast notification.
       toast({
         title: "Upload Failed",
         description: "There was an error uploading your document.",
@@ -103,7 +95,6 @@ export default function ChatLayout() {
     }
   };
 
-  // Handle sending a chat message
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
     setMessages((prev) => [...prev, `You: ${message}`]);
@@ -130,6 +121,8 @@ export default function ChatLayout() {
 
       const data = await res.json();
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
+      // Update the relevant chunks state from the backend response
+      setRelevantChunks(data.relevant_chunks);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
@@ -145,19 +138,17 @@ export default function ChatLayout() {
         <CustomSidebar 
           files={files} 
           sources={sources} 
-          uploadHandler={handleFileUpload} 
-          uploading={uploading} // Optionally use this prop in the sidebar to disable inputs or show a spinner.
+          uploadHandler={handleFileUpload}
+          relevantChunks={relevantChunks} // Pass the relevant chunks here
         />
       </aside>
 
       {/* Main Chat Area */}
       <main className="flex-1 flex flex-col ml-64 mr-80">
-        {/* Chat Messages - Only This Scrolls */}
         <div className="flex-1 overflow-y-auto p-4">
           <ChatMessages messages={messages} isLoading={isLoading} />
         </div>
 
-        {/* Chat Input - Fixed at Bottom */}
         <div className="fixed bottom-0 left-64 right-80 bg-stone-950 p-4">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
