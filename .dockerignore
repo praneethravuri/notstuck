@@ -8,3 +8,5 @@ backend/.venv
 .dockerignore
 README.md
 .next/cache
+frontend/.env*
+.env*

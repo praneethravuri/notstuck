@@ -1,10 +1,12 @@
 // app/api/get-pdfs/route.ts
 import { NextResponse } from "next/server";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 export async function GET() {
   try {
     // Forward the request to the FastAPI backend.
-    const backendResponse = await fetch("http://127.0.0.1:8000/api/get-pdfs");
+    console.log(backendUrl)
+    const backendResponse = await fetch(`${backendUrl}/api/get-pdfs`);
     if (!backendResponse.ok) {
       throw new Error("Failed to fetch PDF list from FastAPI");
     }

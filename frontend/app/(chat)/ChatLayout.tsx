@@ -61,23 +61,25 @@ export default function ChatLayout() {
       title: "Uploading File",
       description: "Your file is being uploaded and your knowledge is expanding...",
     });
-
+  
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
         formData.append("files", file);
       });
-
-      const response = await axios.post("http://localhost:8000/api/upload", formData, {
+  
+      // Use the environment variable for the backend URL
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      const response = await axios.post(`${backendUrl}/api/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
-
+  
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
       });
-
+  
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -90,6 +92,7 @@ export default function ChatLayout() {
       setIsUploading(false);
     }
   };
+  
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
