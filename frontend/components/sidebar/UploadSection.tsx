@@ -58,7 +58,7 @@
           <label htmlFor="file-upload" className="cursor-pointer">
             <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
             <p className="text-sm text-gray-400">
-              Drag and drop files here or <span className="text-green-600">browse</span>
+              Drag and drop or Click to upload
             </p>
           </label>
         </div>

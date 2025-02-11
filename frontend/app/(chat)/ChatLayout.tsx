@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import axios from "axios";
 import { ChatMessages } from "@/components/chat/ChatMessages";
 import { ChatInput } from "@/components/chat/ChatInput";
 import CustomSidebar from "@/components/sidebar/CustomSidebar";
 import { SettingsSection } from "@/components/model-settings/SettingsSection";
-import axios from "axios";
+// Import the toast hook from shadcn (adjust the path based on your project structure)
+import { useToast } from "@/hooks/use-toast";
 
 interface PdfFile {
   name: string;
@@ -15,6 +17,9 @@ export default function ChatLayout() {
   // Chat messages state
   const [messages, setMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Loading state for file uploads
+  const [uploading, setUploading] = useState(false);
 
   // Settings state
   const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
@@ -27,6 +32,9 @@ export default function ChatLayout() {
   // Sidebar data state
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<string[]>([]);
+
+  // Get the toast function from shadcn
+  const { toast } = useToast();
 
   // Function to fetch PDF files via Next.js API route
   const loadFiles = async () => {
@@ -56,6 +64,13 @@ export default function ChatLayout() {
 
   // Handle file upload and refresh files list after successful upload
   const handleFileUpload = async (files: FileList) => {
+    // Set loading state for upload and show a loading toast notification.
+    setUploading(true);
+    toast({
+      title: "Uploading File",
+      description: "Your file is being uploaded and your knowledge is expanding...",
+    });
+
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
@@ -67,10 +82,24 @@ export default function ChatLayout() {
       });
       console.log("Upload successful:", response.data);
 
+      // Show a success toast notification.
+      toast({
+        title: "Upload Successful",
+        description: "Your document has been uploaded successfully.",
+      });
+
       // After successful upload, refresh the PDF files list.
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
+      // Show an error toast notification.
+      toast({
+        title: "Upload Failed",
+        description: "There was an error uploading your document.",
+        variant: "destructive",
+      });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -113,7 +142,12 @@ export default function ChatLayout() {
     <div className="h-screen w-full flex bg-stone-950">
       {/* Left Sidebar - Fixed */}
       <aside className="w-64 border-r border-gray-800 fixed left-0 top-0 bottom-0 h-screen overflow-hidden">
-        <CustomSidebar files={files} sources={sources} uploadHandler={handleFileUpload} />
+        <CustomSidebar 
+          files={files} 
+          sources={sources} 
+          uploadHandler={handleFileUpload} 
+          uploading={uploading} // Optionally use this prop in the sidebar to disable inputs or show a spinner.
+        />
       </aside>
 
       {/* Main Chat Area */}
@@ -124,7 +158,7 @@ export default function ChatLayout() {
         </div>
 
         {/* Chat Input - Fixed at Bottom */}
-        <div className="fixed bottom-0 left-64 right-80 bg-stone-950 p-4 ">
+        <div className="fixed bottom-0 left-64 right-80 bg-stone-950 p-4">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </main>

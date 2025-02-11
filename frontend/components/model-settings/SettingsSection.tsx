@@ -50,7 +50,7 @@ export const SettingsSection = ({
         <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
           <Wrench className="h-5 w-5 text-white" />
         </div>
-        <span className="font-semibold text-gray-200">Fine Tuning</span>
+        <span className="font-semibold text-gray-200">Tuning</span>
       </div>
       <div className="border-t border-zinc-800 p-4">
         <div className="space-y-4">
