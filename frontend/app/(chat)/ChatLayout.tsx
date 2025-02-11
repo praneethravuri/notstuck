@@ -6,7 +6,7 @@ import { ChatMessages } from "@/components/chat/ChatMessages";
 import { ChatInput } from "@/components/chat/ChatInput";
 import CustomSidebar from "@/components/sidebar/CustomSidebar";
 import { SettingsSection } from "@/components/model-settings/SettingsSection";
-import { useToast } from "@/hooks/use-toast";
+// import { useToast } from "@/hooks/use-toast";
 import { DocumentsSection } from "@/components/information/DocumentSection";
 import { SourcesSection } from "@/components/information/SourcesSection";
 import { UploadSection } from "@/components/information/UploadSection";
@@ -41,7 +41,7 @@ export default function ChatLayout() {
   // New state for relevant chunks from the backend
   const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
 
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   const loadFiles = async () => {
     try {
@@ -60,10 +60,10 @@ export default function ChatLayout() {
 
   const handleFileUpload = async (files: FileList) => {
     setIsUploading(true);
-    toast({
-      title: "Uploading File",
-      description: "Your file is being uploaded and your knowledge is expanding...",
-    });
+    // toast({
+    //   title: "Uploading File",
+    //   description: "Your file is being uploaded and your knowledge is expanding...",
+    // });
   
     try {
       const formData = new FormData();
@@ -76,19 +76,19 @@ export default function ChatLayout() {
       });
       console.log("Upload successful:", response.data);
   
-      toast({
-        title: "Upload Successful",
-        description: "Your document has been uploaded successfully.",
-      });
+      // toast({
+      //   title: "Upload Successful",
+      //   description: "Your document has been uploaded successfully.",
+      // });
   
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
-      toast({
-        title: "Upload Failed",
-        description: "There was an error uploading your document.",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "Upload Failed",
+      //   description: "There was an error uploading your document.",
+      //   variant: "destructive",
+      // });
     } finally {
       setIsUploading(false);
     }
