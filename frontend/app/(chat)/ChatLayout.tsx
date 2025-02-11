@@ -19,8 +19,9 @@ export default function ChatLayout() {
   const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
   const [similarResults, setSimilarResults] = useState([7]);
   const [temperature, setTemperature] = useState([0.5]);
-  const [maxTokens, setMaxTokens] = useState([2000]);
+  const [maxTokens, setMaxTokens] = useState([5000]);
   const [responseStyle, setResponseStyle] = useState("detailed");
+  const [modelName, setModelName] = useState("gpt-3.5-turbo");
 
   // Sidebar data state
   const [files, setFiles] = useState<PdfFile[]>([]);
@@ -83,6 +84,7 @@ export default function ChatLayout() {
           temperature: temperature[0],
           maxTokens: maxTokens[0],
           responseStyle: responseStyle,
+          modelName: modelName,
         }),
       });
 
@@ -131,6 +133,8 @@ export default function ChatLayout() {
           setMaxTokens={setMaxTokens}
           responseStyle={responseStyle}
           setResponseStyle={setResponseStyle}
+          modelName={modelName}
+          setModelName={setModelName}
         />
       </aside>
     </div>

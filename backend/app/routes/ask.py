@@ -13,6 +13,7 @@ class QuestionPayload(BaseModel):
     temperature: float
     maxTokens: int
     responseStyle: str
+    modelName: str
 
 @router.post("/ask")
 def ask_question(payload: QuestionPayload):
@@ -21,7 +22,11 @@ def ask_question(payload: QuestionPayload):
             question=payload.question,
             top_k=payload.similarResults,
             threshold=payload.similarityThreshold,
-            namespace="my-namespace"
+            temperature=payload.temperature,
+            max_tokens=payload.maxTokens,
+            response_style=payload.responseStyle,
+            namespace="my-namespace",
+            model_name=payload.modelName
         )
         return {"answer": answer}
     except Exception as e:

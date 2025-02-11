@@ -29,13 +29,14 @@ from ..embeddings.generate_embeddings import get_embedding_function
 # MAIN FUNCTION: ANSWER A QUESTION
 #############################################################################
 
-def answer_question(question: str,
-                    top_k: int = 5,
-                    threshold: float = 0.9,
-                    temperature: float = 0.7,
-                    max_tokens: int = 2000,
-                    response_style: str = "detailed",
-                    namespace: Optional[str] = None) -> str:
+def answer_question(question,
+                    top_k,
+                    threshold,
+                    temperature,
+                    max_tokens,
+                    response_style,
+                    namespace,
+                    model_name):
     """
     1) Embed the user question with get_embedding_function().
     2) Query Pinecone for top_k relevant chunks (distance < threshold).
@@ -44,7 +45,7 @@ def answer_question(question: str,
     """
     
     print(f"The rag received the following question: {question}")
-    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}")
+    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}, namespace: {namespace}, model_name: {model_name}")  
 
     # 1) Embed the user question
     embedding_func = get_embedding_function()
@@ -73,7 +74,7 @@ def answer_question(question: str,
         metadata = match.get("metadata", {})
         text_chunk = metadata.get("text", "")
 
-        if score < threshold:
+        if score >= threshold:  # Only include chunks with a score >= threshold
             relevant_chunks.append(text_chunk)
 
     if relevant_chunks:
@@ -81,16 +82,21 @@ def answer_question(question: str,
     else:
         context_text = ""
 
-    system_prompt = """You are a helpful AI assistant.
-Answer the question using the following context if relevant.
-If the context doesn't help, answer from your own knowledge.
-Provide the answer in Markdown format.
-"""
+    # Adjust system prompt based on response_style
+    if response_style == "concise":
+        system_prompt = """You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+    elif response_style == "technical":
+        system_prompt = """You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+    elif response_style == "casual":
+        system_prompt = """You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+    else:  # Default to "detailed"
+        system_prompt = """You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+
     user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
 
     llm = ChatOpenAI(
         openai_api_key=OPENAI_API_KEY,
-        model="gpt-4o",
+        model=model_name,
         temperature=temperature,
         max_tokens=max_tokens
     )

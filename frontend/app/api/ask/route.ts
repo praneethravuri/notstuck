@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         // 1) Parse incoming data from the client
-        const { question, similarityThreshold, similarResults, temperature, maxTokens, responseStyle } = await req.json();
+        const { question, similarityThreshold, similarResults, temperature, maxTokens, responseStyle, modelName } = await req.json();
 
         // 2) Forward the question and settings to the FastAPI backend
         const backendResponse = await fetch("http://127.0.0.1:8000/api/ask", {
@@ -17,7 +17,8 @@ export async function POST(req: NextRequest) {
                 similarResults,
                 temperature,
                 maxTokens,
-                responseStyle
+                responseStyle,
+                modelName,
             }),
         });
 
