@@ -1,17 +1,19 @@
   "use client";
   import { Upload } from "lucide-react";
   import axios from "axios";
+  import { FadeLoader } from "react-spinners";
   
 
   interface UploadSectionProps {
     // Optional custom upload handler.
     uploadHandler?: (files: FileList) => Promise<void>;
+    isUploading?: boolean;
   }
 
-  export const UploadSection = ({ uploadHandler }: UploadSectionProps) => {
+  export const UploadSection = ({ uploadHandler, isUploading }: UploadSectionProps) => {
     const handleFileUpload = async (files: FileList) => {
       if (uploadHandler) {
-        await uploadHandler(files);
+        await uploadHandler(files); 
         return;
       }
       try {
@@ -56,12 +58,34 @@
               }
             }}
           />
-          <label htmlFor="file-upload" className="cursor-pointer">
-            <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-400">
-              Drag and drop or Click to upload
-            </p>
-          </label>
+<label 
+          htmlFor="file-upload" 
+          className={`${isUploading ? "cursor-not-allowed" : "cursor-pointer"}`}
+        >
+          {isUploading ? (
+            <div className="space-y-4">
+              <FadeLoader
+                color="#22c55e"
+                className="mx-auto"
+              />
+              <div className="space-y-2">
+                <p className="text-sm text-gray-400 font-medium">
+                  Uploading Documents...
+                </p>
+                <p className="text-xs text-gray-500">
+                  Your knowledge base is expanding
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-400">
+                Drag and drop or Click to upload
+              </p>
+            </>
+          )}
+        </label>
         </div>
       </div>
     );

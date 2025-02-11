@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wrench, Settings2 } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -47,13 +47,7 @@ export const SettingsSection = ({
 }: SettingsSectionProps) => {
   return (
     <div className=" bg-stone-950 flex flex-col">
-      <div className="flex items-center space-x-2 p-4">
-        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-          <Wrench className="h-5 w-5 text-white" />
-        </div>
-        <span className="font-semibold text-gray-200">Tuning</span>
-      </div>
-      <div className="border-t border-zinc-800 p-4">
+      <div className="p-4">
         <div className="space-y-4">
           {/* Primary Settings */}
           <div>

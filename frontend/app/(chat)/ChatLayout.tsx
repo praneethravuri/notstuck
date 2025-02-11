@@ -22,10 +22,10 @@ export default function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Loading state for file uploads
-  const [, setUploading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   // Settings state
-  const [similarityThreshold, setSimilarityThreshold] = useState([0.9]);
+  const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
   const [similarResults, setSimilarResults] = useState([7]);
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([5000]);
@@ -56,7 +56,7 @@ export default function ChatLayout() {
   }, []);
 
   const handleFileUpload = async (files: FileList) => {
-    setUploading(true);
+    setIsUploading(true);
     toast({
       title: "Uploading File",
       description: "Your file is being uploaded and your knowledge is expanding...",
@@ -68,7 +68,7 @@ export default function ChatLayout() {
         formData.append("files", file);
       });
 
-      const response = await axios.post("http://127.0.0.1:8000/api/upload", formData, {
+      const response = await axios.post("http://localhost:8000/api/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload successful:", response.data);
@@ -87,7 +87,7 @@ export default function ChatLayout() {
         variant: "destructive",
       });
     } finally {
-      setUploading(false);
+      setIsUploading(false);
     }
   };
 
@@ -172,7 +172,7 @@ export default function ChatLayout() {
           setModelName={setModelName}
         />
         <DocumentsSection files={files} />
-        <UploadSection uploadHandler={handleFileUpload} />
+        <UploadSection uploadHandler={handleFileUpload} isUploading = {isUploading} />
         </CustomSidebar>
       </aside>
     </div>
