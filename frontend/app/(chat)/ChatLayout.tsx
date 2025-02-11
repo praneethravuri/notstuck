@@ -51,14 +51,6 @@ export default function ChatLayout() {
     loadFiles();
   }, []);
 
-  useEffect(() => {
-    async function fetchSources() {
-      const exampleSources = ["doc1.pdf", "report.pdf"];
-      setSources(exampleSources);
-    }
-    fetchSources();
-  }, []);
-
   const handleFileUpload = async (files: FileList) => {
     setUploading(true);
     toast({
@@ -123,6 +115,8 @@ export default function ChatLayout() {
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
       // Update the relevant chunks state from the backend response
       setRelevantChunks(data.relevant_chunks);
+      console.log(data.source_files)
+      setSources(data.source_files);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);

@@ -1,13 +1,19 @@
-// SourcesSection.tsx
 "use client";
 
 import { FileText } from "lucide-react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 interface SourcesSectionProps {
   relevantChunks: string[];
+  sources?: string[];
 }
 
-export const SourcesSection = ({ relevantChunks }: SourcesSectionProps) => {
+export const SourcesSection = ({ relevantChunks, sources = [] }: SourcesSectionProps) => {
   return (
     <div className="p-4 h-1/2 border-t border-zinc-800 overflow-y-auto">
       <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
@@ -18,13 +24,20 @@ export const SourcesSection = ({ relevantChunks }: SourcesSectionProps) => {
       {relevantChunks.length === 0 ? (
         <div className="text-sm text-gray-400 px-3 py-2">No active sources</div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
+        <Accordion type="multiple" className="space-y-2">
           {relevantChunks.map((chunk, index) => (
-            <div key={index} className="bg-stone-900 p-4 rounded-lg shadow">
-              <p className="text-sm text-gray-200">{chunk}</p>
-            </div>
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="bg-stone-900 p-4 rounded-lg shadow">
+                <span className="text-sm text-gray-200">
+                  {sources[index]}
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="bg-stone-900 p-4 rounded-lg shadow">
+                <p className="text-sm text-gray-200">{chunk}</p>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       )}
     </div>
   );

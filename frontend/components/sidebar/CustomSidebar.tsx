@@ -17,7 +17,7 @@ interface CustomSidebarProps {
   relevantChunks: string[]; // NEW prop for the chunks from the backend
 }
 
-const CustomSidebar = ({ files, uploadHandler, relevantChunks }: CustomSidebarProps) => {
+const CustomSidebar = ({ files, uploadHandler, relevantChunks, sources }: CustomSidebarProps) => {
   return (
     <div className="h-screen bg-stone-950 flex flex-col">
       {/* Logo Section */}
@@ -33,7 +33,7 @@ const CustomSidebar = ({ files, uploadHandler, relevantChunks }: CustomSidebarPr
         <DocumentsSection files={files} />
 
         {/* Sources Section – pass the relevant chunks to be displayed as cards */}
-        <SourcesSection relevantChunks={relevantChunks} />
+        <SourcesSection relevantChunks={relevantChunks} sources = {sources} />
 
         {/* Upload Section */}
         <UploadSection uploadHandler={uploadHandler} />

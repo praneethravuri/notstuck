@@ -28,6 +28,8 @@ def ask_question(payload: QuestionPayload):
             namespace="my-namespace",
             model_name=payload.modelName
         )
+        
+        print(result)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

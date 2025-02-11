@@ -73,13 +73,16 @@ def answer_question(question,
 
     matches = query_response.get("matches", [])
     relevant_chunks = []
+    source_files = []
     for match in matches:
         score = match["score"]
         metadata = match.get("metadata", {})
         text_chunk = metadata.get("text", "")
+        source_file = metadata.get("source_file", "unknown source")
 
         if score >= threshold:  # Only include chunks with a score >= threshold
             relevant_chunks.append(text_chunk)
+            source_files.append(source_file)
 
     if relevant_chunks:
         context_text = "\n\n---\n\n".join(relevant_chunks)
@@ -127,7 +130,7 @@ def answer_question(question,
         print(f"Error calling OpenAI API: {e}")
         return "There was an error calling the OpenAI API."
 
-    return {"answer": final_answer.strip(), "relevant_chunks": relevant_chunks}
+    return {"answer": final_answer.strip(), "relevant_chunks": relevant_chunks, "source_files": source_files}
 
 #############################################################################
 # SAMPLE USAGE (CLI)
