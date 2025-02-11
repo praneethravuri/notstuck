@@ -21,7 +21,7 @@ export default function ChatLayout() {
   const [, setUploading] = useState(false);
 
   // Settings state
-  const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
+  const [similarityThreshold, setSimilarityThreshold] = useState([0.9]);
   const [similarResults, setSimilarResults] = useState([7]);
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([5000]);
