@@ -36,7 +36,8 @@ def answer_question(question,
                     max_tokens,
                     response_style,
                     namespace,
-                    model_name):
+                    model_name,
+                    reasoning=False):  # Add reasoning parameter
     """
     1) Embed the user question with get_embedding_function().
     2) Query Pinecone for top_k relevant chunks (distance < threshold).
@@ -45,7 +46,7 @@ def answer_question(question,
     """
     
     print(f"The rag received the following question: {question}")
-    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}, namespace: {namespace}, model_name: {model_name}")  
+    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}, namespace: {namespace}, model_name: {model_name}, reasoning: {reasoning}")  
 
     # 1) Embed the user question
     embedding_func = get_embedding_function()
@@ -82,15 +83,22 @@ def answer_question(question,
     else:
         context_text = ""
 
-    # Adjust system prompt based on response_style
+    # Adjust system prompt based on response_style and reasoning
     if response_style == "concise":
-        system_prompt = """You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+        system_prompt = """You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
     elif response_style == "technical":
-        system_prompt = """You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+        system_prompt = """You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
     elif response_style == "casual":
-        system_prompt = """You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+        system_prompt = """You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
     else:  # Default to "detailed"
-        system_prompt = """You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge. Provide the answer in Markdown format."""
+        system_prompt = """You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+
+    # Add reasoning instructions if reasoning is True
+    if reasoning:
+        system_prompt += """\n\nProvide a step-by-step reasoning process for your answer. Break down your thought process into clear and logical steps."""
+
+    # Add Markdown formatting instruction
+    system_prompt += "\n\nProvide the answer in Markdown format."
 
     user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
 
