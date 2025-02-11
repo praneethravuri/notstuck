@@ -33,7 +33,7 @@ const MarkdownRenderer = ({ content }: { content: string }) => (
 );
 
 // ChatMessages Component
-export const ChatMessages = ({ messages }: { messages: string[] }) => {
+export const ChatMessages = ({ messages, isLoading }: { messages: string[], isLoading: boolean }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -42,7 +42,7 @@ export const ChatMessages = ({ messages }: { messages: string[] }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isLoading]); // Also trigger scroll when loading state changes
 
   return (
     <div className="flex-1 overflow-y-auto p-4 pb-24"> {/* Ensures proper scrolling and input space */}
@@ -74,6 +74,16 @@ export const ChatMessages = ({ messages }: { messages: string[] }) => {
             </div>
           );
         })}
+
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-xl p-4 bg-stone-950 text-gray-200">
+              <p className="text-sm leading-relaxed">AI is typing...</p>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
     </div>

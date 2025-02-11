@@ -14,14 +14,15 @@ interface PdfFile {
 export default function ChatLayout() {
   // Chat messages state
   const [messages, setMessages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Settings state
   const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
   const [similarResults, setSimilarResults] = useState([7]);
-  const [temperature, setTemperature] = useState([0.5]);
+  const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([5000]);
   const [responseStyle, setResponseStyle] = useState("detailed");
-  const [modelName, setModelName] = useState("gpt-3.5-turbo");
+  const [modelName, setModelName] = useState("gpt-4o");
 
   // Sidebar data state
   const [files, setFiles] = useState<PdfFile[]>([]);
@@ -72,6 +73,7 @@ export default function ChatLayout() {
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
     setMessages((prev) => [...prev, `You: ${message}`]);
+    setIsLoading(true); // Set loading to true when sending a message
 
     try {
       const res = await fetch("/api/ask", {
@@ -97,6 +99,8 @@ export default function ChatLayout() {
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
+    } finally {
+      setIsLoading(false); // Set loading to false after receiving the response
     }
   };
 
@@ -111,7 +115,7 @@ export default function ChatLayout() {
       <main className="flex-1 flex flex-col ml-64 mr-80">
         {/* Chat Messages - Only This Scrolls */}
         <div className="flex-1 overflow-y-auto p-4">
-          <ChatMessages messages={messages} />
+          <ChatMessages messages={messages} isLoading={isLoading} />
         </div>
 
         {/* Chat Input - Fixed at Bottom */}
