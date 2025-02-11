@@ -1,7 +1,8 @@
-"use client";
-import { Wrench } from 'lucide-react';
+import React from 'react';
+import { Wrench, Settings2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 interface SettingsSectionProps {
   similarityThreshold: number[];
@@ -14,8 +15,8 @@ interface SettingsSectionProps {
   setMaxTokens: (value: number[]) => void;
   responseStyle: string;
   setResponseStyle: (value: string) => void;
-  modelName: string; // Add modelName
-  setModelName: (value: string) => void; // Add setModelName
+  modelName: string;
+  setModelName: (value: string) => void;
 }
 
 const models = [
@@ -41,11 +42,11 @@ export const SettingsSection = ({
   setMaxTokens,
   responseStyle,
   setResponseStyle,
-  modelName, // Add modelName
-  setModelName, // Add setModelName
+  modelName,
+  setModelName,
 }: SettingsSectionProps) => {
   return (
-    <div className="h-screen bg-stone-950 flex flex-col">
+    <div className=" bg-stone-950 flex flex-col">
       <div className="flex items-center space-x-2 p-4">
         <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
           <Wrench className="h-5 w-5 text-white" />
@@ -54,7 +55,7 @@ export const SettingsSection = ({
       </div>
       <div className="border-t border-zinc-800 p-4">
         <div className="space-y-4">
-          {/* Model Selection */}
+          {/* Primary Settings */}
           <div>
             <label className="text-sm text-gray-400 mb-2 block">Model</label>
             <Select value={modelName} onValueChange={setModelName}>
@@ -71,7 +72,6 @@ export const SettingsSection = ({
             </Select>
           </div>
 
-          {/* Response Style */}
           <div>
             <label className="text-sm text-gray-400 mb-2 block">Response Style</label>
             <Select value={responseStyle} onValueChange={setResponseStyle}>
@@ -88,61 +88,76 @@ export const SettingsSection = ({
             </Select>
           </div>
 
-          {/* Temperature */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">Temperature</label>
-            <Slider
-              value={temperature}
-              onValueChange={setTemperature}
-              min={0}
-              max={1}
-              step={0.1}
-              className="w-full"
-            />
-            <span className="text-sm text-gray-400 mt-1 block">{temperature[0]}</span>
-          </div>
+          {/* Advanced Settings Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="advanced-settings" className="border-zinc-800">
+              <AccordionTrigger className="text-gray-200 hover:text-gray-100">
+                <div className="flex items-center space-x-2">
+                  <Settings2 className="h-4 w-4 text-green-600" />
+                  <span>Advanced Settings</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-6 pt-4">
+                  {/* Temperature */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Temperature</label>
+                    <Slider
+                      value={temperature}
+                      onValueChange={setTemperature}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{temperature[0]}</span>
+                  </div>
 
-          {/* Max Tokens */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">Max Tokens</label>
-            <Slider
-              value={maxTokens}
-              onValueChange={setMaxTokens}
-              min={5000}
-              max={20000}
-              step={1000}
-              className="w-full"
-            />
-            <span className="text-sm text-gray-400 mt-1 block">{maxTokens[0]}</span>
-          </div>
+                  {/* Max Tokens */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Max Tokens</label>
+                    <Slider
+                      value={maxTokens}
+                      onValueChange={setMaxTokens}
+                      min={5000}
+                      max={20000}
+                      step={1000}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{maxTokens[0]}</span>
+                  </div>
 
-          {/* Similarity Threshold */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">Similarity Threshold</label>
-            <Slider
-              value={similarityThreshold}
-              onValueChange={setSimilarityThreshold}
-              min={0}
-              max={1}
-              step={0.1}
-              className="w-full"
-            />
-            <span className="text-sm text-gray-400 mt-1 block">{similarityThreshold[0] * 100}%</span>
-          </div>
+                  {/* Similarity Threshold */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Similarity Threshold</label>
+                    <Slider
+                      value={similarityThreshold}
+                      onValueChange={setSimilarityThreshold}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{similarityThreshold[0] * 100}%</span>
+                  </div>
 
-          {/* Similar Results */}
-          <div>
-            <label className="text-sm text-gray-400 mb-2 block">Similar Results</label>
-            <Slider
-              value={similarResults}
-              onValueChange={setSimilarResults}
-              min={5}
-              max={15}
-              step={1}
-              className="w-full"
-            />
-            <span className="text-sm text-gray-400 mt-1 block">{similarResults[0]}</span>
-          </div>
+                  {/* Similar Results */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Similar Results</label>
+                    <Slider
+                      value={similarResults}
+                      onValueChange={setSimilarResults}
+                      min={5}
+                      max={15}
+                      step={1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{similarResults[0]}</span>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </div>
     </div>

@@ -7,6 +7,10 @@ import { ChatInput } from "@/components/chat/ChatInput";
 import CustomSidebar from "@/components/sidebar/CustomSidebar";
 import { SettingsSection } from "@/components/model-settings/SettingsSection";
 import { useToast } from "@/hooks/use-toast";
+import { DocumentsSection } from "@/components/information/DocumentSection";
+import { SourcesSection } from "@/components/information/SourcesSection";
+import { UploadSection } from "@/components/information/UploadSection";
+import { MessageSquare } from "lucide-react";
 
 interface PdfFile {
   name: string;
@@ -113,9 +117,8 @@ export default function ChatLayout() {
 
       const data = await res.json();
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
-      // Update the relevant chunks state from the backend response
+      // Update the relevant chunks and sources state from the backend response
       setRelevantChunks(data.relevant_chunks);
-      console.log(data.source_files)
       setSources(data.source_files);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
@@ -129,12 +132,17 @@ export default function ChatLayout() {
     <div className="h-screen w-full flex bg-stone-950">
       {/* Left Sidebar - Fixed */}
       <aside className="w-64 border-r border-gray-800 fixed left-0 top-0 bottom-0 h-screen overflow-hidden">
-        <CustomSidebar 
-          files={files} 
-          sources={sources} 
-          uploadHandler={handleFileUpload}
-          relevantChunks={relevantChunks} // Pass the relevant chunks here
-        />
+        <CustomSidebar>
+        <div className="p-4 flex items-center space-x-2">
+        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+          <MessageSquare className="h-5 w-5 text-white" />
+        </div>
+        <span className="font-semibold text-gray-200">NotStuck</span>
+      </div>
+          
+          <SourcesSection relevantChunks={relevantChunks} sources={sources} />
+          
+        </CustomSidebar>
       </aside>
 
       {/* Main Chat Area */}
@@ -147,9 +155,8 @@ export default function ChatLayout() {
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </main>
-
-      {/* Right Sidebar - Fixed */}
-      <aside className="w-80 border-l border-gray-800 fixed right-0 top-0 bottom-0 h-screen overflow-hidden">
+      <aside className="w-64 border-l border-gray-800 fixed right-0 top-0 bottom-0 h-screen overflow-hidden">
+        <CustomSidebar>
         <SettingsSection
           similarityThreshold={similarityThreshold}
           setSimilarityThreshold={setSimilarityThreshold}
@@ -164,6 +171,9 @@ export default function ChatLayout() {
           modelName={modelName}
           setModelName={setModelName}
         />
+        <DocumentsSection files={files} />
+        <UploadSection uploadHandler={handleFileUpload} />
+        </CustomSidebar>
       </aside>
     </div>
   );
