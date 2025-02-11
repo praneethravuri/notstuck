@@ -1,18 +1,21 @@
+# Frontend build stage
 FROM node:20-alpine AS frontend-build
 
 WORKDIR /app/frontend
 
-# Set production environment to pick up .env.production
-ENV NODE_ENV production
+# Set production environment and accept build arg for the backend URL.
+ENV NODE_ENV=production
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
 
 # Install dependencies
 COPY frontend/package*.json ./
 RUN npm install
 
-# Copy frontend source
+# Copy the rest of the frontend source (including .env.production if needed)
 COPY frontend/ ./
 
-# Build Next.js application
+# Build Next.js application (this build will pick up NEXT_PUBLIC_BACKEND_URL)
 RUN npm run build
 
 # Final image
@@ -25,7 +28,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# Copy frontend build
+# Copy frontend build output
 COPY --from=frontend-build /app/frontend/.next /app/frontend/.next
 COPY --from=frontend-build /app/frontend/public /app/frontend/public
 COPY --from=frontend-build /app/frontend/package*.json /app/frontend/
@@ -33,7 +36,7 @@ COPY --from=frontend-build /app/frontend/node_modules /app/frontend/node_modules
 
 # Set up Python virtual environment and install dependencies
 RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH=/opt/venv/bin:$PATH
 
 # Install Python dependencies in virtual environment
 COPY backend/requirements.txt .

@@ -32,5 +32,6 @@ jobs:
           context: .
           push: true
           tags: ${{ env.DOCKER_USERNAME }}/notstuck:latest
-
- 
+          build-args: |
+            NODE_ENV=production
+            NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }}
