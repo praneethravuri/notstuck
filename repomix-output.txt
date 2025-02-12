@@ -1,0 +1,3993 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: node_modules,  .env
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+.dockerignore
+.github/workflows/ci-cd.yml
+.gitignore
+backend/.dockerignore
+backend/app/main.py
+backend/app/routes/ask.py
+backend/app/routes/pdfs.py
+backend/app/routes/reset_db.py
+backend/app/routes/upload.py
+backend/app/services/config.py
+backend/app/services/document_pipeline/document_chunker.py
+backend/app/services/document_pipeline/document_converter.py
+backend/app/services/document_pipeline/main.py
+backend/app/services/embeddings/generate_embeddings.py
+backend/app/services/pinecone_db/main.py
+backend/app/services/rag/main.py
+backend/Dockerfile
+backend/fly.toml
+backend/requirements.txt
+docker-compose.yml
+frontend/.dockerignore
+frontend/.gitignore
+frontend/app/(chat)/ChatLayout.tsx
+frontend/app/api/ask/route.ts
+frontend/app/api/get-pdfs/route.ts
+frontend/app/api/upload/route.ts
+frontend/app/globals.css
+frontend/app/layout.tsx
+frontend/app/page.tsx
+frontend/components.json
+frontend/components/chat/ChatInput.tsx
+frontend/components/chat/ChatMessages.tsx
+frontend/components/information/DocumentSection.tsx
+frontend/components/information/SourcesSection.tsx
+frontend/components/information/UploadSection.tsx
+frontend/components/model-settings/SettingsSection.tsx
+frontend/components/sidebar/CustomSidebar.tsx
+frontend/components/ui/accordion.tsx
+frontend/components/ui/button.tsx
+frontend/components/ui/dropdown-menu.tsx
+frontend/components/ui/input.tsx
+frontend/components/ui/scroll-area.tsx
+frontend/components/ui/select.tsx
+frontend/components/ui/separator.tsx
+frontend/components/ui/sheet.tsx
+frontend/components/ui/skeleton.tsx
+frontend/components/ui/slider.tsx
+frontend/components/ui/textarea.tsx
+frontend/components/ui/toast.tsx
+frontend/components/ui/toaster.tsx
+frontend/components/ui/tooltip.tsx
+frontend/Dockerfile
+frontend/eslint.config.mjs
+frontend/fly.toml
+frontend/hooks/use-mobile.tsx
+frontend/hooks/use-toast.ts
+frontend/lib/utils.ts
+frontend/next.config.ts
+frontend/package.json
+frontend/postcss.config.mjs
+frontend/public/file.svg
+frontend/public/globe.svg
+frontend/public/next.svg
+frontend/public/vercel.svg
+frontend/public/window.svg
+frontend/README.md
+frontend/tailwind.config.ts
+frontend/tsconfig.json
+LICENSE
+terraform/main.tf
+terraform/variables.tf
+
+================================================================
+Files
+================================================================
+
+================
+File: .dockerignore
+================
+node_modules
+npm-debug.log
+backend/.env
+backend/.venv
+**/__pycache__
+.git
+.gitignore
+.dockerignore
+README.md
+.next/cache
+frontend/.env*
+.env*
+
+================
+File: .github/workflows/ci-cd.yml
+================
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push frontend image
+        run: |
+          docker build \
+            -f frontend/Dockerfile \
+            --build-arg NEXT_PUBLIC_BACKEND_URL=${{ secrets.NEXT_PUBLIC_BACKEND_URL }} \
+            -t ${{ secrets.DOCKER_USERNAME }}/notstuck-frontend:latest \
+            ./frontend
+          docker push ${{ secrets.DOCKER_USERNAME }}/notstuck-frontend:latest
+
+      - name: Build and push backend image
+        run: |
+          docker build \
+            -f backend/Dockerfile \
+            -t ${{ secrets.DOCKER_USERNAME }}/notstuck-backend:latest \
+            ./backend
+          docker push ${{ secrets.DOCKER_USERNAME }}/notstuck-backend:latest
+
+================
+File: .gitignore
+================
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented libs generated by jscoverage/JSCover
+lib-cov
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Snowpack dependency directory (https://snowpack.dev/)
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+# Comment in the public line in if your project uses Gatsby and not Next.js
+# https://nextjs.org/blog/next-9-1#public-directory-support
+# public
+
+# vuepress build output
+.vuepress/dist
+
+# vuepress v2.x temp and cache directory
+.temp
+.cache
+
+# Docusaurus cache and generated files
+.docusaurus
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing VSCode extensions
+.vscode-test
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+frontend/node_modules
+
+================
+File: backend/.dockerignore
+================
+# flyctl launch added from .venv\.gitignore
+# Created by venv; see https://docs.python.org/3/library/venv.html
+.venv\**\*
+fly.toml
+
+================
+File: backend/app/main.py
+================
+# app/main.py
+# uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+# Import the routers
+from app.routes import ask, pdfs, upload, reset_db
+
+app = FastAPI()
+
+# Set up CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers with a common prefix (e.g., /api)
+app.include_router(ask.router, prefix="/api")
+app.include_router(pdfs.router, prefix="/api")
+app.include_router(upload.router, prefix="/api")
+app.include_router(reset_db.router, prefix="/api")
+
+================
+File: backend/app/routes/ask.py
+================
+# app/routes/ask.py
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from app.services.rag.main import answer_question  # adjust the import path as needed
+
+router = APIRouter()
+
+class QuestionPayload(BaseModel):
+    question: str
+    similarityThreshold: float
+    similarResults: int
+    temperature: float
+    maxTokens: int
+    responseStyle: str
+    modelName: str
+
+@router.post("/ask")
+def ask_question(payload: QuestionPayload):
+    try:
+        result = answer_question(
+            question=payload.question,
+            top_k=payload.similarResults,
+            threshold=payload.similarityThreshold,
+            temperature=payload.temperature,
+            max_tokens=payload.maxTokens,
+            response_style=payload.responseStyle,
+            namespace="my-namespace",
+            model_name=payload.modelName
+        )
+        
+        print(result)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+================
+File: backend/app/routes/pdfs.py
+================
+# app/routes/pdfs.py
+
+import os
+from typing import Optional
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import FileResponse
+
+router = APIRouter()
+
+# Define directory paths (adjust based on your structure)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
+
+@router.get("/get-pdfs")
+def pdf_endpoint(filename: Optional[str] = Query(None)):
+    """
+    If 'filename' is not provided => Return JSON list of PDFs.
+    If 'filename' is provided => Return the PDF file as FileResponse.
+    """
+    try:
+        if filename is None:
+            if not os.path.isdir(PROCESSED_DIR):
+                return {"files": []}
+            files = [f for f in os.listdir(PROCESSED_DIR) if f.lower().endswith(".pdf")]
+            return {"files": files}
+
+        pdf_path = os.path.join(PROCESSED_DIR, filename)
+        if not os.path.isfile(pdf_path) or not filename.lower().endswith(".pdf"):
+            raise HTTPException(status_code=404, detail="PDF not found")
+        return FileResponse(pdf_path, media_type="application/pdf")
+    except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        raise HTTPException(status_code=500, detail=str(e))
+
+================
+File: backend/app/routes/reset_db.py
+================
+from app.services.pinecone_db.main import delete_all_data, init_pinecone
+from pinecone import Pinecone, ServerlessSpec
+from fastapi import APIRouter, HTTPException
+
+router = APIRouter()
+
+@router.delete("/reset-db")
+def reset_db():
+    print("Reset DB route accessed")  # Debug print
+    try:
+        delete_all_data(namespace="my-namespace")
+        return "Database reset successful."
+    except Exception as e:
+        print("Error in reset_db:", e)
+        raise HTTPException(status_code=500, detail=str(e))
+
+================
+File: backend/app/routes/upload.py
+================
+# app/routes/upload.py
+
+import os
+from fastapi import APIRouter, HTTPException, UploadFile, File
+from app.services.pinecone_db.main import process_and_push_all_pdfs  # adjust as needed
+
+router = APIRouter()
+
+# Define the upload directory (adjust the path as needed)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+UPLOAD_DIR = os.path.join(BASE_DIR, "data", "raw")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+@router.post("/upload")
+async def upload_files(files: list[UploadFile] = File(...)):
+    try:
+        # Save each uploaded file
+        for file in files:
+            file_path = os.path.join(UPLOAD_DIR, file.filename)
+            content = await file.read()
+            with open(file_path, "wb") as f:
+                f.write(content)
+        
+        # Process PDFs after upload
+        try:
+            print("Processing and pushing PDFs to Pinecone...")
+            process_and_push_all_pdfs(namespace="my-namespace")
+            return {
+                "message": "Files uploaded and processed successfully",
+                "files": [file.filename for file in files]
+            }
+        except Exception as process_error:
+            return {
+                "message": "Files uploaded but processing failed",
+                "error": str(process_error),
+                "files": [file.filename for file in files]
+            }
+            
+    except Exception as upload_error:
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(upload_error)}")
+
+================
+File: backend/app/services/config.py
+================
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+# Paths
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+RAW_DATA_PATH = os.path.join(BASE_DIR, "data", "raw")
+PROCESSED_DATA_PATH = os.path.join(BASE_DIR, "data", "processed")
+
+# API Keys
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+PINECONE_ENV = os.getenv("PINECONE_ENV")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
+
+# Embedding Dimensions
+PINECONE_EMBEDDING_DIMENSIONS = 1536
+
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 150
+EMBEDDING_MODEL = "text-embedding-3-small"
+
+SIMILARITY_THRESHOLD = 0.99999  # 99.999% similar
+EXACT_MATCH_THRESHOLD = 1.0     # 100% similar
+
+================
+File: backend/app/services/document_pipeline/document_chunker.py
+================
+import os
+from langchain_community.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema import Document
+from .document_converter import convert_all_docs_in_raw_folder
+from ..config import CHUNK_SIZE, CHUNK_OVERLAP, PROCESSED_DATA_PATH
+
+def load_and_split_pdf(pdf_path: str) -> list[Document]:
+    """
+    Uses LangChain's PyPDFLoader to read a PDF and then splits it into chunks
+    using RecursiveCharacterTextSplitter.
+    Returns a list of Document objects.
+    """
+    try:
+        loader = PyPDFLoader(pdf_path)
+        pages = loader.load()
+    except Exception as exc:
+        print(f"Error loading PDF '{pdf_path}': {exc}")
+        return []
+
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=CHUNK_SIZE,
+        chunk_overlap=CHUNK_OVERLAP,
+        length_function=len
+    )
+    documents = splitter.split_documents(pages)
+    return documents
+
+================
+File: backend/app/services/document_pipeline/document_converter.py
+================
+# app/services/document_converter.py
+
+import os
+import shutil
+from typing import Optional
+
+# Make sure to install 'docx2pdf' and 'Pillow' if you want to support DOCX and image -> PDF conversion.
+# pip install docx2pdf Pillow
+from docx2pdf import convert as docx2pdf_convert
+from PIL import Image
+
+# Import your paths from config.py; note that here we only need RAW_DATA_PATH for conversion.
+from ..config import RAW_DATA_PATH
+
+def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
+    """
+    Converts a single file to PDF if needed.
+    Returns the path to the converted PDF (or the existing PDF if no conversion was needed).
+    Returns None if conversion was not possible.
+    """
+    filename = os.path.basename(input_path)
+    file_root, file_ext = os.path.splitext(filename)
+    file_ext_lower = file_ext.lower()
+
+    # If it's already a PDF, we could simply return the path.
+    if file_ext_lower == ".pdf":
+        # (Optionally, you might want to skip copying if input and output are the same.)
+        return os.path.join(output_dir, filename)
+
+    # Handle DOCX files
+    if file_ext_lower == ".docx":
+        # docx2pdf converts and writes the PDF to the output directory.
+        docx2pdf_convert(input_path, output_dir)
+        pdf_filename = file_root + ".pdf"
+        output_path = os.path.join(output_dir, pdf_filename)
+        return output_path if os.path.exists(output_path) else None
+
+    # Handle common image files (PNG, JPG, JPEG)
+    if file_ext_lower in [".png", ".jpg", ".jpeg"]:
+        output_filename = file_root + ".pdf"
+        output_path = os.path.join(output_dir, output_filename)
+        try:
+            with Image.open(input_path) as img:
+                rgb_img = img.convert('RGB')
+                rgb_img.save(output_path, "PDF", resolution=100.0)
+            return output_path if os.path.exists(output_path) else None
+        except Exception as e:
+            print(f"Error converting image '{filename}' to PDF: {e}")
+            return None
+
+    print(f"No conversion rule for file type: {file_ext_lower}. Skipping.")
+    return None
+
+def convert_all_docs_in_raw_folder():
+    """
+    Goes through all files in RAW_DATA_PATH.
+    For files that are not PDFs, converts them to PDFs and saves the result in RAW_DATA_PATH.
+    Deletes the original non-PDF file after a successful conversion.
+    """
+    for filename in os.listdir(RAW_DATA_PATH):
+        full_path = os.path.join(RAW_DATA_PATH, filename)
+        # Skip directories
+        if os.path.isdir(full_path):
+            continue
+
+        file_root, file_ext = os.path.splitext(filename)
+        file_ext_lower = file_ext.lower()
+
+        if file_ext_lower == ".pdf":
+            # Already a PDF – no conversion needed.
+            continue
+
+        converted_path = convert_to_pdf(full_path, RAW_DATA_PATH)
+        if converted_path:
+            print(f"Converted '{filename}' to PDF -> {converted_path}")
+            try:
+                os.remove(full_path)
+                print(f"Deleted original file: {full_path}")
+            except Exception as e:
+                print(f"Error deleting raw file '{full_path}': {e}")
+        else:
+            print(f"Could not convert file: {filename}")
+
+================
+File: backend/app/services/document_pipeline/main.py
+================
+# backend/app/services/document_pipeline/main.py
+
+import os
+
+# Import paths from your config
+from ..config import RAW_DATA_PATH, PROCESSED_DATA_PATH 
+
+# Import the functions from your pipeline modules
+from .document_converter import convert_all_docs_in_raw_folder
+from .document_chunker import load_and_split_pdf
+
+def document_pipeline():
+    """
+    1. Convert all non-PDF files in RAW_DATA_PATH to PDF 
+       and move them to PROCESSED_DATA_PATH.
+    2. Then load and chunk each PDF in PROCESSED_DATA_PATH.
+    """
+    # Step 1: Convert documents & move them to 'processed'
+    convert_all_docs_in_raw_folder()
+
+    # Step 2: For each PDF now in 'processed', load and split into chunks
+    for filename in os.listdir(PROCESSED_DATA_PATH):
+        if filename.lower().endswith(".pdf"):
+            pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)
+            docs = load_and_split_pdf(pdf_path)
+            print(f"Chunked '{filename}' into {len(docs)} LangChain Document objects.")
+
+================
+File: backend/app/services/embeddings/generate_embeddings.py
+================
+import os
+from dotenv import load_dotenv
+from langchain_community.embeddings.openai import OpenAIEmbeddings
+from ..config import OPENAI_API_KEY, EMBEDDING_MODEL
+
+def get_embedding_function():
+    """Returns an OpenAI embedding callable for LangChain."""
+    return OpenAIEmbeddings(
+        openai_api_key=OPENAI_API_KEY,
+        model="text-embedding-ada-002"
+    )
+
+================
+File: backend/app/services/pinecone_db/main.py
+================
+# backend/app/services/pinecone_db/main.py
+
+import os
+import shutil
+import uuid
+from typing import List, Optional, Dict
+
+from pinecone import Pinecone, ServerlessSpec
+
+from ..config import (
+    RAW_DATA_PATH,
+    PROCESSED_DATA_PATH,
+    PINECONE_API_KEY,
+    PINECONE_ENV,
+    PINECONE_INDEX_NAME,
+    PINECONE_EMBEDDING_DIMENSIONS,
+    SIMILARITY_THRESHOLD,
+    EXACT_MATCH_THRESHOLD,
+)
+from ..document_pipeline.document_converter import convert_all_docs_in_raw_folder
+from ..document_pipeline.document_chunker import load_and_split_pdf
+from ..embeddings.generate_embeddings import get_embedding_function
+
+############################################
+# PINECONE INITIALIZATION (v2)
+############################################
+def init_pinecone():
+    """
+    Initializes a Pinecone client using your API key and environment from config.
+    Creates (or retrieves) the index if needed, returning a Pinecone.Index object.
+    """
+    if not PINECONE_API_KEY or not PINECONE_ENV:
+        raise ValueError("Missing Pinecone credentials. Check config or environment variables.")
+
+    pc = Pinecone(api_key=PINECONE_API_KEY)
+
+    # Check existing indexes
+    existing_indexes = [idx.name for idx in pc.list_indexes()]
+    if PINECONE_INDEX_NAME not in existing_indexes:
+        print(f"Index '{PINECONE_INDEX_NAME}' not found. Creating it now...")
+        pc.create_index(
+            name=PINECONE_INDEX_NAME,
+            dimension=PINECONE_EMBEDDING_DIMENSIONS,
+            metric="cosine",
+            spec=ServerlessSpec(
+                region=PINECONE_ENV,
+                cloud="aws"
+            )
+        )
+    return pc.Index(PINECONE_INDEX_NAME)
+
+def delete_all_data(namespace: Optional[str] = None):
+    """
+    Deletes all vectors in the Pinecone index.
+    
+    If a namespace is provided, only the vectors in that namespace will be deleted.
+    If namespace is None, it will delete all vectors in the entire index.
+    """
+    index = init_pinecone()  # Get the index from your initialization function
+    index.delete(delete_all=True, namespace=namespace)
+    print(f"Deleted all data{' in namespace ' + namespace if namespace else ''}.")
+
+
+
+############################################
+# SIMILARITY-CHECK UPSERT
+############################################
+def upsert_chunk_with_similarity_check(
+    index,
+    embedding: List[float],
+    chunk_text: str,
+    metadata: Optional[Dict] = None,
+    namespace: Optional[str] = None
+):
+    """
+    Query Pinecone for the most similar chunk to 'embedding' and decide to skip, update, or insert.
+    """
+    if not embedding:
+        print("No embedding provided. Skipping.")
+        return
+
+    query_result = index.query(
+        vector=embedding,
+        top_k=1,
+        include_metadata=True,
+        namespace=namespace
+    )
+
+    matched_id = None
+    matched_score = 0.0
+
+    if query_result and "matches" in query_result and query_result["matches"]:
+        best_match = query_result["matches"][0]
+        matched_id = best_match["id"]
+        matched_score = best_match["score"]
+
+    if matched_score >= EXACT_MATCH_THRESHOLD:
+        print(f"Skipping chunk (score=1.0). Identical chunk exists.")
+        return
+    elif matched_score >= SIMILARITY_THRESHOLD:
+        vector_id = matched_id
+        print(f"Updating chunk (score={matched_score:.5f}) with existing ID={vector_id}.")
+    else:
+        vector_id = str(uuid.uuid4())
+        print(f"Inserting new chunk (score={matched_score:.5f}). ID={vector_id}.")
+
+    upsert_vector = {
+        "id": vector_id,
+        "values": embedding,
+        "metadata": {"text": chunk_text}
+    }
+    if metadata:
+        upsert_vector["metadata"].update(metadata)
+
+    index.upsert(vectors=[upsert_vector], namespace=namespace)
+
+############################################
+# EMBED + UPSERT (WITH SIMILARITY CHECK)
+############################################
+def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
+    """
+    Splits the PDF into chunks, embeds each chunk, and upserts them into the Pinecone index.
+    """
+    docs = load_and_split_pdf(pdf_path)
+    if not docs:
+        print(f"No chunks created or error reading PDF: {pdf_path}")
+        return
+
+    print(f"Loaded and split '{os.path.basename(pdf_path)}' into {len(docs)} chunks.")
+    embedding_func = get_embedding_function()
+    index = init_pinecone()
+
+    for doc in docs:
+        chunk_text = doc.page_content.strip()
+        if not chunk_text:
+            continue
+
+        try:
+            # embed_documents returns a list; we get the first embedding.
+            embedding = embedding_func.embed_documents([chunk_text])[0]
+        except Exception as e:
+            print(f"Error embedding chunk: {e}")
+            continue
+
+        if embedding:
+            chunk_metadata = {"source_file": os.path.basename(pdf_path)}
+            upsert_chunk_with_similarity_check(
+                index=index,
+                embedding=embedding,
+                chunk_text=chunk_text,
+                metadata=chunk_metadata,
+                namespace=namespace
+            )
+
+############################################
+# MAIN PIPELINE
+############################################
+def process_and_push_all_pdfs(namespace: Optional[str] = None):
+    """
+    Pipeline steps:
+      1. Convert all documents in RAW_DATA_PATH (DOCX/image -> PDF).  
+      2. Process (embed & upsert) each PDF in the RAW_DATA_PATH.  
+      3. After processing, move the PDF to PROCESSED_DATA_PATH.
+    """
+    # Ensure the PROCESSED_DATA_PATH exists.
+    if not os.path.exists(PROCESSED_DATA_PATH):
+        os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
+
+    # Step 1: Convert non-PDF documents in RAW_DATA_PATH to PDFs.
+    print(f"[STEP 1] Converting documents in '{RAW_DATA_PATH}' to PDFs...")
+    convert_all_docs_in_raw_folder()
+
+    # Step 2: Process each PDF in the RAW_DATA_PATH.
+    print(f"\n[STEP 2] Embedding & upserting PDFs from '{RAW_DATA_PATH}' into Pinecone...")
+    for filename in os.listdir(RAW_DATA_PATH):
+        if filename.lower().endswith(".pdf"):
+            pdf_path = os.path.join(RAW_DATA_PATH, filename)
+            embed_and_upsert_chunks(pdf_path, namespace=namespace)
+
+            # After processing, move the PDF to the processed directory.
+            dest_path = os.path.join(PROCESSED_DATA_PATH, filename)
+            try:
+                shutil.move(pdf_path, dest_path)
+                print(f"Moved processed PDF to: {dest_path}")
+            except Exception as e:
+                print(f"Error moving PDF '{pdf_path}' to processed dir: {e}")
+
+    print("\n✅ Done. All documents in RAW_DATA_PATH have been processed and moved to PROCESSED_DATA_PATH.")
+
+############################################
+# CLI ENTRY POINT
+############################################
+if __name__ == "__main__":
+    # Run as: python -m backend.app.services.pinecone_db.main
+    # process_and_push_all_pdfs(namespace="my-namespace")
+    
+    delete_all_data(namespace="my-namespace")
+
+================
+File: backend/app/services/rag/main.py
+================
+# backend/app/services/rag/answer_question.py
+
+import os
+from typing import Optional, List
+from pinecone import Pinecone, ServerlessSpec
+
+# If you are using langchain_community for ChatOpenAI:
+from openai import OpenAI
+
+from ..pinecone_db.main import init_pinecone
+
+# Or, if you're using official LangChain:
+# from langchain.chat_models import ChatOpenAI
+
+# Import your config variables
+from ..config import (
+    PINECONE_API_KEY,
+    PINECONE_ENV,
+    PINECONE_INDEX_NAME,
+    PINECONE_EMBEDDING_DIMENSIONS,
+    OPENAI_API_KEY
+)
+
+# Import your existing embedding function
+# e.g. from backend/app/services/embeddings/generate_embeddings.py
+from ..embeddings.generate_embeddings import get_embedding_function
+
+#############################################################################
+# MAIN FUNCTION: ANSWER A QUESTION
+#############################################################################
+
+client = OpenAI()
+client.api_key = OPENAI_API_KEY
+
+def answer_question(question,
+                    top_k,
+                    threshold,
+                    temperature,
+                    max_tokens,
+                    response_style,
+                    namespace,
+                    model_name,
+                    reasoning=False):  # Add reasoning parameter
+    """
+    1) Embed the user question with get_embedding_function().
+    2) Query Pinecone for top_k relevant chunks (distance < threshold).
+    3) Build a final prompt with those chunks as context.
+    4) Ask the OpenAI model (via ChatOpenAI) and return the answer in Markdown.
+    """
+    
+    print(f"The rag received the following question: {question}")
+    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}, namespace: {namespace}, model_name: {model_name}, reasoning: {reasoning}")  
+
+    # 1) Embed the user question
+    embedding_func = get_embedding_function()
+    try:
+        question_embedding = embedding_func.embed_query(question)
+    except Exception as e:
+        print(f"Error embedding query: {e}")
+        return "Unable to embed your question at this time."
+
+    if not question_embedding:
+        return "Got an empty embedding for your question."
+
+    # 2) Query Pinecone with the user question embedding
+    index = init_pinecone()
+    query_response = index.query(
+        vector=question_embedding,
+        top_k=top_k,
+        include_metadata=True,
+        namespace=namespace
+    )
+
+    matches = query_response.get("matches", [])
+    relevant_chunks = []
+    source_files = []
+    for match in matches:
+        score = match["score"]
+        metadata = match.get("metadata", {})
+        text_chunk = metadata.get("text", "")
+        source_file = metadata.get("source_file", "unknown source")
+
+        if score >= threshold:  # Only include chunks with a score >= threshold
+            relevant_chunks.append(text_chunk)
+            source_files.append(source_file)
+
+    if relevant_chunks:
+        context_text = "\n\n---\n\n".join(relevant_chunks)
+    else:
+        context_text = ""
+        
+    print(f"Relevant chunks: {relevant_chunks}")    
+
+    # Adjust system prompt based on response_style and reasoning
+    if response_style == "concise":
+        system_prompt = """You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+    elif response_style == "technical":
+        system_prompt = """You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+    elif response_style == "casual":
+        system_prompt = """You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+    else:  # Default to "detailed"
+        system_prompt = """You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+
+    # Add reasoning instructions if reasoning is True
+    if reasoning:
+        system_prompt += """\n\nProvide a step-by-step reasoning process for your answer. Break down your thought process into clear and logical steps."""
+
+    # Add Markdown formatting instruction
+    system_prompt += "\n\nProvide the answer in Markdown format."
+
+    user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+    ]
+    
+    final_answer = ""
+    try:
+        print("here")
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+            temperature=temperature,
+            max_completion_tokens=max_tokens
+        )
+            
+        final_answer = response.choices[0].message.content
+    except Exception as e:
+        print(f"Error calling OpenAI API: {e}")
+        return "There was an error calling the OpenAI API."
+
+    return {"answer": final_answer.strip(), "relevant_chunks": relevant_chunks, "source_files": source_files}
+
+#############################################################################
+# SAMPLE USAGE (CLI)
+#############################################################################
+
+if __name__ == "__main__":
+    # Example question
+    sample_question = "how to win at game of life?"
+    answer = answer_question(
+        question=sample_question,
+        top_k=5,
+        threshold=0.9,
+        temperature=0.7,
+        max_tokens=150,
+        response_style="detailed",
+        namespace="my-namespace",
+        model_name="gpt-3.5-turbo",  # Replace with the actual model name if needed
+        reasoning=True
+    )
+    print("\nFINAL ANSWER (Markdown):\n")
+    print(answer)
+
+================
+File: backend/Dockerfile
+================
+# Use a slim Python image for a lightweight backend container
+FROM python:3.10-slim
+
+# Prevent Python from writing .pyc files to disk and buffer stdout/stderr
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install OS-level dependencies
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+
+# Copy the requirements file from the backend directory (which is now the context root)
+COPY requirements.txt .
+
+# Create a virtual environment and add it to PATH
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Upgrade pip and install Python dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy the rest of the backend code
+COPY . ./
+
+# Expose the port that FastAPI (via Uvicorn) will listen on
+EXPOSE 8000
+
+# Start the FastAPI application with Uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+================
+File: backend/fly.toml
+================
+# fly.toml app configuration file generated for notstuck-backend on 2025-02-11T19:15:30-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'notstuck-backend'
+primary_region = 'dfw'
+
+[build]
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+================
+File: backend/requirements.txt
+================
+docx2pdf # convert all docx to pdf
+Pillow # for document conversion
+python-dotenv # for environment variables
+langchain
+langchain-community
+langchain-openai
+pypdf
+openai
+pinecone-client
+fastapi
+pydantic
+uvicorn
+python-multipart
+
+================
+File: docker-compose.yml
+================
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://host.docker.internal:8000}
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+
+================
+File: frontend/.dockerignore
+================
+# flyctl launch added from .gitignore
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+.pnp
+**\.pnp.*
+**\.yarn\*
+!**\.yarn\patches
+!**\.yarn\plugins
+!**\.yarn\releases
+!**\.yarn\versions
+
+# testing
+coverage
+
+# next.js
+.next
+out
+
+# production
+build
+
+# misc
+**\.DS_Store
+**\*.pem
+
+# debug
+**\npm-debug.log*
+**\yarn-debug.log*
+**\yarn-error.log*
+**\.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+**\.env*
+
+# vercel
+**\.vercel
+
+# typescript
+**\*.tsbuildinfo
+**\next-env.d.ts
+fly.toml
+
+================
+File: frontend/.gitignore
+================
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+================
+File: frontend/app/(chat)/ChatLayout.tsx
+================
+"use client";
+
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { ChatMessages } from "../../components/chat/ChatMessages";
+import { ChatInput } from "../../components/chat/ChatInput";
+import CustomSidebar from "../../components/sidebar/CustomSidebar";
+import { SettingsSection } from "../../components/model-settings/SettingsSection";
+// import { useToast } from "@/hooks/use-toast";
+import { DocumentsSection } from "../../components/information/DocumentSection";
+import { SourcesSection } from "../../components/information/SourcesSection";
+import { UploadSection } from "../../components/information/UploadSection";
+import { MessageSquare } from "lucide-react";
+
+interface PdfFile {
+  name: string;
+}
+
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log(apiUrl)
+
+
+export default function ChatLayout() {
+  // Chat messages state
+  const [messages, setMessages] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Loading state for file uploads
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Settings state
+  const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
+  const [similarResults, setSimilarResults] = useState([7]);
+  const [temperature, setTemperature] = useState([0.7]);
+  const [maxTokens, setMaxTokens] = useState([5000]);
+  const [responseStyle, setResponseStyle] = useState("detailed");
+  const [modelName, setModelName] = useState("gpt-4o");
+
+  // Sidebar data state
+  const [files, setFiles] = useState<PdfFile[]>([]);
+  const [sources, setSources] = useState<string[]>([]);
+  // New state for relevant chunks from the backend
+  const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
+
+  // const { toast } = useToast();
+
+  const loadFiles = async () => {
+    try {
+      const res = await fetch("/api/get-pdfs");
+      if (!res.ok) throw new Error("Failed to fetch PDF list");
+      const data = await res.json();
+      setFiles(data.files.map((filename: string) => ({ name: filename })));
+    } catch (err) {
+      console.error("Error fetching PDF list:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadFiles();
+  }, []);
+
+  const handleFileUpload = async (files: FileList) => {
+    setIsUploading(true);
+    // toast({
+    //   title: "Uploading File",
+    //   description: "Your file is being uploaded and your knowledge is expanding...",
+    // });
+  
+    try {
+      const formData = new FormData();
+      Array.from(files).forEach((file) => {
+        formData.append("files", file);
+      });
+
+      const response = await axios.post(`${apiUrl}/api/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Upload is successful:", response.data);
+  
+      // toast({
+      //   title: "Upload Successful",
+      //   description: "Your document has been uploaded successfully.",
+      // });
+  
+      loadFiles();
+    } catch (error) {
+      console.error("Upload failed:", error);
+      // toast({
+      //   title: "Upload Failed",
+      //   description: "There was an error uploading your document.",
+      //   variant: "destructive",
+      // });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+  
+
+  const handleSendMessage = async (message: string) => {
+    if (!message.trim()) return;
+    setMessages((prev) => [...prev, `You: ${message}`]);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: message,
+          similarityThreshold: similarityThreshold[0],
+          similarResults: similarResults[0],
+          temperature: temperature[0],
+          maxTokens: maxTokens[0],
+          responseStyle: responseStyle,
+          modelName: modelName,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Failed to get answer. Status: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setMessages((prev) => [...prev, `AI: ${data.answer}`]);
+      // Update the relevant chunks and sources state from the backend response
+      setRelevantChunks(data.relevant_chunks);
+      setSources(data.source_files);
+    } catch (error) {
+      console.error("Error fetching from /api/ask:", error);
+      setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="h-screen w-full flex bg-stone-950">
+      {/* Left Sidebar - Fixed */}
+      <aside className="w-64 border-r border-gray-800 fixed left-0 top-0 bottom-0 h-screen overflow-hidden">
+        <CustomSidebar>
+        <div className="p-4 flex items-center space-x-2">
+        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+          <MessageSquare className="h-5 w-5 text-white" />
+        </div>
+        <span className="font-semibold text-gray-200">NotStuck</span>
+      </div>
+          
+          <SourcesSection relevantChunks={relevantChunks} sources={sources} />
+          
+        </CustomSidebar>
+      </aside>
+
+      {/* Main Chat Area */}
+      <main className="flex-1 flex flex-col ml-64 mr-80">
+        <div className="flex-1 overflow-y-auto p-4">
+          <ChatMessages messages={messages} isLoading={isLoading} />
+        </div>
+
+        <div className="fixed bottom-0 left-64 right-80 bg-stone-950 p-4">
+          <ChatInput onSendMessage={handleSendMessage} />
+        </div>
+      </main>
+      <aside className="w-64 border-l border-gray-800 fixed right-0 top-0 bottom-0 h-screen overflow-hidden">
+        <CustomSidebar>
+        <SettingsSection
+          similarityThreshold={similarityThreshold}
+          setSimilarityThreshold={setSimilarityThreshold}
+          similarResults={similarResults}
+          setSimilarResults={setSimilarResults}
+          temperature={temperature}
+          setTemperature={setTemperature}
+          maxTokens={maxTokens}
+          setMaxTokens={setMaxTokens}
+          responseStyle={responseStyle}
+          setResponseStyle={setResponseStyle}
+          modelName={modelName}
+          setModelName={setModelName}
+        />
+        <DocumentsSection files={files} />
+        <UploadSection uploadHandler={handleFileUpload} isUploading = {isUploading} />
+        </CustomSidebar>
+      </aside>
+    </div>
+  );
+}
+
+================
+File: frontend/app/api/ask/route.ts
+================
+import { NextRequest, NextResponse } from "next/server";
+
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
+export async function POST(req: NextRequest) {
+    try {
+        // 1) Parse incoming data from the client
+        const { question, similarityThreshold, similarResults, temperature, maxTokens, responseStyle, modelName } = await req.json();
+
+        // 2) Forward the question and settings to the FastAPI backend
+        const backendResponse = await fetch(`${apiUrl}/api/ask`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ 
+                question,
+                similarityThreshold,
+                similarResults,
+                temperature,
+                maxTokens,
+                responseStyle,
+                modelName,
+            }),
+        });
+
+        if (!backendResponse.ok) {
+            // Log the status code or text for debugging
+            console.error("FastAPI returned an error:", backendResponse.status, backendResponse.statusText);
+            throw new Error("Error returned by FastAPI");
+        }
+
+        // 3) Return the backend's JSON to the client
+        const data = await backendResponse.json();
+        return NextResponse.json(data);
+
+    } catch (error: unknown) {
+        // Return an error response
+        console.log(error);
+        let errorMessage = "An unexpected error occurred";
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        return NextResponse.json({ error: errorMessage }, { status: 500 });
+    }
+}
+
+================
+File: frontend/app/api/get-pdfs/route.ts
+================
+// app/api/get-pdfs/route.ts
+import { NextResponse } from "next/server";
+
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log(apiUrl)
+
+export async function GET() {
+  try {
+    // Forward the request to the FastAPI backend.
+    const backendResponse = await fetch(`${apiUrl}/api/get-pdfs`);
+    if (!backendResponse.ok) {
+      throw new Error("Failed to fetch PDF list from FastAPI");
+    }
+    const data = await backendResponse.json();
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    console.error("Error in GET /api/get-pdfs:", error);
+    let errorMessage = "An unexpected error occurred";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  }
+}
+
+================
+File: frontend/app/api/upload/route.ts
+================
+import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
+
+export async function POST(req: NextRequest) {
+  try {
+    const contentType = req.headers.get("content-type") || "";
+
+    // Forward the request to FastAPI using Axios
+    const backendResponse = await axios.post("http://127.0.0.1:8000/api/upload", req.body, {
+      headers: {
+        "Content-Type": contentType,
+      },
+      responseType: "json",
+    });
+
+    return NextResponse.json(backendResponse.data);
+  } catch (error) {
+    console.error("Error in POST /api/upload:", error);
+    return NextResponse.json(
+      { error: "Failed to upload file to FastAPI" },
+      { status: 500 }
+    );
+  }
+}
+
+================
+File: frontend/app/globals.css
+================
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --neon-green: 79 98% 36%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+================
+File: frontend/app/layout.tsx
+================
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+// import { Toaster } from "@/components/ui/toaster"
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "NotStuck",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}
+      >
+        {children}
+        {/* <Toaster /> */}
+      </body>
+    </html>
+  );
+}
+
+================
+File: frontend/app/page.tsx
+================
+"use client"
+import ChatLayout from "./(chat)/ChatLayout"
+
+export default function Home() {
+  return (
+    <div className="overflow-none">
+      <ChatLayout />
+    </div>
+  )
+}
+
+================
+File: frontend/components.json
+================
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils",
+    "ui": "@/components/ui",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  },
+  "iconLibrary": "lucide"
+}
+
+================
+File: frontend/components/chat/ChatInput.tsx
+================
+"use client";
+
+import React, { useRef, useEffect } from "react";
+import { Send } from "lucide-react";
+
+export const ChatInput = ({ onSendMessage }: { onSendMessage: (message: string) => void }) => {
+  const [message, setMessage] = React.useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (message.trim()) {
+      onSendMessage(message);
+      setMessage("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
+    }
+  }, [message]);
+
+  return (
+    <div className="fixed bottom-0 left-0 w-full  p-4 ">
+      <form onSubmit={handleSubmit} className="flex justify-center items-center max-w-4xl mx-auto">
+        <div className="flex gap-2 items-end w-full max-w-[600px]">
+          <textarea
+            ref={textareaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Write a message here..."
+            rows={1}
+            className="flex-1 bg-stone-800 border border-green-800 focus:border-green-800 focus:ring-0 rounded-xl 
+                     px-4 py-3 text-sm text-gray-200 focus:outline-none overflow-hidden
+                     placeholder-gray-400 resize-none max-h-[150px]"
+          />
+          
+          <button
+            type="submit"
+            disabled={!message.trim()}
+            className={`p-3 rounded-xl transition-all duration-200 border border-green-800 ${
+              message.trim()
+                ? 'bg-green-600 text-white hover:bg-green-800'
+                : 'bg-stone-800 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            <Send className="h-5 w-5" />
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+================
+File: frontend/components/chat/ChatMessages.tsx
+================
+"use client";
+
+import React, { useRef, useEffect } from "react";
+import ReactMarkdown from 'react-markdown';
+
+// ChatMessages Component
+export const ChatMessages = ({ messages, isLoading }: { messages: string[], isLoading: boolean }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]); // Also trigger scroll when loading state changes
+
+  return (
+    <div className="flex-1 overflow-y-auto p-4 pb-24"> {/* Ensures proper scrolling and input space */}
+      <div className="flex flex-col space-y-6">
+        {messages.map((message, index) => {
+          const isUser = message.startsWith("You:");
+          const text = message.replace(/^(You:|AI:)\s*/, '');
+          
+          return (
+            <div
+              key={index}
+              className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
+            >
+              <div
+                className={`
+                  max-w-[85%] rounded-xl p-4
+                  ${isUser
+                    ? 'bg-green-600 text-white'
+                    : 'bg-stone-950 text-gray-200'
+                  }
+                `}
+              >
+                {isUser ? (
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{text}</p>
+                ) : (
+                  <ReactMarkdown>{text}</ReactMarkdown>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="max-w-[85%] rounded-xl p-4 bg-stone-950 text-gray-200">
+              <p className="text-sm leading-relaxed">AI is typing...</p>
+            </div>
+          </div>
+        )}
+
+        <div ref={messagesEndRef} />
+      </div>
+    </div>
+  );
+};
+
+================
+File: frontend/components/information/DocumentSection.tsx
+================
+"use client";
+
+import { useState } from "react";
+import { Database, FolderIcon, Search } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+import { Input } from "../ui/input";
+
+interface PdfFile {
+  name: string;
+}
+
+interface DocumentsSectionProps {
+  files: PdfFile[];
+}
+
+export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter files based on search query
+  const filteredFiles = files.filter((file) =>
+    file.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return (
+    <div className="p-4 border-t border-zinc-800 h-1/2 overflow-y-auto">
+      <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
+        <Database className="h-4 w-4 text-green-600" />
+        <span>Documents</span>
+      </h2>
+
+      {/* Search Bar */}
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search documents..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-stone-900 focus:border-green-800 focus:ring-0"
+          />
+        </div>
+      </div>
+
+      {/* Files List */}
+      {filteredFiles.length === 0 ? (
+        <div className="text-sm text-gray-400 px-3 py-2">No matching files found</div>
+      ) : (
+        <Accordion type="single" collapsible className="w-full overflow-y-auto space-y-1">
+          {filteredFiles.map((file, index) => (
+            <AccordionItem
+              key={index}
+              value={`pdf-${index}`}
+              className="border-0 mb-1 overflow-hidden rounded-lg "
+            >
+              <AccordionTrigger className="rounded-lg px-1 py-2">
+                <div className="flex items-center space-x-1">
+                  <FolderIcon className="h-4 w-4 text-green-600" />
+                  <span className="text-sm text-gray-200">{file.name}</span>
+                </div>
+              </AccordionTrigger>
+
+              <AccordionContent>
+                <div style={{ height: "500px", overflowY: "auto" }}>
+                  <iframe
+                    src={`http://localhost:8000/api/get-pdfs?filename=${file.name}`}
+                    style={{ width: "100%", height: "100%", border: "none" }}
+                    title={file.name}
+                  />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+    </div>
+  );
+};
+
+================
+File: frontend/components/information/SourcesSection.tsx
+================
+"use client";
+
+import { FileText } from "lucide-react";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "../ui/accordion";
+
+interface SourcesSectionProps {
+  relevantChunks: string[];
+  sources?: string[];
+}
+
+export const SourcesSection = ({ relevantChunks, sources = [] }: SourcesSectionProps) => {
+  return (
+    <div className="p-4 h-1/2 border-t border-zinc-800 overflow-y-auto">
+      <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
+        <FileText className="h-4 w-4 text-green-600" />
+        <span>Active Context Sources</span>
+      </h2>
+
+      {relevantChunks.length === 0 ? (
+        <div className="text-sm text-gray-400 px-3 py-2">No active sources</div>
+      ) : (
+        <Accordion type="multiple" className="space-y-2">
+          {relevantChunks.map((chunk, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="bg-stone-900 p-4 rounded-lg shadow">
+                <span className="text-sm text-gray-200">
+                  {sources[index]}
+                </span>
+              </AccordionTrigger>
+              <AccordionContent className="bg-stone-900 p-4 rounded-lg shadow">
+                <p className="text-sm text-gray-200">{chunk}</p>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      )}
+    </div>
+  );
+};
+
+================
+File: frontend/components/information/UploadSection.tsx
+================
+"use client";
+  import { Upload } from "lucide-react";
+  import axios from "axios";
+  import { FadeLoader } from "react-spinners";
+  
+
+  interface UploadSectionProps {
+    // Optional custom upload handler.
+    uploadHandler?: (files: FileList) => Promise<void>;
+    isUploading?: boolean;
+  }
+
+  export const UploadSection = ({ uploadHandler, isUploading }: UploadSectionProps) => {
+    const handleFileUpload = async (files: FileList) => {
+      if (uploadHandler) {
+        await uploadHandler(files); 
+        return;
+      }
+      try {
+        const formData = new FormData();
+        Array.from(files).forEach((file) => {
+          formData.append("files", file);
+        });
+        const response = await axios.post("/api/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log("Upload successful:", response.data);
+      } catch (error) {
+        console.error("Upload failed:", error);
+      }
+    };
+
+    return (
+      <div className="p-4 border-t border-zinc-800">
+        <h2 className="text-sm font-semibold mb-4 text-gray-200 flex items-center space-x-2">
+          <Upload className="h-4 w-4 text-green-600" />
+          <span>Upload Documents</span>
+        </h2>
+
+        <div
+          className="border-2 border-dashed border-gray-700 rounded-lg p-6 text-center hover:border-green-600 transition-colors duration-200 cursor-pointer"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={(e) => {
+            e.preventDefault();
+            if (e.dataTransfer.files) {
+              handleFileUpload(e.dataTransfer.files);
+            }
+          }}
+        >
+          <input
+            id="file-upload"
+            type="file"
+            className="hidden"
+            multiple
+            onChange={(e) => {
+              if (e.target.files) {
+                handleFileUpload(e.target.files);
+              }
+            }}
+          />
+<label 
+          htmlFor="file-upload" 
+          className={`${isUploading ? "cursor-not-allowed" : "cursor-pointer"}`}
+        >
+          {isUploading ? (
+            <div className="space-y-4">
+              <FadeLoader
+                color="#22c55e"
+                className="mx-auto"
+              />
+              <div className="space-y-2">
+                <p className="text-sm text-gray-400 font-medium">
+                  Uploading Documents...
+                </p>
+                <p className="text-xs text-gray-500">
+                  Your knowledge base is expanding
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-400">
+                Drag and drop or Click to upload
+              </p>
+            </>
+          )}
+        </label>
+        </div>
+      </div>
+    );
+  };
+
+================
+File: frontend/components/model-settings/SettingsSection.tsx
+================
+import React from 'react';
+import { Settings2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Slider } from "../ui/slider";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
+
+interface SettingsSectionProps {
+  similarityThreshold: number[];
+  setSimilarityThreshold: (value: number[]) => void;
+  similarResults: number[];
+  setSimilarResults: (value: number[]) => void;
+  temperature: number[];
+  setTemperature: (value: number[]) => void;
+  maxTokens: number[];
+  setMaxTokens: (value: number[]) => void;
+  responseStyle: string;
+  setResponseStyle: (value: string) => void;
+  modelName: string;
+  setModelName: (value: string) => void;
+}
+
+const models = [
+  { modelName: "gpt-4o", displayName: "GPT-4o" },
+  { modelName: "gpt-4o-mini", displayName: "GPT-4.0-Mini" },
+];
+
+const responseStyles = [
+  { style: "concise", displayName: "Concise" },
+  { style: "detailed", displayName: "Detailed" },
+  { style: "technical", displayName: "Technical" },
+  { style: "casual", displayName: "Casual" },
+];
+
+export const SettingsSection = ({
+  similarityThreshold,
+  setSimilarityThreshold,
+  similarResults,
+  setSimilarResults,
+  temperature,
+  setTemperature,
+  maxTokens,
+  setMaxTokens,
+  responseStyle,
+  setResponseStyle,
+  modelName,
+  setModelName,
+}: SettingsSectionProps) => {
+  return (
+    <div className=" bg-stone-950 flex flex-col">
+      <div className="p-4">
+        <div className="space-y-4">
+          {/* Primary Settings */}
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">Model</label>
+            <Select value={modelName} onValueChange={setModelName}>
+              <SelectTrigger className="w-full bg-stone-900 focus:border-green-800 focus:ring-0">
+                <SelectValue placeholder="Select model" />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((model) => (
+                  <SelectItem key={model.modelName} value={model.modelName}>
+                    {model.displayName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-400 mb-2 block">Response Style</label>
+            <Select value={responseStyle} onValueChange={setResponseStyle}>
+              <SelectTrigger className="w-full bg-stone-900 focus:border-green-800 focus:ring-0">
+                <SelectValue placeholder="Select style" />
+              </SelectTrigger>
+              <SelectContent>
+                {responseStyles.map((style) => (
+                  <SelectItem key={style.style} value={style.style}>
+                    {style.displayName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Advanced Settings Accordion */}
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="advanced-settings" className="border-zinc-800">
+              <AccordionTrigger className="text-gray-200 hover:text-gray-100">
+                <div className="flex items-center space-x-2">
+                  <Settings2 className="h-4 w-4 text-green-600" />
+                  <span>Advanced Settings</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-6 pt-4">
+                  {/* Temperature */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Temperature</label>
+                    <Slider
+                      value={temperature}
+                      onValueChange={setTemperature}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{temperature[0]}</span>
+                  </div>
+
+                  {/* Max Tokens */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Max Tokens</label>
+                    <Slider
+                      value={maxTokens}
+                      onValueChange={setMaxTokens}
+                      min={5000}
+                      max={20000}
+                      step={1000}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{maxTokens[0]}</span>
+                  </div>
+
+                  {/* Similarity Threshold */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Similarity Threshold</label>
+                    <Slider
+                      value={similarityThreshold}
+                      onValueChange={setSimilarityThreshold}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{similarityThreshold[0] * 100}%</span>
+                  </div>
+
+                  {/* Similar Results */}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-2 block">Similar Results</label>
+                    <Slider
+                      value={similarResults}
+                      onValueChange={setSimilarResults}
+                      min={5}
+                      max={15}
+                      step={1}
+                      className="w-full"
+                    />
+                    <span className="text-sm text-gray-400 mt-1 block">{similarResults[0]}</span>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default SettingsSection;
+
+================
+File: frontend/components/sidebar/CustomSidebar.tsx
+================
+// CustomSidebar.tsx
+"use client";
+import React from "react";
+
+interface CustomSidebarProps {
+  children: React.ReactNode;
+}
+
+const CustomSidebar = ({ children }: CustomSidebarProps) => {
+  return (
+    <div className="h-screen bg-stone-950 flex flex-col">
+      {/* Logo Section */}
+
+
+      {/* Render the passed-in children */}
+      <div className="h-screen flex flex-col justify-between overflow-y-auto">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export default CustomSidebar;
+
+================
+File: frontend/components/ui/accordion.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as AccordionPrimitive from "@radix-ui/react-accordion"
+import { ChevronDown } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const Accordion = AccordionPrimitive.Root
+
+const AccordionItem = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+>(({ className, ...props }, ref) => (
+  <AccordionPrimitive.Item
+    ref={ref}
+    className={cn("border-b", className)}
+    {...props}
+  />
+))
+AccordionItem.displayName = "AccordionItem"
+
+const AccordionTrigger = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Trigger
+      ref={ref}
+      className={cn(
+        "flex flex-1 items-center justify-between py-4 text-sm font-medium transition-all text-left [&[data-state=open]>svg]:rotate-180",
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200" />
+    </AccordionPrimitive.Trigger>
+  </AccordionPrimitive.Header>
+))
+AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
+
+const AccordionContent = React.forwardRef<
+  React.ElementRef<typeof AccordionPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <AccordionPrimitive.Content
+    ref={ref}
+    className="overflow-hidden text-sm data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
+    {...props}
+  >
+    <div className={cn("pb-4 pt-0", className)}>{children}</div>
+  </AccordionPrimitive.Content>
+))
+AccordionContent.displayName = AccordionPrimitive.Content.displayName
+
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
+
+================
+File: frontend/components/ui/button.tsx
+================
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
+import { cn } from "../../lib/utils"
+
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default:
+          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline:
+          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+)
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button"
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Button.displayName = "Button"
+
+export { Button, buttonVariants }
+
+================
+File: frontend/components/ui/dropdown-menu.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
+import { Check, ChevronRight, Circle } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const DropdownMenu = DropdownMenuPrimitive.Root
+
+const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger
+
+const DropdownMenuGroup = DropdownMenuPrimitive.Group
+
+const DropdownMenuPortal = DropdownMenuPrimitive.Portal
+
+const DropdownMenuSub = DropdownMenuPrimitive.Sub
+
+const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup
+
+const DropdownMenuSubTrigger = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubTrigger>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubTrigger> & {
+    inset?: boolean
+  }
+>(({ className, inset, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubTrigger
+    ref={ref}
+    className={cn(
+      "flex cursor-default gap-2 select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <ChevronRight className="ml-auto" />
+  </DropdownMenuPrimitive.SubTrigger>
+))
+DropdownMenuSubTrigger.displayName =
+  DropdownMenuPrimitive.SubTrigger.displayName
+
+const DropdownMenuSubContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.SubContent>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.SubContent>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.SubContent
+    ref={ref}
+    className={cn(
+      "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+      className
+    )}
+    {...props}
+  />
+))
+DropdownMenuSubContent.displayName =
+  DropdownMenuPrimitive.SubContent.displayName
+
+const DropdownMenuContent = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <DropdownMenuPrimitive.Portal>
+    <DropdownMenuPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md",
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </DropdownMenuPrimitive.Portal>
+))
+DropdownMenuContent.displayName = DropdownMenuPrimitive.Content.displayName
+
+const DropdownMenuItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&>svg]:size-4 [&>svg]:shrink-0",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+))
+DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName
+
+const DropdownMenuCheckboxItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+>(({ className, children, checked, ...props }, ref) => (
+  <DropdownMenuPrimitive.CheckboxItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    checked={checked}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.CheckboxItem>
+))
+DropdownMenuCheckboxItem.displayName =
+  DropdownMenuPrimitive.CheckboxItem.displayName
+
+const DropdownMenuRadioItem = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.RadioItem>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.RadioItem>
+>(({ className, children, ...props }, ref) => (
+  <DropdownMenuPrimitive.RadioItem
+    ref={ref}
+    className={cn(
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+      <DropdownMenuPrimitive.ItemIndicator>
+        <Circle className="h-2 w-2 fill-current" />
+      </DropdownMenuPrimitive.ItemIndicator>
+    </span>
+    {children}
+  </DropdownMenuPrimitive.RadioItem>
+))
+DropdownMenuRadioItem.displayName = DropdownMenuPrimitive.RadioItem.displayName
+
+const DropdownMenuLabel = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Label> & {
+    inset?: boolean
+  }
+>(({ className, inset, ...props }, ref) => (
+  <DropdownMenuPrimitive.Label
+    ref={ref}
+    className={cn(
+      "px-2 py-1.5 text-sm font-semibold",
+      inset && "pl-8",
+      className
+    )}
+    {...props}
+  />
+))
+DropdownMenuLabel.displayName = DropdownMenuPrimitive.Label.displayName
+
+const DropdownMenuSeparator = React.forwardRef<
+  React.ElementRef<typeof DropdownMenuPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <DropdownMenuPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    {...props}
+  />
+))
+DropdownMenuSeparator.displayName = DropdownMenuPrimitive.Separator.displayName
+
+const DropdownMenuShortcut = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <span
+      className={cn("ml-auto text-xs tracking-widest opacity-60", className)}
+      {...props}
+    />
+  )
+}
+DropdownMenuShortcut.displayName = "DropdownMenuShortcut"
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+}
+
+================
+File: frontend/components/ui/input.tsx
+================
+import * as React from "react"
+
+import { cn } from "../../lib/utils"
+
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+  ({ className, type, ...props }, ref) => {
+    return (
+      <input
+        type={type}
+        className={cn(
+          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    )
+  }
+)
+Input.displayName = "Input"
+
+export { Input }
+
+================
+File: frontend/components/ui/scroll-area.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
+
+import { cn } from "../../lib/utils"
+
+const ScrollArea = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root
+    ref={ref}
+    className={cn("relative overflow-hidden", className)}
+    {...props}
+  >
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+      {children}
+    </ScrollAreaPrimitive.Viewport>
+    <ScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+))
+ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
+
+const ScrollBar = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+>(({ className, orientation = "vertical", ...props }, ref) => (
+  <ScrollAreaPrimitive.ScrollAreaScrollbar
+    ref={ref}
+    orientation={orientation}
+    className={cn(
+      "flex touch-none select-none transition-colors",
+      orientation === "vertical" &&
+        "h-full w-2.5 border-l border-l-transparent p-[1px]",
+      orientation === "horizontal" &&
+        "h-2.5 flex-col border-t border-t-transparent p-[1px]",
+      className
+    )}
+    {...props}
+  >
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-border" />
+  </ScrollAreaPrimitive.ScrollAreaScrollbar>
+))
+ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName
+
+export { ScrollArea, ScrollBar }
+
+================
+File: frontend/components/ui/select.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as SelectPrimitive from "@radix-ui/react-select"
+import { Check, ChevronDown, ChevronUp } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const Select = SelectPrimitive.Root
+
+const SelectGroup = SelectPrimitive.Group
+
+const SelectValue = SelectPrimitive.Value
+
+const SelectTrigger = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Trigger>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Trigger
+    ref={ref}
+    className={cn(
+      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      className
+    )}
+    {...props}
+  >
+    {children}
+    <SelectPrimitive.Icon asChild>
+      <ChevronDown className="h-4 w-4 opacity-50" />
+    </SelectPrimitive.Icon>
+  </SelectPrimitive.Trigger>
+))
+SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
+
+const SelectScrollUpButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollUpButton
+    ref={ref}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      className
+    )}
+    {...props}
+  >
+    <ChevronUp className="h-4 w-4" />
+  </SelectPrimitive.ScrollUpButton>
+))
+SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
+
+const SelectScrollDownButton = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.ScrollDownButton
+    ref={ref}
+    className={cn(
+      "flex cursor-default items-center justify-center py-1",
+      className
+    )}
+    {...props}
+  >
+    <ChevronDown className="h-4 w-4" />
+  </SelectPrimitive.ScrollDownButton>
+))
+SelectScrollDownButton.displayName =
+  SelectPrimitive.ScrollDownButton.displayName
+
+const SelectContent = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+>(({ className, children, position = "popper", ...props }, ref) => (
+  <SelectPrimitive.Portal>
+    <SelectPrimitive.Content
+      ref={ref}
+      className={cn(
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        position === "popper" &&
+          "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+        className
+      )}
+      position={position}
+      {...props}
+    >
+      <SelectScrollUpButton />
+      <SelectPrimitive.Viewport
+        className={cn(
+          "p-1",
+          position === "popper" &&
+            "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]"
+        )}
+      >
+        {children}
+      </SelectPrimitive.Viewport>
+      <SelectScrollDownButton />
+    </SelectPrimitive.Content>
+  </SelectPrimitive.Portal>
+))
+SelectContent.displayName = SelectPrimitive.Content.displayName
+
+const SelectLabel = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Label>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Label
+    ref={ref}
+    className={cn("px-2 py-1.5 text-sm font-semibold", className)}
+    {...props}
+  />
+))
+SelectLabel.displayName = SelectPrimitive.Label.displayName
+
+const SelectItem = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Item>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+>(({ className, children, ...props }, ref) => (
+  <SelectPrimitive.Item
+    ref={ref}
+    className={cn(
+      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <span className="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
+      <SelectPrimitive.ItemIndicator>
+        <Check className="h-4 w-4" />
+      </SelectPrimitive.ItemIndicator>
+    </span>
+    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+  </SelectPrimitive.Item>
+))
+SelectItem.displayName = SelectPrimitive.Item.displayName
+
+const SelectSeparator = React.forwardRef<
+  React.ElementRef<typeof SelectPrimitive.Separator>,
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+>(({ className, ...props }, ref) => (
+  <SelectPrimitive.Separator
+    ref={ref}
+    className={cn("-mx-1 my-1 h-px bg-muted", className)}
+    {...props}
+  />
+))
+SelectSeparator.displayName = SelectPrimitive.Separator.displayName
+
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+}
+
+================
+File: frontend/components/ui/separator.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as SeparatorPrimitive from "@radix-ui/react-separator"
+
+import { cn } from "../../lib/utils"
+
+const Separator = React.forwardRef<
+  React.ElementRef<typeof SeparatorPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root>
+>(
+  (
+    { className, orientation = "horizontal", decorative = true, ...props },
+    ref
+  ) => (
+    <SeparatorPrimitive.Root
+      ref={ref}
+      decorative={decorative}
+      orientation={orientation}
+      className={cn(
+        "shrink-0 bg-border",
+        orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+        className
+      )}
+      {...props}
+    />
+  )
+)
+Separator.displayName = SeparatorPrimitive.Root.displayName
+
+export { Separator }
+
+================
+File: frontend/components/ui/sheet.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as SheetPrimitive from "@radix-ui/react-dialog"
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const Sheet = SheetPrimitive.Root
+
+const SheetTrigger = SheetPrimitive.Trigger
+
+const SheetClose = SheetPrimitive.Close
+
+const SheetPortal = SheetPrimitive.Portal
+
+const SheetOverlay = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Overlay>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Overlay>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Overlay
+    className={cn(
+      "fixed inset-0 z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+      className
+    )}
+    {...props}
+    ref={ref}
+  />
+))
+SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
+
+const sheetVariants = cva(
+  "fixed z-50 gap-4 bg-background p-6 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500 data-[state=open]:animate-in data-[state=closed]:animate-out",
+  {
+    variants: {
+      side: {
+        top: "inset-x-0 top-0 border-b data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top",
+        bottom:
+          "inset-x-0 bottom-0 border-t data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
+        left: "inset-y-0 left-0 h-full w-3/4 border-r data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+        right:
+          "inset-y-0 right-0 h-full w-3/4 border-l data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
+      },
+    },
+    defaultVariants: {
+      side: "right",
+    },
+  }
+)
+
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {}
+
+const SheetContent = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Content>,
+  SheetContentProps
+>(({ side = "right", className, children, ...props }, ref) => (
+  <SheetPortal>
+    <SheetOverlay />
+    <SheetPrimitive.Content
+      ref={ref}
+      className={cn(sheetVariants({ side }), className)}
+      {...props}
+    >
+      <SheetPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
+        <X className="h-4 w-4" />
+        <span className="sr-only">Close</span>
+      </SheetPrimitive.Close>
+      {children}
+    </SheetPrimitive.Content>
+  </SheetPortal>
+))
+SheetContent.displayName = SheetPrimitive.Content.displayName
+
+const SheetHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col space-y-2 text-center sm:text-left",
+      className
+    )}
+    {...props}
+  />
+)
+SheetHeader.displayName = "SheetHeader"
+
+const SheetFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn(
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className
+    )}
+    {...props}
+  />
+)
+SheetFooter.displayName = "SheetFooter"
+
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold text-foreground", className)}
+    {...props}
+  />
+))
+SheetTitle.displayName = SheetPrimitive.Title.displayName
+
+const SheetDescription = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Description>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Description>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Description
+    ref={ref}
+    className={cn("text-sm text-muted-foreground", className)}
+    {...props}
+  />
+))
+SheetDescription.displayName = SheetPrimitive.Description.displayName
+
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+}
+
+================
+File: frontend/components/ui/skeleton.tsx
+================
+import { cn } from "../../lib/utils"
+
+function Skeleton({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div
+      className={cn("animate-pulse rounded-md bg-primary/10", className)}
+      {...props}
+    />
+  )
+}
+
+export { Skeleton }
+
+================
+File: frontend/components/ui/slider.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as SliderPrimitive from "@radix-ui/react-slider"
+
+import { cn } from "../../lib/utils"
+
+const Slider = React.forwardRef<
+  React.ElementRef<typeof SliderPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitive.Root
+    ref={ref}
+    className={cn(
+      "relative flex w-full touch-none select-none items-center",
+      className
+    )}
+    {...props}
+  >
+    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-stone-800">
+      <SliderPrimitive.Range className="absolute h-full  bg-green-600" />
+    </SliderPrimitive.Track>
+    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
+  </SliderPrimitive.Root>
+))
+Slider.displayName = SliderPrimitive.Root.displayName
+
+export { Slider }
+
+================
+File: frontend/components/ui/textarea.tsx
+================
+import * as React from "react"
+
+import { cn } from "../../lib/utils"
+
+const Textarea = React.forwardRef<
+  HTMLTextAreaElement,
+  React.ComponentProps<"textarea">
+>(({ className, ...props }, ref) => {
+  return (
+    <textarea
+      className={cn(
+        "flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+        className
+      )}
+      ref={ref}
+      {...props}
+    />
+  )
+})
+Textarea.displayName = "Textarea"
+
+export { Textarea }
+
+================
+File: frontend/components/ui/toast.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as ToastPrimitives from "@radix-ui/react-toast"
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+
+import { cn } from "../../lib/utils"
+
+const ToastProvider = ToastPrimitives.Provider
+
+const ToastViewport = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Viewport>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Viewport
+    ref={ref}
+    className={cn(
+      "fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]",
+      className
+    )}
+    {...props}
+  />
+))
+ToastViewport.displayName = ToastPrimitives.Viewport.displayName
+
+const toastVariants = cva(
+  "group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full",
+  {
+    variants: {
+      variant: {
+        default: "border bg-background text-foreground",
+        destructive:
+          "destructive group border-destructive bg-destructive text-destructive-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+const Toast = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
+    VariantProps<typeof toastVariants>
+>(({ className, variant, ...props }, ref) => {
+  return (
+    <ToastPrimitives.Root
+      ref={ref}
+      className={cn(toastVariants({ variant }), className)}
+      {...props}
+    />
+  )
+})
+Toast.displayName = ToastPrimitives.Root.displayName
+
+const ToastAction = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Action>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Action
+    ref={ref}
+    className={cn(
+      "inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium transition-colors hover:bg-secondary focus:outline-none focus:ring-1 focus:ring-ring disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive",
+      className
+    )}
+    {...props}
+  />
+))
+ToastAction.displayName = ToastPrimitives.Action.displayName
+
+const ToastClose = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Close>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Close
+    ref={ref}
+    className={cn(
+      "absolute right-1 top-1 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-1 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
+      className
+    )}
+    toast-close=""
+    {...props}
+  >
+    <X className="h-4 w-4" />
+  </ToastPrimitives.Close>
+))
+ToastClose.displayName = ToastPrimitives.Close.displayName
+
+const ToastTitle = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Title>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Title
+    ref={ref}
+    className={cn("text-sm font-semibold [&+div]:text-xs", className)}
+    {...props}
+  />
+))
+ToastTitle.displayName = ToastPrimitives.Title.displayName
+
+const ToastDescription = React.forwardRef<
+  React.ElementRef<typeof ToastPrimitives.Description>,
+  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
+>(({ className, ...props }, ref) => (
+  <ToastPrimitives.Description
+    ref={ref}
+    className={cn("text-sm opacity-90", className)}
+    {...props}
+  />
+))
+ToastDescription.displayName = ToastPrimitives.Description.displayName
+
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
+
+type ToastActionElement = React.ReactElement<typeof ToastAction>
+
+export {
+  type ToastProps,
+  type ToastActionElement,
+  ToastProvider,
+  ToastViewport,
+  Toast,
+  ToastTitle,
+  ToastDescription,
+  ToastClose,
+  ToastAction,
+}
+
+================
+File: frontend/components/ui/toaster.tsx
+================
+"use client"
+
+import { useToast } from "@/hooks/use-toast"
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+} from "../../components/ui/toast"
+
+export function Toaster() {
+  const { toasts } = useToast()
+
+  return (
+    <ToastProvider>
+      {toasts.map(function ({ id, title, description, action, ...props }) {
+        return (
+          <Toast key={id} {...props}>
+            <div className="grid gap-1">
+              {title && <ToastTitle>{title}</ToastTitle>}
+              {description && (
+                <ToastDescription>{description}</ToastDescription>
+              )}
+            </div>
+            {action}
+            <ToastClose />
+          </Toast>
+        )
+      })}
+      <ToastViewport />
+    </ToastProvider>
+  )
+}
+
+================
+File: frontend/components/ui/tooltip.tsx
+================
+"use client"
+
+import * as React from "react"
+import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+
+import { cn } from "../../lib/utils"
+
+const TooltipProvider = TooltipPrimitive.Provider
+
+const Tooltip = TooltipPrimitive.Root
+
+const TooltipTrigger = TooltipPrimitive.Trigger
+
+const TooltipContent = React.forwardRef<
+  React.ElementRef<typeof TooltipPrimitive.Content>,
+  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
+>(({ className, sideOffset = 4, ...props }, ref) => (
+  <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Content
+      ref={ref}
+      sideOffset={sideOffset}
+      className={cn(
+        "z-50 overflow-hidden rounded-md bg-primary px-3 py-1.5 text-xs text-primary-foreground animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        className
+      )}
+      {...props}
+    />
+  </TooltipPrimitive.Portal>
+))
+TooltipContent.displayName = TooltipPrimitive.Content.displayName
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+
+================
+File: frontend/Dockerfile
+================
+# Stage 1: Build the frontend using Node.js
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Accept build argument for the backend URL and set production environment
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NODE_ENV=production
+ENV NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy the rest of the frontend source code
+COPY . ./
+
+# Build the Next.js application
+RUN npm run build
+
+# Stage 2: Serve the built frontend using a lightweight Node.js runtime
+FROM node:20-slim
+
+WORKDIR /app
+
+# Copy the production build and node_modules from the builder stage
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+
+# Expose the port used by Next.js (default: 3000)
+EXPOSE 3000
+
+# Start the Next.js server
+CMD ["npm", "run", "start"]
+
+================
+File: frontend/eslint.config.mjs
+================
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+];
+
+export default eslintConfig;
+
+================
+File: frontend/fly.toml
+================
+# fly.toml app configuration file generated for notstuck-frontend on 2025-02-11T19:18:50-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'notstuck-frontend'
+primary_region = 'dfw'
+
+[build]
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+
+================
+File: frontend/hooks/use-mobile.tsx
+================
+import * as React from "react"
+
+const MOBILE_BREAKPOINT = 768
+
+export function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+
+  React.useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    const onChange = () => {
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    }
+    mql.addEventListener("change", onChange)
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
+
+  return !!isMobile
+}
+
+================
+File: frontend/hooks/use-toast.ts
+================
+"use client"
+
+// Inspired by react-hot-toast library
+import * as React from "react"
+
+import type {
+  ToastActionElement,
+  ToastProps,
+} from "@/components/ui/toast"
+
+const TOAST_LIMIT = 1
+const TOAST_REMOVE_DELAY = 1000000
+
+type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
+}
+
+const actionTypes = {
+  ADD_TOAST: "ADD_TOAST",
+  UPDATE_TOAST: "UPDATE_TOAST",
+  DISMISS_TOAST: "DISMISS_TOAST",
+  REMOVE_TOAST: "REMOVE_TOAST",
+} as const
+
+let count = 0
+
+function genId() {
+  count = (count + 1) % Number.MAX_SAFE_INTEGER
+  return count.toString()
+}
+
+type ActionType = typeof actionTypes
+
+type Action =
+  | {
+      type: ActionType["ADD_TOAST"]
+      toast: ToasterToast
+    }
+  | {
+      type: ActionType["UPDATE_TOAST"]
+      toast: Partial<ToasterToast>
+    }
+  | {
+      type: ActionType["DISMISS_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
+  | {
+      type: ActionType["REMOVE_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
+
+interface State {
+  toasts: ToasterToast[]
+}
+
+const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
+
+const addToRemoveQueue = (toastId: string) => {
+  if (toastTimeouts.has(toastId)) {
+    return
+  }
+
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId)
+    dispatch({
+      type: "REMOVE_TOAST",
+      toastId: toastId,
+    })
+  }, TOAST_REMOVE_DELAY)
+
+  toastTimeouts.set(toastId, timeout)
+}
+
+export const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD_TOAST":
+      return {
+        ...state,
+        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+      }
+
+    case "UPDATE_TOAST":
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === action.toast.id ? { ...t, ...action.toast } : t
+        ),
+      }
+
+    case "DISMISS_TOAST": {
+      const { toastId } = action
+
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
+      if (toastId) {
+        addToRemoveQueue(toastId)
+      } else {
+        state.toasts.forEach((toast) => {
+          addToRemoveQueue(toast.id)
+        })
+      }
+
+      return {
+        ...state,
+        toasts: state.toasts.map((t) =>
+          t.id === toastId || toastId === undefined
+            ? {
+                ...t,
+                open: false,
+              }
+            : t
+        ),
+      }
+    }
+    case "REMOVE_TOAST":
+      if (action.toastId === undefined) {
+        return {
+          ...state,
+          toasts: [],
+        }
+      }
+      return {
+        ...state,
+        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+      }
+  }
+}
+
+const listeners: Array<(state: State) => void> = []
+
+let memoryState: State = { toasts: [] }
+
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action)
+  listeners.forEach((listener) => {
+    listener(memoryState)
+  })
+}
+
+type Toast = Omit<ToasterToast, "id">
+
+function toast({ ...props }: Toast) {
+  const id = genId()
+
+  const update = (props: ToasterToast) =>
+    dispatch({
+      type: "UPDATE_TOAST",
+      toast: { ...props, id },
+    })
+  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+
+  dispatch({
+    type: "ADD_TOAST",
+    toast: {
+      ...props,
+      id,
+      open: true,
+      onOpenChange: (open) => {
+        if (!open) dismiss()
+      },
+    },
+  })
+
+  return {
+    id: id,
+    dismiss,
+    update,
+  }
+}
+
+function useToast() {
+  const [state, setState] = React.useState<State>(memoryState)
+
+  React.useEffect(() => {
+    listeners.push(setState)
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) {
+        listeners.splice(index, 1)
+      }
+    }
+  }, [state])
+
+  return {
+    ...state,
+    toast,
+    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+  }
+}
+
+export { useToast, toast }
+
+================
+File: frontend/lib/utils.ts
+================
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+================
+File: frontend/next.config.ts
+================
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
+};
+
+export default nextConfig;
+
+================
+File: frontend/package.json
+================
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-accordion": "^1.2.3",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-select": "^2.1.6",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@radix-ui/react-toast": "^1.2.6",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.3",
+    "react-pdf": "^9.2.1",
+    "react-spinners": "^0.15.0",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.6",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}
+
+================
+File: frontend/postcss.config.mjs
+================
+/** @type {import('postcss-load-config').Config} */
+const config = {
+  plugins: {
+    tailwindcss: {},
+  },
+};
+
+export default config;
+
+================
+File: frontend/public/file.svg
+================
+<svg fill="none" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 13.5V5.41a1 1 0 0 0-.3-.7L9.8.29A1 1 0 0 0 9.08 0H1.5v13.5A2.5 2.5 0 0 0 4 16h8a2.5 2.5 0 0 0 2.5-2.5m-1.5 0v-7H8v-5H3v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1M9.5 5V2.12L12.38 5zM5.13 5h-.62v1.25h2.12V5zm-.62 3h7.12v1.25H4.5zm.62 3h-.62v1.25h7.12V11z" clip-rule="evenodd" fill="#666" fill-rule="evenodd"/></svg>
+
+================
+File: frontend/public/globe.svg
+================
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+
+================
+File: frontend/public/next.svg
+================
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 394 80"><path fill="#000" d="M262 0h68.5v12.7h-27.2v66.6h-13.6V12.7H262V0ZM149 0v12.7H94v20.4h44.3v12.6H94v21h55v12.6H80.5V0h68.7zm34.3 0h-17.8l63.8 79.4h17.9l-32-39.7 32-39.6h-17.9l-23 28.6-23-28.6zm18.3 56.7-9-11-27.1 33.7h17.8l18.3-22.7z"/><path fill="#000" d="M81 79.3 17 0H0v79.3h13.6V17l50.2 62.3H81Zm252.6-.4c-1 0-1.8-.4-2.5-1s-1.1-1.6-1.1-2.6.3-1.8 1-2.5 1.6-1 2.6-1 1.8.3 2.5 1a3.4 3.4 0 0 1 .6 4.3 3.7 3.7 0 0 1-3 1.8zm23.2-33.5h6v23.3c0 2.1-.4 4-1.3 5.5a9.1 9.1 0 0 1-3.8 3.5c-1.6.8-3.5 1.3-5.7 1.3-2 0-3.7-.4-5.3-1s-2.8-1.8-3.7-3.2c-.9-1.3-1.4-3-1.4-5h6c.1.8.3 1.6.7 2.2s1 1.2 1.6 1.5c.7.4 1.5.5 2.4.5 1 0 1.8-.2 2.4-.6a4 4 0 0 0 1.6-1.8c.3-.8.5-1.8.5-3V45.5zm30.9 9.1a4.4 4.4 0 0 0-2-3.3 7.5 7.5 0 0 0-4.3-1.1c-1.3 0-2.4.2-3.3.5-.9.4-1.6 1-2 1.6a3.5 3.5 0 0 0-.3 4c.3.5.7.9 1.3 1.2l1.8 1 2 .5 3.2.8c1.3.3 2.5.7 3.7 1.2a13 13 0 0 1 3.2 1.8 8.1 8.1 0 0 1 3 6.5c0 2-.5 3.7-1.5 5.1a10 10 0 0 1-4.4 3.5c-1.8.8-4.1 1.2-6.8 1.2-2.6 0-4.9-.4-6.8-1.2-2-.8-3.4-2-4.5-3.5a10 10 0 0 1-1.7-5.6h6a5 5 0 0 0 3.5 4.6c1 .4 2.2.6 3.4.6 1.3 0 2.5-.2 3.5-.6 1-.4 1.8-1 2.4-1.7a4 4 0 0 0 .8-2.4c0-.9-.2-1.6-.7-2.2a11 11 0 0 0-2.1-1.4l-3.2-1-3.8-1c-2.8-.7-5-1.7-6.6-3.2a7.2 7.2 0 0 1-2.4-5.7 8 8 0 0 1 1.7-5 10 10 0 0 1 4.3-3.5c2-.8 4-1.2 6.4-1.2 2.3 0 4.4.4 6.2 1.2 1.8.8 3.2 2 4.3 3.4 1 1.4 1.5 3 1.5 5h-5.8z"/></svg>
+
+================
+File: frontend/public/vercel.svg
+================
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1155 1000"><path d="m577.3 0 577.4 1000H0z" fill="#fff"/></svg>
+
+================
+File: frontend/public/window.svg
+================
+<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.5 2.5h13v10a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1zM0 1h16v11.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 0 12.5zm3.75 4.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5M7 4.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0m1.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5" fill="#666"/></svg>
+
+================
+File: frontend/README.md
+================
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+================
+File: frontend/tailwind.config.ts
+================
+import type { Config } from "tailwindcss";
+
+export default {
+    darkMode: ["class"],
+    content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+  	extend: {
+  		colors: {
+			neonGreen: 'hsl(var(--neon-green))',
+  			background: 'hsl(var(--background))',
+  			foreground: 'hsl(var(--foreground))',
+  			card: {
+  				DEFAULT: 'hsl(var(--card))',
+  				foreground: 'hsl(var(--card-foreground))'
+  			},
+  			popover: {
+  				DEFAULT: 'hsl(var(--popover))',
+  				foreground: 'hsl(var(--popover-foreground))'
+  			},
+  			primary: {
+  				DEFAULT: 'hsl(var(--primary))',
+  				foreground: 'hsl(var(--primary-foreground))'
+  			},
+  			secondary: {
+  				DEFAULT: 'hsl(var(--secondary))',
+  				foreground: 'hsl(var(--secondary-foreground))'
+  			},
+  			muted: {
+  				DEFAULT: 'hsl(var(--muted))',
+  				foreground: 'hsl(var(--muted-foreground))'
+  			},
+  			accent: {
+  				DEFAULT: 'hsl(var(--accent))',
+  				foreground: 'hsl(var(--accent-foreground))'
+  			},
+  			destructive: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))'
+  			},
+  			border: 'hsl(var(--border))',
+  			input: 'hsl(var(--input))',
+  			ring: 'hsl(var(--ring))',
+  			chart: {
+  				'1': 'hsl(var(--chart-1))',
+  				'2': 'hsl(var(--chart-2))',
+  				'3': 'hsl(var(--chart-3))',
+  				'4': 'hsl(var(--chart-4))',
+  				'5': 'hsl(var(--chart-5))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
+  			}
+  		},
+  		borderRadius: {
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		}
+  	}
+  },
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+
+================
+File: frontend/tsconfig.json
+================
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+
+================
+File: LICENSE
+================
+MIT License
+
+Copyright (c) 2025 Praneeth Ravuri
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================
+File: terraform/main.tf
+================
+resource "google_cloud_run_service" "default" {
+  name     = "notstuck-app"
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        image = "docker.io/${var.docker_username}/notstuck:latest"
+
+        # Inject secret environment variables using the correct block name.
+        env {
+          name = "OPENAI_API_KEY"
+          value_from {
+            secret_key_ref {
+              name = "openai-api-key"   # Must match the secret ID in Secret Manager.
+              key  = "latest"           # Uses the latest version.
+            }
+          }
+        }
+
+        env {
+          name = "PINECONE_API_KEY"
+          value_from {
+            secret_key_ref {
+              name = "pinecone-api-key"
+              key  = "latest"
+            }
+          }
+        }
+
+        env {
+          name = "PINECONE_ENV"
+          value_from {
+            secret_key_ref {
+              name = "pinecone-env"
+              key  = "latest"
+            }
+          }
+        }
+
+        env {
+          name = "PINECONE_INDEX_NAME"
+          value_from {
+            secret_key_ref {
+              name = "pinecone-index-name"
+              key  = "latest"
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Use the correct block name "traffic" for routing configuration.
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+
+  autogenerate_revision_name = true
+}
+
+================
+File: terraform/variables.tf
+================
+variable "project" {
+  description = "GCP Project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP Region for Cloud Run"
+  type        = string
+  default     = "us-central1"
+}
+
+variable "docker_username" {
+  description = "Your Docker Hub username (where the image is hosted)"
+  type        = string
+}
+
+
+
+================================================================
+End of Codebase
+================================================================
