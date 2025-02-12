@@ -1,10 +1,14 @@
 // frontend/app/api/chats/[chatId]/route.ts
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export async function GET(request: Request, { params }: { params: { chatId: string } }) {
-  const { chatId } = params;
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ chatId: string }> }
+) {
+  const { chatId } = await params;
 
   try {
     // Forward the GET request to your FastAPI backend for a specific chat.

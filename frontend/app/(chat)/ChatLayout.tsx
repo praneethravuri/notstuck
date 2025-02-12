@@ -10,7 +10,7 @@ import { SettingsSection } from "../../components/model-settings/SettingsSection
 import { DocumentsSection } from "../../components/information/DocumentSection";
 import { SourcesSection } from "../../components/information/SourcesSection";
 import { UploadSection } from "../../components/information/UploadSection";
-import ChatList from "@/components/chat/ChatList";
+import ChatList from "../../components/chat/ChatList";
 import { MessageSquare } from "lucide-react";
 
 interface PdfFile {
