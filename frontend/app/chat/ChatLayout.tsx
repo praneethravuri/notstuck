@@ -6,60 +6,60 @@ import { ChatMessages } from "../../components/chat/ChatMessages";
 import { ChatInput } from "../../components/chat/ChatInput";
 import CustomSidebar from "../../components/sidebar/CustomSidebar";
 import { SettingsSection } from "../../components/model-settings/SettingsSection";
-// import { useToast } from "@/hooks/use-toast";
 import { DocumentsSection } from "../../components/information/DocumentSection";
 import { SourcesSection } from "../../components/information/SourcesSection";
 import { UploadSection } from "../../components/information/UploadSection";
 import ChatList from "../../components/chat/ChatList";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare} from "lucide-react";
+import { useToast } from "../../hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 interface PdfFile {
   name: string;
 }
 
 const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-console.log(apiUrl)
-
 
 export default function ChatLayout() {
-  // Chat messages state
   const [messages, setMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // New state for the current chat session id.
   const [chatId, setChatId] = useState<string | null>(null);
-
-  // Loading state for file uploads
   const [isUploading, setIsUploading] = useState(false);
-
-  // Settings state
   const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
   const [similarResults, setSimilarResults] = useState([7]);
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([5000]);
   const [responseStyle, setResponseStyle] = useState("detailed");
   const [modelName, setModelName] = useState("gpt-4o");
-
-  // Sidebar data state
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<string[]>([]);
-  // New state for relevant chunks from the backend
   const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
 
-  // const { toast } = useToast();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const handleNewChat = () => {
+    setChatId(null);
+    setMessages([]);
+    router.push("/chat");
+  };
 
   const loadChatHistory = async (chatId: string) => {
     try {
       const res = await fetch(`/api/chats/${chatId}`);
       if (!res.ok) throw new Error("Failed to fetch chat history");
       const data = await res.json();
-      // Map messages to strings with a prefix.
       const formatted = data.messages.map((msg: { role: string; content: string }) =>
         msg.role === "user" ? `You: ${msg.content}` : `AI: ${msg.content}`
       );
       setMessages(formatted);
     } catch (error) {
       console.error("Error loading chat history:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load chat history",
+        variant: "destructive",
+      });
     }
   };
 
@@ -67,7 +67,6 @@ export default function ChatLayout() {
     setChatId(selectedChatId);
     loadChatHistory(selectedChatId);
   };
-
 
   const loadFiles = async () => {
     try {
@@ -77,6 +76,11 @@ export default function ChatLayout() {
       setFiles(data.files.map((filename: string) => ({ name: filename })));
     } catch (err) {
       console.error("Error fetching PDF list:", err);
+      toast({
+        title: "Error",
+        description: "Failed to fetch PDF list",
+        variant: "destructive",
+      });
     }
   };
 
@@ -86,10 +90,10 @@ export default function ChatLayout() {
 
   const handleFileUpload = async (files: FileList) => {
     setIsUploading(true);
-    // toast({
-    //   title: "Uploading File",
-    //   description: "Your file is being uploaded and your knowledge is expanding...",
-    // });
+    toast({
+      title: "Uploading File",
+      description: "Your file is being uploaded and your knowledge is expanding...",
+    });
 
     try {
       const formData = new FormData();
@@ -102,24 +106,23 @@ export default function ChatLayout() {
       });
       console.log("Upload is successful:", response.data);
 
-      // toast({
-      //   title: "Upload Successful",
-      //   description: "Your document has been uploaded successfully.",
-      // });
+      toast({
+        title: "Upload Successful",
+        description: "Your document has been uploaded successfully.",
+      });
 
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
-      // toast({
-      //   title: "Upload Failed",
-      //   description: "There was an error uploading your document.",
-      //   variant: "destructive",
-      // });
+      toast({
+        title: "Upload Failed",
+        description: "There was an error uploading your document.",
+        variant: "destructive",
+      });
     } finally {
       setIsUploading(false);
     }
   };
-
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -148,12 +151,16 @@ export default function ChatLayout() {
 
       const data = await res.json();
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
-      // Update the relevant chunks and sources state from the backend response
       setRelevantChunks(data.relevant_chunks);
       setSources(data.source_files);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
+      toast({
+        title: "Error",
+        description: "Failed to fetch answer",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -170,9 +177,8 @@ export default function ChatLayout() {
             </div>
             <span className="font-semibold text-gray-200">NotStuck</span>
           </div>
-          <ChatList onSelectChat={handleSelectChat} />
+          <ChatList onSelectChat={handleSelectChat} onNewChat={handleNewChat} />
           <SourcesSection relevantChunks={relevantChunks} sources={sources} />
-
         </CustomSidebar>
       </aside>
 

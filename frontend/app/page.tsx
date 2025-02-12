@@ -1,10 +1,12 @@
-"use client"
-import ChatLayout from "./(chat)/ChatLayout"
+import React from 'react'
+import HomePage from './(homepage)/page'
 
-export default function Home() {
+const page = () => {
   return (
-    <div className="overflow-none">
-      <ChatLayout />
+    <div>
+      <HomePage />
     </div>
   )
 }
+
+export default page
