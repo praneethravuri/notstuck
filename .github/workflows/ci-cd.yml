@@ -44,8 +44,3 @@ jobs:
             -t ${{ secrets.DOCKER_USERNAME }}/notstuck-backend:latest \
             ./backend
           docker push ${{ secrets.DOCKER_USERNAME }}/notstuck-backend:latest
-
-          - name: Install flyctl
-          uses: superfly/flyctl-actions/setup-flyctl@v1
-          with:
-            version: "latest"
