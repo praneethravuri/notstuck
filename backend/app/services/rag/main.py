@@ -1,18 +1,12 @@
-# backend/app/services/rag/answer_question.py
+# app/services/rag/main.py
 
-import os
+import logging
 from typing import Optional, List
 from pinecone import Pinecone, ServerlessSpec
 
-# If you are using langchain_community for ChatOpenAI:
 from openai import OpenAI
 
 from ..pinecone_db.main import init_pinecone
-
-# Or, if you're using official LangChain:
-# from langchain.chat_models import ChatOpenAI
-
-# Import your config variables
 from ..config import (
     PINECONE_API_KEY,
     PINECONE_ENV,
@@ -20,92 +14,102 @@ from ..config import (
     PINECONE_EMBEDDING_DIMENSIONS,
     OPENAI_API_KEY
 )
-
-# Import your existing embedding function
-# e.g. from backend/app/services/embeddings/generate_embeddings.py
 from ..embeddings.generate_embeddings import get_embedding_function
 
-#############################################################################
-# MAIN FUNCTION: ANSWER A QUESTION
-#############################################################################
+logger = logging.getLogger(__name__)
 
+# Initialize OpenAI client
 client = OpenAI()
 client.api_key = OPENAI_API_KEY
 
-def answer_question(question,
-                    top_k,
-                    threshold,
-                    temperature,
-                    max_tokens,
-                    response_style,
-                    namespace,
-                    model_name,
-                    reasoning=False):  # Add reasoning parameter
+def answer_question(
+    question: str,
+    top_k: int,
+    threshold: float,
+    temperature: float,
+    max_tokens: int,
+    response_style: str,
+    namespace: str,
+    model_name: str,
+    reasoning: bool = False
+) -> dict:
     """
-    1) Embed the user question with get_embedding_function().
-    2) Query Pinecone for top_k relevant chunks (distance < threshold).
-    3) Build a final prompt with those chunks as context.
-    4) Ask the OpenAI model (via ChatOpenAI) and return the answer in Markdown.
+    1) Embed the user question.
+    2) Query Pinecone for top_k relevant chunks (score >= threshold).
+    3) Build a prompt with the retrieved context.
+    4) Get and return the answer from the OpenAI model.
     """
     
-    print(f"The rag received the following question: {question}")
-    print(f"top_k: {top_k}, threshold: {threshold}, temperature: {temperature}, max_tokens: {max_tokens}, response_style: {response_style}, namespace: {namespace}, model_name: {model_name}, reasoning: {reasoning}")  
+    logger.info(f"Received question: {question}")
+    logger.info(f"Parameters: top_k={top_k}, threshold={threshold}, temperature={temperature}, "
+                f"max_tokens={max_tokens}, response_style={response_style}, namespace={namespace}, "
+                f"model_name={model_name}, reasoning={reasoning}")  
 
     # 1) Embed the user question
     embedding_func = get_embedding_function()
     try:
         question_embedding = embedding_func.embed_query(question)
     except Exception as e:
-        print(f"Error embedding query: {e}")
-        return "Unable to embed your question at this time."
+        logger.error(f"Error embedding query: {e}")
+        return {"answer": "Unable to embed your question at this time.", "relevant_chunks": [], "source_files": []}
 
     if not question_embedding:
-        return "Got an empty embedding for your question."
+        return {"answer": "Got an empty embedding for your question.", "relevant_chunks": [], "source_files": []}
 
     # 2) Query Pinecone with the user question embedding
     index = init_pinecone()
-    query_response = index.query(
-        vector=question_embedding,
-        top_k=top_k,
-        include_metadata=True,
-        namespace=namespace
-    )
+    try:
+        query_response = index.query(
+            vector=question_embedding,
+            top_k=top_k,
+            include_metadata=True,
+            namespace=namespace
+        )
+    except Exception as e:
+        logger.error(f"Error querying Pinecone: {e}")
+        return {"answer": "Error querying the database.", "relevant_chunks": [], "source_files": []}
 
     matches = query_response.get("matches", [])
-    relevant_chunks = []
-    source_files = []
+    relevant_chunks: List[str] = []
+    source_files: List[str] = []
     for match in matches:
         score = match["score"]
         metadata = match.get("metadata", {})
         text_chunk = metadata.get("text", "")
         source_file = metadata.get("source_file", "unknown source")
-
-        if score >= threshold:  # Only include chunks with a score >= threshold
+        if score >= threshold:
             relevant_chunks.append(text_chunk)
             source_files.append(source_file)
 
-    if relevant_chunks:
-        context_text = "\n\n---\n\n".join(relevant_chunks)
-    else:
-        context_text = ""
-        
-    print(f"Relevant chunks: {relevant_chunks}")    
+    context_text = "\n\n---\n\n".join(relevant_chunks) if relevant_chunks else ""
+    logger.info(f"Found {len(relevant_chunks)} relevant chunks.")
 
     # Adjust system prompt based on response_style and reasoning
     if response_style == "concise":
-        system_prompt = """You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+        system_prompt = (
+            "You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. "
+            "If the context doesn't help, answer from your own knowledge."
+        )
     elif response_style == "technical":
-        system_prompt = """You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+        system_prompt = (
+            "You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. "
+            "If the context doesn't help, answer from your own knowledge."
+        )
     elif response_style == "casual":
-        system_prompt = """You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+        system_prompt = (
+            "You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. "
+            "If the context doesn't help, answer from your own knowledge."
+        )
     else:  # Default to "detailed"
-        system_prompt = """You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. If the context doesn't help, answer from your own knowledge."""
+        system_prompt = (
+            "You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. "
+            "If the context doesn't help, answer from your own knowledge."
+        )
 
-    # Add reasoning instructions if reasoning is True
     if reasoning:
-        system_prompt += """\n\nProvide a step-by-step reasoning process for your answer. Break down your thought process into clear and logical steps."""
-
-    # Add Markdown formatting instruction
+        system_prompt += (
+            "\n\nProvide a step-by-step reasoning process for your answer. Break down your thought process into clear and logical steps."
+        )
     system_prompt += "\n\nProvide the answer in Markdown format."
 
     user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
@@ -115,31 +119,24 @@ def answer_question(question,
         {"role": "user", "content": user_prompt}
     ]
     
-    final_answer = ""
     try:
-        print("here")
         response = client.chat.completions.create(
             model=model_name,
             messages=messages,
             temperature=temperature,
             max_completion_tokens=max_tokens
         )
-            
-        final_answer = response.choices[0].message.content
+        final_answer = response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error calling OpenAI API: {e}")
-        return "There was an error calling the OpenAI API."
+        logger.error(f"Error calling OpenAI API: {e}")
+        return {"answer": "There was an error calling the OpenAI API.", "relevant_chunks": [], "source_files": []}
 
-    return {"answer": final_answer.strip(), "relevant_chunks": relevant_chunks, "source_files": source_files}
+    return {"answer": final_answer, "relevant_chunks": relevant_chunks, "source_files": source_files}
 
-#############################################################################
 # SAMPLE USAGE (CLI)
-#############################################################################
-
 if __name__ == "__main__":
-    # Example question
     sample_question = "how to win at game of life?"
-    answer = answer_question(
+    result = answer_question(
         question=sample_question,
         top_k=5,
         threshold=0.9,
@@ -147,8 +144,8 @@ if __name__ == "__main__":
         max_tokens=150,
         response_style="detailed",
         namespace="my-namespace",
-        model_name="gpt-3.5-turbo",  # Replace with the actual model name if needed
+        model_name="gpt-3.5-turbo",
         reasoning=True
     )
-    print("\nFINAL ANSWER (Markdown):\n")
-    print(answer)
+    logger.info("FINAL ANSWER (Markdown):")
+    logger.info(result)
