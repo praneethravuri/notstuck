@@ -4,10 +4,19 @@ const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function POST(req: NextRequest) {
     try {
-        // 1) Parse incoming data from the client
-        const { question, similarityThreshold, similarResults, temperature, maxTokens, responseStyle, modelName } = await req.json();
+        // Parse incoming data from the client, now including an optional chatId.
+        const {
+            question,
+            similarityThreshold,
+            similarResults,
+            temperature,
+            maxTokens,
+            responseStyle,
+            modelName,
+            chatId  // New field!
+        } = await req.json();
 
-        // 2) Forward the question and settings to the FastAPI backend
+        // Forward the question and settings (including chatId, if available) to the FastAPI backend.
         const backendResponse = await fetch(`${apiUrl}/api/ask`, {
             method: "POST",
             headers: {
@@ -21,22 +30,21 @@ export async function POST(req: NextRequest) {
                 maxTokens,
                 responseStyle,
                 modelName,
+                chatId,  // Forward the chat session ID
             }),
         });
 
         if (!backendResponse.ok) {
-            // Log the status code or text for debugging
             console.error("FastAPI returned an error:", backendResponse.status, backendResponse.statusText);
             throw new Error("Error returned by FastAPI");
         }
 
-        // 3) Return the backend's JSON to the client
+        // Return the backend's JSON response to the client.
         const data = await backendResponse.json();
         return NextResponse.json(data);
 
     } catch (error: unknown) {
-        // Return an error response
-        console.log(error);
+        console.error(error);
         let errorMessage = "An unexpected error occurred";
         if (error instanceof Error) {
             errorMessage = error.message;

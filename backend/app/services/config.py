@@ -22,3 +22,5 @@ EMBEDDING_MODEL = "text-embedding-3-small"
 
 SIMILARITY_THRESHOLD = 0.99999  # 99.999% similar
 EXACT_MATCH_THRESHOLD = 1.0     # 100% similar
+
+MONGODB_URI = os.getenv("MONGODB_URI")

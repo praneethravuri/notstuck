@@ -10,6 +10,7 @@ import { SettingsSection } from "../../components/model-settings/SettingsSection
 import { DocumentsSection } from "../../components/information/DocumentSection";
 import { SourcesSection } from "../../components/information/SourcesSection";
 import { UploadSection } from "../../components/information/UploadSection";
+import ChatList from "@/components/chat/ChatList";
 import { MessageSquare } from "lucide-react";
 
 interface PdfFile {
@@ -24,6 +25,9 @@ export default function ChatLayout() {
   // Chat messages state
   const [messages, setMessages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // New state for the current chat session id.
+  const [chatId, setChatId] = useState<string | null>(null);
 
   // Loading state for file uploads
   const [isUploading, setIsUploading] = useState(false);
@@ -43,6 +47,27 @@ export default function ChatLayout() {
   const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
 
   // const { toast } = useToast();
+
+  const loadChatHistory = async (chatId: string) => {
+    try {
+      const res = await fetch(`/api/chats/${chatId}`);
+      if (!res.ok) throw new Error("Failed to fetch chat history");
+      const data = await res.json();
+      // Map messages to strings with a prefix.
+      const formatted = data.messages.map((msg: { role: string; content: string }) =>
+        msg.role === "user" ? `You: ${msg.content}` : `AI: ${msg.content}`
+      );
+      setMessages(formatted);
+    } catch (error) {
+      console.error("Error loading chat history:", error);
+    }
+  };
+
+  const handleSelectChat = (selectedChatId: string) => {
+    setChatId(selectedChatId);
+    loadChatHistory(selectedChatId);
+  };
+
 
   const loadFiles = async () => {
     try {
@@ -65,7 +90,7 @@ export default function ChatLayout() {
     //   title: "Uploading File",
     //   description: "Your file is being uploaded and your knowledge is expanding...",
     // });
-  
+
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
@@ -76,12 +101,12 @@ export default function ChatLayout() {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log("Upload is successful:", response.data);
-  
+
       // toast({
       //   title: "Upload Successful",
       //   description: "Your document has been uploaded successfully.",
       // });
-  
+
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -94,7 +119,7 @@ export default function ChatLayout() {
       setIsUploading(false);
     }
   };
-  
+
 
   const handleSendMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -113,6 +138,7 @@ export default function ChatLayout() {
           maxTokens: maxTokens[0],
           responseStyle: responseStyle,
           modelName: modelName,
+          chatId: chatId
         }),
       });
 
@@ -138,15 +164,15 @@ export default function ChatLayout() {
       {/* Left Sidebar - Fixed */}
       <aside className="w-64 border-r border-gray-800 fixed left-0 top-0 bottom-0 h-screen overflow-hidden">
         <CustomSidebar>
-        <div className="p-4 flex items-center space-x-2">
-        <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-          <MessageSquare className="h-5 w-5 text-white" />
-        </div>
-        <span className="font-semibold text-gray-200">NotStuck</span>
-      </div>
-          
+          <div className="p-4 flex items-center space-x-2">
+            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <MessageSquare className="h-5 w-5 text-white" />
+            </div>
+            <span className="font-semibold text-gray-200">NotStuck</span>
+          </div>
+          <ChatList onSelectChat={handleSelectChat} />
           <SourcesSection relevantChunks={relevantChunks} sources={sources} />
-          
+
         </CustomSidebar>
       </aside>
 
@@ -162,22 +188,22 @@ export default function ChatLayout() {
       </main>
       <aside className="w-64 border-l border-gray-800 fixed right-0 top-0 bottom-0 h-screen overflow-hidden">
         <CustomSidebar>
-        <SettingsSection
-          similarityThreshold={similarityThreshold}
-          setSimilarityThreshold={setSimilarityThreshold}
-          similarResults={similarResults}
-          setSimilarResults={setSimilarResults}
-          temperature={temperature}
-          setTemperature={setTemperature}
-          maxTokens={maxTokens}
-          setMaxTokens={setMaxTokens}
-          responseStyle={responseStyle}
-          setResponseStyle={setResponseStyle}
-          modelName={modelName}
-          setModelName={setModelName}
-        />
-        <DocumentsSection files={files} />
-        <UploadSection uploadHandler={handleFileUpload} isUploading = {isUploading} />
+          <SettingsSection
+            similarityThreshold={similarityThreshold}
+            setSimilarityThreshold={setSimilarityThreshold}
+            similarResults={similarResults}
+            setSimilarResults={setSimilarResults}
+            temperature={temperature}
+            setTemperature={setTemperature}
+            maxTokens={maxTokens}
+            setMaxTokens={setMaxTokens}
+            responseStyle={responseStyle}
+            setResponseStyle={setResponseStyle}
+            modelName={modelName}
+            setModelName={setModelName}
+          />
+          <DocumentsSection files={files} />
+          <UploadSection uploadHandler={handleFileUpload} isUploading={isUploading} />
         </CustomSidebar>
       </aside>
     </div>
