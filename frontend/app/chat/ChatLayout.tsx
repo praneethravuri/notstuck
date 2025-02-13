@@ -18,7 +18,7 @@ interface PdfFile {
   name: string;
 }
 
-const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+// const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 // console.log(`API Url: ${apiUrl}`)
 
 export default function ChatLayout() {
@@ -91,27 +91,25 @@ export default function ChatLayout() {
 
   const handleFileUpload = async (files: FileList) => {
     setIsUploading(true);
-    toast({
-      title: "Uploading File",
-      description: "Your file is being uploaded and your knowledge is expanding...",
-    });
-
+    
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
         formData.append("files", file);
       });
-
-      const response = await axios.post(`${apiUrl}/api/upload`, formData, {
+  
+      // Call the Next.js API route instead of the backend directly
+      const response = await axios.post('/api/upload', formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+  
       console.log("Upload is successful:", response.data);
-
+  
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
       });
-
+  
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
