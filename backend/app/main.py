@@ -1,15 +1,10 @@
-# app/main.py
-# uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import logging
 import os
+from app.vector_search_db.pinecone_db import PineconeDB
 
 # Import the routers
 from app.routes import ask, pdfs, upload, reset_db, chats
-import app.logging_config
-
-logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -22,12 +17,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# @app.on_event("startup")
-# async def startup_event():
-#     host = os.getenv("HOST", "0.0.0.0")
-#     port = os.getenv("PORT", "8000")
-#     complete_url = f"http://{host}:{port}"
-#     logger.info(f"Backend running at {complete_url}")
+@app.on_event("startup")
+async def startup_event():
+    # Initialize the Pinecone DB once at startup and store it in the app state
+    app.state.pinecone_db = PineconeDB()
+    print("Pinecone DB initialized.")
 
 # Include routers with a common prefix (e.g., /api)
 app.include_router(ask.router, prefix="/api")
@@ -35,5 +29,3 @@ app.include_router(pdfs.router, prefix="/api")
 app.include_router(upload.router, prefix="/api")
 app.include_router(reset_db.router, prefix="/api")
 app.include_router(chats.router, prefix="/api")
-
-logger.info("Application startup complete.")

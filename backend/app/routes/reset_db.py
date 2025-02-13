@@ -1,14 +1,15 @@
-from app.services.pinecone_db.main import delete_all_data, init_pinecone
+from app.vector_search_db.pinecone_db import PineconeDB
 from pinecone import Pinecone, ServerlessSpec
 from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
+pinecone_db = PineconeDB()
 
 @router.delete("/reset-db")
 def reset_db():
     print("Reset DB route accessed")  # Debug print
     try:
-        delete_all_data(namespace="my-namespace")
+        pinecone_db.delete_all_data(namespace="my-namespace")
         return "Database reset successful."
     except Exception as e:
         print("Error in reset_db:", e)

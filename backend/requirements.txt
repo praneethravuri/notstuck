@@ -13,3 +13,6 @@ uvicorn
 python-multipart
 motor
 pytest
+pymupdf4llm
+sentence-transformers
+aiofiles

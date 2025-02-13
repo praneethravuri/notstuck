@@ -1,7 +1,7 @@
 # backend/app/routes/chats.py
 
 from fastapi import APIRouter, HTTPException
-from app.services.mongo_db.db import get_all_chats, get_chat_by_id
+from app.database.db import get_all_chats, get_chat_by_id
 
 router = APIRouter()
 
