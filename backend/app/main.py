@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging
+import os
 
 # Import the routers
 from app.routes import ask, pdfs, upload, reset_db, chats
@@ -20,6 +21,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# @app.on_event("startup")
+# async def startup_event():
+#     host = os.getenv("HOST", "0.0.0.0")
+#     port = os.getenv("PORT", "8000")
+#     complete_url = f"http://{host}:{port}"
+#     logger.info(f"Backend running at {complete_url}")
 
 # Include routers with a common prefix (e.g., /api)
 app.include_router(ask.router, prefix="/api")
