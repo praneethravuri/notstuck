@@ -18,7 +18,7 @@ interface PdfFile {
   name: string;
 }
 
-// const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 // console.log(`API Url: ${apiUrl}`)
 
 export default function ChatLayout() {
