@@ -24,7 +24,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
                 <MessageSquare className="h-6 w-6 text-white" />
               </div>
-              <h2 className="text-2xl font-bold text-green-500">NotStuck</h2>
+              <h2 className="text-2xl font-bold text-green-500">!Stuck</h2>
             </div>
 
             <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 tracking-tight">

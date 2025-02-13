@@ -10,7 +10,7 @@ import { DocumentsSection } from "../../components/information/DocumentSection";
 import { SourcesSection } from "../../components/information/SourcesSection";
 import { UploadSection } from "../../components/information/UploadSection";
 import ChatList from "../../components/chat/ChatList";
-import { MessageSquare} from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { useToast } from "../../hooks/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -141,7 +141,7 @@ export default function ChatLayout() {
           maxTokens: maxTokens[0],
           responseStyle: responseStyle,
           modelName: modelName,
-          chatId: chatId
+          chatId: chatId,
         }),
       });
 
@@ -167,9 +167,9 @@ export default function ChatLayout() {
   };
 
   return (
-    <div className="h-screen w-full flex bg-stone-950">
-      {/* Left Sidebar - Fixed */}
-      <aside className="w-64 border-r border-gray-800 fixed left-0 top-0 bottom-0 h-screen overflow-hidden">
+    <div className="min-h-screen bg-stone-950 flex flex-col md:flex-row">
+      {/* Left Sidebar */}
+      <aside className="w-full md:w-64  border-r border-gray-800">
         <CustomSidebar>
           <div className="p-4 flex items-center space-x-2">
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -179,20 +179,22 @@ export default function ChatLayout() {
           </div>
           <ChatList onSelectChat={handleSelectChat} onNewChat={handleNewChat} />
           <SourcesSection relevantChunks={relevantChunks} sources={sources} />
+          <UploadSection uploadHandler={handleFileUpload} isUploading={isUploading} />
         </CustomSidebar>
       </aside>
 
       {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col ml-64 mr-80">
-        <div className="flex-1 overflow-y-auto p-4">
+      <main className="flex-1 p-4 flex flex-col">
+        <div className="flex-1 overflow-y-auto">
           <ChatMessages messages={messages} isLoading={isLoading} />
         </div>
-
-        <div className="fixed bottom-0 left-64 right-80 bg-stone-950 p-4">
+        <div className="mt-4">
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       </main>
-      <aside className="w-64 border-l border-gray-800 fixed right-0 top-0 bottom-0 h-screen overflow-hidden">
+
+      {/* Right Sidebar */}
+      <aside className="w-full md:w-64 border-t md:border-t-0 md:border-l border-gray-800">
         <CustomSidebar>
           <SettingsSection
             similarityThreshold={similarityThreshold}
@@ -209,7 +211,7 @@ export default function ChatLayout() {
             setModelName={setModelName}
           />
           <DocumentsSection files={files} />
-          <UploadSection uploadHandler={handleFileUpload} isUploading={isUploading} />
+          
         </CustomSidebar>
       </aside>
     </div>
