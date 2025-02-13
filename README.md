@@ -1,3 +1,13 @@
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-blue.svg)](https://fastapi.tiangolo.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://www.mongodb.com/)
+[![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/)
+[![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/)
+[![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/)
+![CI/CD](https://github.com/praneethravuri/notstuck/actions/workflows/ci-cd.yml/badge.svg)
+
 # NotStuck - AI-Powered Knowledge Base Assistant
 
 ## Project Description
@@ -89,15 +99,6 @@ NotStuck is built with a modular architecture, consisting of the following compo
 3. **View Active Sources:**: Active sources and relevant document chunks are displayed alongside the chat, giving you insights into which parts of your documents are being referenced.
 4. **Adjust Settings**: Use the settings panel to adjust parameters such as similarity threshold, response style, and model temperature.
 
-## Badges
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
-[![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-blue.svg)](https://fastapi.tiangolo.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://www.mongodb.com/)
-[![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/)
-[![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/)
 
 ---
 
