@@ -6,7 +6,6 @@ from typing import Optional
 
 # Make sure to install 'docx2pdf' and 'Pillow' if you want to support DOCX and image -> PDF conversion.
 # pip install docx2pdf Pillow
-from docx2pdf import convert as docx2pdf_convert
 from PIL import Image
 
 # Import your paths from config.py; note that here we only need RAW_DATA_PATH for conversion.
@@ -26,27 +25,6 @@ def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
     if file_ext_lower == ".pdf":
         # (Optionally, you might want to skip copying if input and output are the same.)
         return os.path.join(output_dir, filename)
-
-    # Handle DOCX files
-    if file_ext_lower == ".docx":
-        # docx2pdf converts and writes the PDF to the output directory.
-        docx2pdf_convert(input_path, output_dir)
-        pdf_filename = file_root + ".pdf"
-        output_path = os.path.join(output_dir, pdf_filename)
-        return output_path if os.path.exists(output_path) else None
-
-    # Handle common image files (PNG, JPG, JPEG)
-    if file_ext_lower in [".png", ".jpg", ".jpeg"]:
-        output_filename = file_root + ".pdf"
-        output_path = os.path.join(output_dir, output_filename)
-        try:
-            with Image.open(input_path) as img:
-                rgb_img = img.convert('RGB')
-                rgb_img.save(output_path, "PDF", resolution=100.0)
-            return output_path if os.path.exists(output_path) else None
-        except Exception as e:
-            print(f"Error converting image '{filename}' to PDF: {e}")
-            return None
 
     print(f"No conversion rule for file type: {file_ext_lower}. Skipping.")
     return None
