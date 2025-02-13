@@ -7,6 +7,7 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/)
 [![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/)
 ![CI/CD](https://github.com/praneethravuri/notstuck/actions/workflows/ci-cd.yml/badge.svg)
+![Fly.io](https://github.com/praneethravuri/notstuck/actions/workflows/fly.yml/badge.svg)
 
 # NotStuck - AI-Powered Knowledge Base Assistant
 
