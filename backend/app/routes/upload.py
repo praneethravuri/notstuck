@@ -10,7 +10,10 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
     try:
-        # Save each uploaded file
+        
+        os.makedirs(RAW_DATA_PATH, exist_ok=True)
+        os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
+        
         for file in files:
             file_path = os.path.join(RAW_DATA_PATH, file.filename)
             content = await file.read()
