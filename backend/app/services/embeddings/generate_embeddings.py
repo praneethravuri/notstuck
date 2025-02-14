@@ -7,6 +7,6 @@ def get_embedding_function():
     """Returns an OpenAI embedding callable for LangChain."""
     return OpenAIEmbeddings(
         openai_api_key=OPENAI_API_KEY,
-        model="text-embedding-ada-002"
+        model=EMBEDDING_MODEL
     )
 

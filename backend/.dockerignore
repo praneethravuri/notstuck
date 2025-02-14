@@ -3,3 +3,10 @@
 .venv\**\*
 fly.toml
 .env
+
+repomix-output.txt
+frontend/repomix-output.txt
+backend/repomix-output.txt
+__pycache__/
+*.pyc
+*.pdf

@@ -130,3 +130,14 @@ dist
 .pnp.*
 
 frontend/node_modules
+
+repomix-output.txt
+frontend/repomix-output.txt
+backend/repomix-output.txt
+__pycache__/
+*.pyc
+*.pdf
+
+
+backend/**/**.pyc
+backend/**/*.pyc
