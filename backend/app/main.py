@@ -42,7 +42,7 @@ async def startup_event():
     # --- Verify Pinecone Initialization ---
     try:
         # For example, list indexes (or simply log the index name)
-        logger.info(f"Pinecone index '{pinecone_index.name}' is initialized.")
+        logger.info(f"Pinecone index is initialized.")
     except Exception as e:
         logger.error(f"Pinecone initialization error: {e}")
 
