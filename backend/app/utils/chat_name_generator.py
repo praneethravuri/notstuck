@@ -20,7 +20,7 @@ async def generate_chat_name_from_llm(question: str) -> str:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=5,
+            max_tokens=10,
         )
         chat_name = response.choices[0].message.content.strip()
         return chat_name
