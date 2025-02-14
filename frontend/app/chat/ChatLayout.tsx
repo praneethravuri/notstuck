@@ -91,6 +91,12 @@ export default function ChatLayout() {
 
   const handleFileUpload = async (files: FileList) => {
     setIsUploading(true);
+
+    toast({
+      title: "Uploading files...",
+      description: "Starting to upload files and expand knowledge",
+      
+    });
     
     try {
       const formData = new FormData();
@@ -108,6 +114,7 @@ export default function ChatLayout() {
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
+        variant: "success"
       });
   
       loadFiles();
