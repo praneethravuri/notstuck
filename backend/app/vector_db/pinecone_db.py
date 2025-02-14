@@ -4,6 +4,7 @@ import os
 import shutil
 import uuid
 import logging
+import concurrent.futures
 from typing import List, Optional, Dict
 from pinecone import Pinecone, ServerlessSpec
 from app.utils.document_converter import convert_all_docs_in_raw_folder
@@ -103,7 +104,8 @@ def upsert_chunk_with_similarity_check(
 
 def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
     """
-    Splits the PDF into chunks, embeds them, and upserts into Pinecone.
+    Splits a PDF into chunks, embeds them, runs similarity checks concurrently,
+    and then upserts the chunks in batch into Pinecone.
     """
     docs = load_and_split_pdf(pdf_path)
     if not docs:
@@ -114,26 +116,76 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
     embedding_func = get_embedding_function()
     index = init_pinecone()
 
-    for doc in docs:
-        chunk_text = doc.page_content.strip()
-        if not chunk_text:
-            continue
+    # Extract non-empty text chunks.
+    chunks = [doc.page_content.strip() for doc in docs if doc.page_content.strip()]
+    if not chunks:
+        logger.warning(f"No valid text found in PDF: {pdf_path}")
+        return
 
-        try:
-            embedding = embedding_func.embed_documents([chunk_text])[0]
-        except Exception as e:
-            logger.error(f"Error embedding chunk: {e}")
-            continue
+    try:
+        # Batch embed all chunks at once.
+        embeddings = embedding_func.embed_documents(chunks)
+    except Exception as e:
+        logger.error(f"Error embedding chunks: {e}")
+        return
 
-        if embedding:
-            chunk_metadata = {"source_file": os.path.basename(pdf_path)}
-            upsert_chunk_with_similarity_check(
-                index=index,
-                embedding=embedding,
-                chunk_text=chunk_text,
-                metadata=chunk_metadata,
+    # Run similarity checks concurrently.
+    similarity_results = [None] * len(chunks)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+        # Submit all similarity queries in parallel.
+        future_to_index = {
+            executor.submit(
+                index.query,
+                vector=emb,
+                top_k=1,
+                include_metadata=True,
                 namespace=namespace
-            )
+            ): i for i, emb in enumerate(embeddings)
+        }
+        for future in concurrent.futures.as_completed(future_to_index):
+            i = future_to_index[future]
+            try:
+                similarity_results[i] = future.result()
+            except Exception as exc:
+                logger.error(f"Similarity check for chunk {i} generated an exception: {exc}")
+                similarity_results[i] = None
+
+    # Build upsert vectors based on similarity checks.
+    vectors = []
+    for i, (chunk_text, embedding) in enumerate(zip(chunks, embeddings)):
+        result = similarity_results[i]
+        vector_id = None
+        matched_score = 0.0
+
+        if result and "matches" in result and result["matches"]:
+            best_match = result["matches"][0]
+            matched_score = best_match["score"]
+            if matched_score >= EXACT_MATCH_THRESHOLD:
+                logger.info(f"Skipping chunk {i} (score=1.0). Identical chunk exists.")
+                continue  # Skip upserting this chunk.
+            elif matched_score >= SIMILARITY_THRESHOLD:
+                vector_id = best_match["id"]
+                logger.info(f"Updating chunk {i} (score={matched_score:.5f}) with existing ID={vector_id}.")
+
+        if vector_id is None:
+            vector_id = str(uuid.uuid4())
+            logger.info(f"Inserting new chunk {i} (score={matched_score:.5f}). ID={vector_id}.")
+
+        vectors.append({
+            "id": vector_id,
+            "values": embedding,
+            "metadata": {
+                "text": chunk_text,
+                "source_file": os.path.basename(pdf_path)
+            }
+        })
+
+    try:
+        # Batch upsert all vectors at once.
+        index.upsert(vectors=vectors, namespace=namespace)
+        logger.info(f"Batch upserted {len(vectors)} vectors from '{os.path.basename(pdf_path)}'.")
+    except Exception as e:
+        logger.error(f"Error during batch upsert: {e}")
 
 def process_and_push_all_pdfs(namespace: Optional[str] = None):
     """
