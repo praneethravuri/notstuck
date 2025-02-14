@@ -6,51 +6,24 @@ import uuid
 import logging
 import concurrent.futures
 from typing import List, Optional, Dict
-from pinecone import Pinecone, ServerlessSpec
 from app.utils.document_converter import convert_all_docs_in_raw_folder
 from app.utils.document_chunker import load_and_split_pdf
 from app.utils.generate_embeddings import get_embedding_function
+from app.clients import pinecone_index  # Shared Pinecone client
 from app.config import (
     RAW_DATA_PATH,
     PROCESSED_DATA_PATH,
-    PINECONE_API_KEY,
-    PINECONE_ENV,
-    PINECONE_INDEX_NAME,
-    PINECONE_EMBEDDING_DIMENSIONS,
     SIMILARITY_THRESHOLD,
     EXACT_MATCH_THRESHOLD,
 )
 
 logger = logging.getLogger(__name__)
 
-def init_pinecone():
-    """
-    Initializes a Pinecone client and creates (or retrieves) the index.
-    """
-    if not PINECONE_API_KEY or not PINECONE_ENV:
-        raise ValueError("Missing Pinecone credentials. Check config or environment variables.")
-
-    pc = Pinecone(api_key=PINECONE_API_KEY)
-    existing_indexes = [idx.name for idx in pc.list_indexes()]
-    if PINECONE_INDEX_NAME not in existing_indexes:
-        logger.info(f"Index '{PINECONE_INDEX_NAME}' not found. Creating it now...")
-        pc.create_index(
-            name=PINECONE_INDEX_NAME,
-            dimension=PINECONE_EMBEDDING_DIMENSIONS,
-            metric="cosine",
-            spec=ServerlessSpec(
-                region=PINECONE_ENV,
-                cloud="aws"
-            )
-        )
-    return pc.Index(PINECONE_INDEX_NAME)
-
 def delete_all_data(namespace: Optional[str] = None):
     """
     Deletes all vectors in the Pinecone index for a given namespace (or entire index if None).
     """
-    index = init_pinecone()
-    index.delete(delete_all=True, namespace=namespace)
+    pinecone_index.delete(delete_all=True, namespace=namespace)
     logger.info(f"Deleted all data{' in namespace ' + namespace if namespace else ''}.")
 
 def upsert_chunk_with_similarity_check(
@@ -114,7 +87,8 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
 
     logger.info(f"Loaded and split '{os.path.basename(pdf_path)}' into {len(docs)} chunks.")
     embedding_func = get_embedding_function()
-    index = init_pinecone()
+    # Use the shared Pinecone index
+    index = pinecone_index
 
     # Extract non-empty text chunks.
     chunks = [doc.page_content.strip() for doc in docs if doc.page_content.strip()]

@@ -1,6 +1,5 @@
-from pinecone import Pinecone, ServerlessSpec
 from fastapi import APIRouter, HTTPException
-from app.vector_db.pinecone_db import delete_all_data, init_pinecone
+from app.vector_db.pinecone_db import delete_all_data  # delete_all_data now uses the shared pinecone_index
 
 router = APIRouter()
 
@@ -13,4 +12,3 @@ def reset_db():
     except Exception as e:
         print("Error in reset_db:", e)
         raise HTTPException(status_code=500, detail=str(e))
-

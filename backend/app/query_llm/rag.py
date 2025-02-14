@@ -2,23 +2,11 @@
 
 import logging
 from typing import Optional, List
-from pinecone import Pinecone, ServerlessSpec
-from openai import OpenAI
-from app.vector_db.pinecone_db import init_pinecone
-from app.config import (
-    PINECONE_API_KEY,
-    PINECONE_ENV,
-    PINECONE_INDEX_NAME,
-    PINECONE_EMBEDDING_DIMENSIONS,
-    OPENAI_API_KEY
-)
+from app.clients import pinecone_index, openai_client as client
+from app.config import OPENAI_API_KEY
 from app.utils.generate_embeddings import get_embedding_function
 
 logger = logging.getLogger(__name__)
-
-# Initialize OpenAI client
-client = OpenAI()
-client.api_key = OPENAI_API_KEY
 
 def answer_question(
     question: str,
@@ -35,15 +23,17 @@ def answer_question(
     1) Embed the user question.
     2) Query Pinecone for top_k relevant chunks (score >= threshold).
     3) Build a prompt with the retrieved context.
-    4) Get and return the answer from the OpenAI model.
+    4) Get and return the answer from the ChatGPT model.
     """
     
     logger.info(f"Received question: {question}")
-    logger.info(f"Parameters: top_k={top_k}, threshold={threshold}, temperature={temperature}, "
-                f"max_tokens={max_tokens}, response_style={response_style}, namespace={namespace}, "
-                f"model_name={model_name}, reasoning={reasoning}")  
+    logger.info(
+        f"Parameters: top_k={top_k}, threshold={threshold}, temperature={temperature}, "
+        f"max_tokens={max_tokens}, response_style={response_style}, namespace={namespace}, "
+        f"model_name={model_name}, reasoning={reasoning}"
+    )
 
-    # 1) Embed the user question
+    # 1) Embed the user question.
     embedding_func = get_embedding_function()
     try:
         question_embedding = embedding_func.embed_query(question)
@@ -54,8 +44,9 @@ def answer_question(
     if not question_embedding:
         return {"answer": "Got an empty embedding for your question.", "relevant_chunks": [], "source_files": []}
 
-    # 2) Query Pinecone with the user question embedding
-    index = init_pinecone()
+    # 2) Query Pinecone with the user question embedding.
+    # Use the shared Pinecone client instance.
+    index = pinecone_index
     try:
         query_response = index.query(
             vector=question_embedding,
@@ -82,7 +73,7 @@ def answer_question(
     context_text = "\n\n---\n\n".join(relevant_chunks) if relevant_chunks else ""
     logger.info(f"Found {len(relevant_chunks)} relevant chunks.")
 
-    # Adjust system prompt based on response_style and reasoning
+    # 3) Build the prompt.
     if response_style == "concise":
         system_prompt = (
             "You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. "
@@ -111,12 +102,12 @@ def answer_question(
     system_prompt += "\n\nProvide the answer in Markdown format."
 
     user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
-
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
     
+    # 4) Call ChatGPT using the shared OpenAI client.
     try:
         response = client.chat.completions.create(
             model=model_name,

@@ -1,13 +1,12 @@
 # backend/app/services/db.py
 
-from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 from bson.objectid import ObjectId
-from app.config import MONGODB_URI
+from fastapi import HTTPException
+from app.clients import mongodb_client  # Use the shared client
 
-# Create a Mongo client and get the default database.
-client = AsyncIOMotorClient(MONGODB_URI)
-db = client.get_database("notstuck")
+# Use the shared MongoDB client instance to get the default database.
+db = mongodb_client.get_database("notstuck")
 chats_collection = db.get_collection("chats")
 
 async def create_chat_session(chat_name: str = None) -> dict:
