@@ -3,18 +3,16 @@
 import logging
 from typing import Optional, List
 from pinecone import Pinecone, ServerlessSpec
-
 from openai import OpenAI
-
-from ..pinecone_db.main import init_pinecone
-from ..config import (
+from app.vector_db.pinecone_db import init_pinecone
+from app.config import (
     PINECONE_API_KEY,
     PINECONE_ENV,
     PINECONE_INDEX_NAME,
     PINECONE_EMBEDDING_DIMENSIONS,
     OPENAI_API_KEY
 )
-from ..embeddings.generate_embeddings import get_embedding_function
+from app.utils.generate_embeddings import get_embedding_function
 
 logger = logging.getLogger(__name__)
 

@@ -4,13 +4,10 @@ import os
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
+from app.config import PROCESSED_DATA_PATH
 
 router = APIRouter()
 
-# Define directory paths (adjust based on your structure)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-PROCESSED_DIR = os.path.join(DATA_DIR, "processed")
 
 @router.get("/get-pdfs")
 def pdf_endpoint(filename: Optional[str] = Query(None)):
@@ -20,12 +17,12 @@ def pdf_endpoint(filename: Optional[str] = Query(None)):
     """
     try:
         if filename is None:
-            if not os.path.isdir(PROCESSED_DIR):
+            if not os.path.isdir(PROCESSED_DATA_PATH):
                 return {"files": []}
-            files = [f for f in os.listdir(PROCESSED_DIR) if f.lower().endswith(".pdf")]
+            files = [f for f in os.listdir(PROCESSED_DATA_PATH) if f.lower().endswith(".pdf")]
             return {"files": files}
 
-        pdf_path = os.path.join(PROCESSED_DIR, filename)
+        pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)
         if not os.path.isfile(pdf_path) or not filename.lower().endswith(".pdf"):
             raise HTTPException(status_code=404, detail="PDF not found")
         return FileResponse(pdf_path, media_type="application/pdf")

@@ -2,21 +2,17 @@
 
 import os
 from fastapi import APIRouter, HTTPException, UploadFile, File
-from app.services.pinecone_db.main import process_and_push_all_pdfs  # adjust as needed
+from app.vector_db.pinecone_db import process_and_push_all_pdfs
+from app.config import RAW_DATA_PATH, PROCESSED_DATA_PATH
 
 router = APIRouter()
-
-# Define the upload directory (adjust the path as needed)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-UPLOAD_DIR = os.path.join(BASE_DIR, "data", "raw")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/upload")
 async def upload_files(files: list[UploadFile] = File(...)):
     try:
         # Save each uploaded file
         for file in files:
-            file_path = os.path.join(UPLOAD_DIR, file.filename)
+            file_path = os.path.join(RAW_DATA_PATH, file.filename)
             content = await file.read()
             with open(file_path, "wb") as f:
                 f.write(content)

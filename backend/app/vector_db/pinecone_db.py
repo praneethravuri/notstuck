@@ -5,10 +5,11 @@ import shutil
 import uuid
 import logging
 from typing import List, Optional, Dict
-
 from pinecone import Pinecone, ServerlessSpec
-
-from ..config import (
+from app.utils.document_converter import convert_all_docs_in_raw_folder
+from app.utils.document_chunker import load_and_split_pdf
+from app.utils.generate_embeddings import get_embedding_function
+from app.config import (
     RAW_DATA_PATH,
     PROCESSED_DATA_PATH,
     PINECONE_API_KEY,
@@ -18,9 +19,6 @@ from ..config import (
     SIMILARITY_THRESHOLD,
     EXACT_MATCH_THRESHOLD,
 )
-from ..document_pipeline.document_converter import convert_all_docs_in_raw_folder
-from ..document_pipeline.document_chunker import load_and_split_pdf
-from ..embeddings.generate_embeddings import get_embedding_function
 
 logger = logging.getLogger(__name__)
 

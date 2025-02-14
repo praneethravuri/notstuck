@@ -1,6 +1,6 @@
-from app.services.pinecone_db.main import delete_all_data, init_pinecone
 from pinecone import Pinecone, ServerlessSpec
 from fastapi import APIRouter, HTTPException
+from app.vector_db.pinecone_db import delete_all_data, init_pinecone
 
 router = APIRouter()
 

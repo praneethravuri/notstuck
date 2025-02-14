@@ -3,7 +3,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime
 from bson.objectid import ObjectId
-from app.services.config import MONGODB_URI
+from app.config import MONGODB_URI
 
 # Create a Mongo client and get the default database.
 client = AsyncIOMotorClient(MONGODB_URI)

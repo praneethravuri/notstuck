@@ -2,10 +2,12 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
 # Paths
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-RAW_DATA_PATH = os.path.join(BASE_DIR, "data", "raw")
-PROCESSED_DATA_PATH = os.path.join(BASE_DIR, "data", "processed")
+APP_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BACKEND_DIR = APP_DIR
+RAW_DATA_PATH = os.path.join(BACKEND_DIR, "data", "raw")
+PROCESSED_DATA_PATH = os.path.join(BACKEND_DIR, "data", "processed")
 
 # API Keys
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")

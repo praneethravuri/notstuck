@@ -9,7 +9,7 @@ from typing import Optional
 from PIL import Image
 
 # Import your paths from config.py; note that here we only need RAW_DATA_PATH for conversion.
-from ..config import RAW_DATA_PATH
+from app.config import RAW_DATA_PATH
 
 def convert_to_pdf(input_path: str, output_dir: str) -> Optional[str]:
     """

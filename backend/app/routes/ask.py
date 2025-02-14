@@ -3,8 +3,8 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from app.services.rag.main import answer_question  # adjust the import path as needed
-from app.services.mongo_db.db import create_chat_session, append_message_to_chat
+from app.query_llm.rag import answer_question
+from app.database.db import create_chat_session, append_message_to_chat
 from datetime import datetime
 
 router = APIRouter()
