@@ -10,14 +10,21 @@ client = AsyncIOMotorClient(MONGODB_URI)
 db = client.get_database("notstuck")
 chats_collection = db.get_collection("chats")
 
-async def create_chat_session() -> str:
-    """Create a new chat session document with an empty messages list."""
+async def create_chat_session(chat_name: str = None) -> dict:
+    if chat_name is None:
+        # Optionally, you could generate a basic default name here
+        chat_name = f"Chat {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}"
+    
     chat_doc = {
+        "name": chat_name,
         "messages": [],
         "created_at": datetime.utcnow()
     }
-    result = await chats_collection.insert_one(chat_doc)
-    return str(result.inserted_id)
+    try:
+        result = await chats_collection.insert_one(chat_doc)
+        return {"chatId": str(result.inserted_id), "name": chat_name}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating chat session: {e}")
 
 async def append_message_to_chat(chat_id: str, message: dict) -> int:
     """Append a message (with a timestamp) to the chat session identified by chat_id."""
@@ -37,9 +44,9 @@ async def get_chat_by_id(chat_id: str) -> dict:
     return chat
 
 async def get_all_chats() -> list:
-    """Return a list of all chat sessions (with minimal info)."""
+    """Return a list of all chat sessions, sorted by creation date (latest first)."""
     chats = []
-    async for chat in chats_collection.find({}):
+    async for chat in chats_collection.find({}).sort("created_at", -1):
         chat["chatId"] = str(chat["_id"])
         del chat["_id"]
         chats.append(chat)

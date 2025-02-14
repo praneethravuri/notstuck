@@ -11,6 +11,7 @@ import {
 
 interface Chat {
   chatId: string;
+  name?: string; // new field for the chat name
   created_at?: string;
 }
 
@@ -44,12 +45,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
   };
 
   return (
-    <Accordion 
-      type="single" 
-      collapsible 
-      defaultValue="chats"
-      className="space-y-2"
-    >
+    <Accordion type="single" collapsible defaultValue="chats" className="space-y-2">
       <AccordionItem value="chats" className="border-none">
         <AccordionTrigger className="py-4 px-4 hover:no-underline hover:bg-stone-900/50">
           <div className="flex items-center gap-3">
@@ -77,12 +73,8 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
                   <div className="text-center py-8 space-y-3">
                     <MessageSquare className="mx-auto h-12 w-12 text-gray-500/50" />
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-gray-300">
-                        No chat history yet
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Start a new conversation
-                      </p>
+                      <p className="text-sm font-medium text-gray-300">No chat history yet</p>
+                      <p className="text-xs text-gray-500">Start a new conversation</p>
                     </div>
                   </div>
                 ) : (
@@ -99,13 +91,11 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
                       <div className="flex items-center gap-3">
                         <MessageSquare 
                           className={`h-4 w-4 ${
-                            selectedChatId === chat.chatId
-                              ? "text-green-500"
-                              : "text-gray-500"
+                            selectedChatId === chat.chatId ? "text-green-500" : "text-gray-500"
                           }`}
                         />
                         <span className="text-sm font-medium">
-                          Chat {chat.chatId.slice(-5)}
+                          {chat.name ? chat.name : `Chat ${chat.chatId.slice(-5)}`}
                         </span>
                       </div>
                     </button>

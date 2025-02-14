@@ -1,11 +1,10 @@
 # backend/app/routes/ask.py
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from app.query_llm.rag import answer_question
 from app.database.db import create_chat_session, append_message_to_chat
-from datetime import datetime
+from app.utils.chat_name_generator import generate_chat_name_from_llm
+from app.query_llm.rag import answer_question
 
 router = APIRouter()
 
@@ -17,24 +16,33 @@ class QuestionPayload(BaseModel):
     maxTokens: int
     responseStyle: str
     modelName: str
-    chatId: Optional[str] = None  # New field for chat session
+    chatId: Optional[str] = None
+    chatName: Optional[str] = None  # optional field from client
 
 @router.post("/ask")
 async def ask_question(payload: QuestionPayload):
     try:
-        # Determine the chat session: use provided chatId or create a new session.
         if payload.chatId:
             chat_id = payload.chatId
         else:
-            chat_id = await create_chat_session()
-        
-        # Store the user message
+            # If a chat name is provided from the client, use it.
+            # Otherwise, use the LLM to generate one based on the question.
+            if payload.chatName:
+                chat_name = payload.chatName
+            else:
+                chat_name = await generate_chat_name_from_llm(payload.question)
+                print(f"Chat name generated: {chat_name}")
+            
+            chat_session = await create_chat_session(chat_name=chat_name)
+            chat_id = chat_session["chatId"]
+
+        # Store the user message.
         await append_message_to_chat(chat_id, {
             "role": "user",
             "content": payload.question
         })
-        
-        # Get the AI answer
+
+        # Generate the answer (replace with your actual function call).
         result = answer_question(
             question=payload.question,
             top_k=payload.similarResults,
@@ -45,17 +53,17 @@ async def ask_question(payload: QuestionPayload):
             namespace="my-namespace",
             model_name=payload.modelName
         )
-        
-        # Store the AI answer
+
+        # Store the AI answer.
         await append_message_to_chat(chat_id, {
             "role": "ai",
-            "content": result["answer"]
+            "content": result.get("answer", "")
         })
 
-        # Return the answer along with the chat session ID
         return {
             "chatId": chat_id,
-            "answer": result["answer"],
+            "chatName": payload.chatId and None or chat_session.get("name"),
+            "answer": result.get("answer", ""),
             "relevant_chunks": result.get("relevant_chunks", []),
             "source_files": result.get("source_files", [])
         }
