@@ -6,7 +6,6 @@ import uuid
 import logging
 import concurrent.futures
 from typing import List, Optional, Dict
-from app.utils.document_converter import convert_all_docs_in_raw_folder
 from app.utils.document_chunker import load_and_split_pdf
 from app.utils.generate_embeddings import get_embedding_function
 from app.clients import pinecone_index  # Shared Pinecone client
@@ -163,15 +162,12 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None):
 
 def process_and_push_all_pdfs(namespace: Optional[str] = None):
     """
-    Pipeline: converts docs to PDFs, embeds & upserts them, and moves processed PDFs.
+    Pipeline: embeds & upserts PDFs from RAW_DATA_PATH and moves processed PDFs.
     """
     if not os.path.exists(PROCESSED_DATA_PATH):
         os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
 
-    logger.info(f"[STEP 1] Converting documents in '{RAW_DATA_PATH}' to PDFs...")
-    convert_all_docs_in_raw_folder()
-
-    logger.info(f"\n[STEP 2] Embedding & upserting PDFs from '{RAW_DATA_PATH}' into Pinecone...")
+    logger.info(f"\n[STEP 1] Embedding & upserting PDFs from '{RAW_DATA_PATH}' into Pinecone...")
     for filename in os.listdir(RAW_DATA_PATH):
         if filename.lower().endswith(".pdf"):
             pdf_path = os.path.join(RAW_DATA_PATH, filename)
