@@ -1,27 +1,24 @@
 # app/main.py
-# uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+
 import logging
 import os
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
-# Import the shared clients
-from app.clients import (
-    pinecone_index,   # Shared Pinecone index instance
-    openai_client,    # Shared OpenAI client instance
-    mongodb_client    # Shared MongoDB client instance
-)
-
-
-# Import the routers
+# Example shared clients (Mongo, Pinecone, etc.)
+from app.clients import pinecone_index, openai_client, mongodb_client
 from app.routes import ask, pdfs, upload, reset_db, chats
 import app.logging_config
 
 logger = logging.getLogger(__name__)
 
+# A global readiness flag
+IS_READY = False
+
 app = FastAPI()
 
-# Set up CORS middleware
+# Enable CORS if needed
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -30,40 +27,48 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.on_event("startup")
 async def startup_event():
-    # --- Initialize / Verify MongoDB Connection ---
+    global IS_READY
+    # Example: Check MongoDB
     try:
-        await mongodb_client.admin.command('ping')
+        await mongodb_client.admin.command("ping")
         logger.info("MongoDB connection successful.")
     except Exception as e:
         logger.error(f"MongoDB connection error: {e}")
+        # If you want to fail startup, raise an exception
 
-    # --- Verify Pinecone Initialization ---
+    # Example: Check Pinecone
     try:
-        # For example, list indexes (or simply log the index name)
-        logger.info(f"Pinecone index is initialized.")
+        # Just log something to confirm initialization
+        logger.info("Pinecone index is initialized.")
     except Exception as e:
         logger.error(f"Pinecone initialization error: {e}")
 
-    # --- Confirm OpenAI Client is Ready ---
-    # OpenAI client is stateless; here we simply log that the client is available.
+    # Example: Check OpenAI
     if openai_client.api_key:
         logger.info("OpenAI client is ready.")
     else:
         logger.error("OpenAI client is not configured properly.")
 
-    host = os.getenv("HOST", "0.0.0.0")
-    port = os.getenv("PORT", "8000")
-    complete_url = f"http://{host}:{port}"
-    logger.info(f"Backend running at {complete_url}")
+    # If everything succeeds, set readiness to True
+    IS_READY = True
+    logger.info("Application startup complete.")
 
-# Include routers with a common prefix (e.g., /api)
+# A simple readiness/health-check endpoint
+@app.get("/api/health-check")
+def health_check():
+    if IS_READY:
+        return {"ready": True, "message": "Backend startup complete!"}
+    else:
+        return JSONResponse(
+            content={"ready": False, "message": "Still starting up..."},
+            status_code=503,
+        )
+
+# Include your other routes
 app.include_router(ask.router, prefix="/api")
 app.include_router(pdfs.router, prefix="/api")
 app.include_router(upload.router, prefix="/api")
 app.include_router(reset_db.router, prefix="/api")
 app.include_router(chats.router, prefix="/api")
-
-logger.info("Application startup complete.")

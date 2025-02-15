@@ -2,7 +2,6 @@
 import { NextResponse } from "next/server";
 
 const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-console.log(apiUrl)
 
 export async function GET() {
   try {

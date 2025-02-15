@@ -1,15 +1,66 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import { MessageSquare, ArrowRight, Database, Zap, Shield } from "lucide-react";
+import LoadingPage from "../components/loading-page/LoadingPage";
 
 export default function Home() {
   const router = useRouter();
 
-  const handleNewChat = () => {
-    router.push("/chat");
+  // Are we currently checking the backend? If true, show a loading screen.
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // We'll store the polling interval ID so we can clear it later
+  const [pollIntervalId, setPollIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const handleStartChatting = () => {
+    setError(null);
+    setIsLoading(true);
+
+    // Set up a poll every 2 seconds
+    const id = setInterval(async () => {
+      try {
+        const res = await fetch("/api/startup-status");
+        if (!res.ok) {
+          // Means the backend is not ready yet (503) or some other error
+          console.log("Backend not ready, waiting...");
+          return;
+        }
+        // If the response is ok, parse JSON
+        const data = await res.json();
+        if (data.ready) {
+          // The backend is ready -> stop polling + navigate to /chat
+          clearInterval(id);
+          setIsLoading(false);
+          router.push("/chat");
+        } else {
+          // Not ready yet
+          console.log("Backend says not ready, waiting...");
+        }
+      } catch (err) {
+        console.error("Error checking startup status:", err);
+        setError("Failed to contact backend. Retrying...");
+      }
+    }, 2000);
+
+    setPollIntervalId(id);
   };
+
+  // Clean up interval on unmount (in case user navigates away)
+  useEffect(() => {
+    return () => {
+      if (pollIntervalId) clearInterval(pollIntervalId);
+    };
+  }, [pollIntervalId]);
+
+  // Render
+  if (isLoading) {
+    // A full-screen loading UI
+    return <LoadingPage error={error} />;
+  }
 
   return (
     <div className="min-h-screen bg-stone-950 overflow-hidden">
@@ -41,7 +92,7 @@ export default function Home() {
 
             <div className="flex items-center justify-center gap-4">
               <Button
-                onClick={handleNewChat}
+                onClick={handleStartChatting}
                 className="bg-green-600 hover:bg-green-700 text-white px-8 py-6 rounded-xl font-semibold text-lg group transition-all duration-200 flex items-center gap-2"
               >
                 Start Chatting
