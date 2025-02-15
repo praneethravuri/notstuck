@@ -1,10 +1,10 @@
 # app/query_llm/rag.py
-
 import logging
-from typing import Optional, List
-from app.clients import pinecone_index, openai_client as client
-from app.config import OPENAI_API_KEY
-from app.utils.generate_embeddings import get_embedding_function
+from typing import Dict
+from app.query_llm.embedding import embed_question
+from app.query_llm.pinecone_query import query_vector, filter_matches
+from app.query_llm.prompt_builder import build_system_prompt, build_user_prompt
+from app.query_llm.openai_client import call_openai_api
 
 logger = logging.getLogger(__name__)
 
@@ -18,129 +18,43 @@ def answer_question(
     namespace: str,
     model_name: str,
     reasoning: bool = False,
-    subject_filter: Optional[str] = None  # <-- New parameter for filtering
-) -> dict:
+    subject_filter: str = None
+) -> Dict:
     """
-    1) Embed the user question.
-    2) Query Pinecone for top_k relevant chunks (score >= threshold) optionally filtered by subject.
-    3) Build a prompt with the retrieved context.
-    4) Get and return the answer from the ChatGPT model.
+    Orchestrates the full retrieval-augmented generation process.
     """
-    
     logger.info(f"Received question: {question}")
-    logger.info(
-        f"Parameters: top_k={top_k}, threshold={threshold}, temperature={temperature}, "
-        f"max_tokens={max_tokens}, response_style={response_style}, namespace={namespace}, "
-        f"model_name={model_name}, reasoning={reasoning}, subject_filter={subject_filter}"
-    )
-
-    # 1) Embed the user question.
-    embedding_func = get_embedding_function()
+    
+    # 1. Embed the question.
     try:
-        question_embedding = embedding_func.embed_query(question)
+        question_embedding = embed_question(question)
     except Exception as e:
-        logger.error(f"Error embedding query: {e}")
         return {"answer": "Unable to embed your question at this time.", "relevant_chunks": [], "source_files": []}
 
     if not question_embedding:
         return {"answer": "Got an empty embedding for your question.", "relevant_chunks": [], "source_files": []}
 
-    # 2) Query Pinecone with the user question embedding.
-    query_params = {
-        "vector": question_embedding,
-        "top_k": top_k,
-        "include_metadata": True,
-        "namespace": namespace
-    }
-    if subject_filter:
-        query_params["filter"] = {
-            "subjects": {"$in": [subject_filter.lower().strip()]}
-        }
-
+    # 2. Query Pinecone.
     try:
-        query_response = pinecone_index.query(**query_params)
+        matches = query_vector(question_embedding, top_k, namespace, subject_filter)
     except Exception as e:
-        logger.error(f"Error querying Pinecone: {e}")
         return {"answer": "Error querying the database.", "relevant_chunks": [], "source_files": []}
 
-    matches = query_response.get("matches", [])
-    relevant_chunks: List[str] = []
-    source_files: List[str] = []
-    for match in matches:
-        score = match["score"]
-        metadata = match.get("metadata", {})
-        text_chunk = metadata.get("text", "")
-        source_file = metadata.get("source_file", "unknown source")
-        if score >= threshold:
-            relevant_chunks.append(text_chunk)
-            source_files.append(source_file)
-
+    relevant_chunks, source_files = filter_matches(matches, threshold)
     context_text = "\n\n---\n\n".join(relevant_chunks) if relevant_chunks else ""
-    logger.info(f"Found {len(relevant_chunks)} relevant chunks.")
 
-    # 3) Build the prompt.
-    if response_style == "concise":
-        system_prompt = (
-            "You are a helpful AI assistant. Provide a concise answer to the question using the context if relevant. "
-            "If the context doesn't help, answer from your own knowledge."
-        )
-    elif response_style == "technical":
-        system_prompt = (
-            "You are a technical AI assistant. Provide a detailed and technical answer to the question using the context if relevant. "
-            "If the context doesn't help, answer from your own knowledge."
-        )
-    elif response_style == "casual":
-        system_prompt = (
-            "You are a friendly AI assistant. Provide a casual and easy-to-understand answer to the question using the context if relevant. "
-            "If the context doesn't help, answer from your own knowledge."
-        )
-    else:  # Default to "detailed"
-        system_prompt = (
-            "You are a helpful AI assistant. Provide a detailed answer to the question using the context if relevant. "
-            "If the context doesn't help, answer from your own knowledge."
-        )
-
-    if reasoning:
-        system_prompt += (
-            "\n\nProvide a step-by-step reasoning process for your answer. Break down your thought process into clear and logical steps."
-        )
-    system_prompt += "\n\nProvide the answer in Markdown format."
-
-    user_prompt = f"Context:\n{context_text}\n\nQuestion:\n{question}"
+    # 3. Build the prompts.
+    system_prompt = build_system_prompt(response_style, reasoning)
+    user_prompt = build_user_prompt(context_text, question)
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
     
-    # 4) Call ChatGPT using the shared OpenAI client.
+    # 4. Call the OpenAI API.
     try:
-        response = client.chat.completions.create(
-            model=model_name,
-            messages=messages,
-            temperature=temperature,
-            max_completion_tokens=max_tokens
-        )
-        final_answer = response.choices[0].message.content.strip()
+        final_answer = call_openai_api(model_name, messages, temperature, max_tokens)
     except Exception as e:
-        logger.error(f"Error calling OpenAI API: {e}")
         return {"answer": "There was an error calling the OpenAI API.", "relevant_chunks": [], "source_files": []}
 
     return {"answer": final_answer, "relevant_chunks": relevant_chunks, "source_files": source_files}
-
-# SAMPLE USAGE (CLI)
-if __name__ == "__main__":
-    sample_question = "how to win at game of life?"
-    result = answer_question(
-        question=sample_question,
-        top_k=5,
-        threshold=0.9,
-        temperature=0.7,
-        max_tokens=150,
-        response_style="detailed",
-        namespace="my-namespace",
-        model_name="gpt-3.5-turbo",
-        reasoning=True,
-        subject_filter="general"
-    )
-    logger.info("FINAL ANSWER (Markdown):")
-    logger.info(result)
