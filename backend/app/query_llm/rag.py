@@ -5,6 +5,7 @@ from app.query_llm.embedding import embed_question
 from app.query_llm.pinecone_query import query_vector, filter_matches
 from app.query_llm.prompt_builder import build_system_prompt, build_user_prompt
 from app.query_llm.openai_client import call_openai_api
+from app.utils.text_cleaning import clean_text
 
 logger = logging.getLogger(__name__)
 
@@ -43,8 +44,10 @@ def answer_question(
         return {"answer": "Error querying the database.", "relevant_chunks": [], "source_files": []}
 
     relevant_chunks, source_files = filter_matches(matches, threshold)
-    context_text = "\n\n---\n\n".join(
-        relevant_chunks) if relevant_chunks else ""
+    
+    # Create a cleaned copy of the relevant chunks for context_text.
+    cleaned_chunks = [clean_text(chunk) for chunk in relevant_chunks]
+    context_text = "\n\n---\n\n".join(cleaned_chunks) if cleaned_chunks else ""
 
     # 3. Build the prompts.
     system_prompt = build_system_prompt(response_style, reasoning)

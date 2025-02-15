@@ -13,3 +13,5 @@ uvicorn
 python-multipart
 motor
 pytest
+nltk
+numpy

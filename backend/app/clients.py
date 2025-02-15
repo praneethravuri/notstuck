@@ -11,6 +11,11 @@ from app.config import (
     PINECONE_INDEX_NAME,
     PINECONE_EMBEDDING_DIMENSIONS
 )
+import nltk
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 # --- Initialize OpenAI Client ---
 openai_client = OpenAI(api_key=OPENAI_API_KEY)

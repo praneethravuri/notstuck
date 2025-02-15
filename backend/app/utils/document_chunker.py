@@ -3,6 +3,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema import Document
 from app.config import CHUNK_SIZE, CHUNK_OVERLAP
+from app.utils.pdf_text_cleaner import clean_pdf_text
 import concurrent.futures
 from typing import Union, List, Dict
 
@@ -24,7 +25,14 @@ def _load_and_split_single_pdf(pdf_path: str) -> List[Document]:
     except Exception as exc:
         print(f"Error loading PDF '{pdf_path}': {exc}")
         return []
-    return splitter.split_documents(pages)
+    
+    documents = splitter.split_documents(pages)
+    
+    for doc in documents:
+        if hasattr(doc, "page_content") and doc.page_content:
+            doc.page_content = clean_pdf_text(doc.page_content)
+    
+    return documents
 
 
 def load_and_split_pdf(pdf_input: Union[str, List[str]]) -> Union[List[Document], Dict[str, List[Document]]]:
