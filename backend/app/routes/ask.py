@@ -5,11 +5,11 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from app.database.db import create_chat_session, append_message_to_chat, get_chat_by_id
 from app.utils.chat_name_generator import generate_chat_name_from_llm
+# IMPORTANT: We now import "answer_question" as async, so adjust accordingly
 from app.query_llm.rag import answer_question
 from app.config import PINECONE_NAMESPACE
 
 router = APIRouter()
-
 
 class QuestionPayload(BaseModel):
     question: str
@@ -29,8 +29,7 @@ async def get_or_create_chat(payload: QuestionPayload) -> Dict[str, str]:
         print("DEBUG: Chat ID provided; fetching existing chat details...")
         chat = await get_chat_by_id(payload.chatId)
         if not chat:
-            raise HTTPException(
-                status_code=404, detail="Chat session not found")
+            raise HTTPException(status_code=404, detail="Chat session not found")
         chat_id = payload.chatId
         chat_name = chat.get("name") or "Unnamed Chat"
     else:
@@ -52,8 +51,12 @@ async def append_ai_message(chat_id: str, answer: str) -> None:
     await append_message_to_chat(chat_id, {"role": "ai", "content": answer})
 
 
-def process_question(payload: QuestionPayload) -> Dict[str, Any]:
-    return answer_question(
+# Change process_question to ASYNC so we can await answer_question
+async def process_question(payload: QuestionPayload, chat_id: str) -> Dict[str, Any]:
+    """
+    Pass the chat_id to answer_question, along with all other parameters.
+    """
+    return await answer_question(
         question=payload.question,
         top_k=payload.similarResults,
         threshold=payload.similarityThreshold,
@@ -62,7 +65,8 @@ def process_question(payload: QuestionPayload) -> Dict[str, Any]:
         response_style=payload.responseStyle,
         namespace=PINECONE_NAMESPACE,
         model_name=payload.modelName,
-        subject_filter=payload.subject
+        subject_filter=payload.subject,
+        chat_id=chat_id  # <--- Pass chat_id here
     )
 
 
@@ -70,14 +74,21 @@ def process_question(payload: QuestionPayload) -> Dict[str, Any]:
 async def ask_question(payload: QuestionPayload):
     try:
         print("DEBUG: Received payload:", payload.dict())
+        # 1) Create or fetch an existing chat session
         chat_info = await get_or_create_chat(payload)
         chat_id = chat_info["chatId"]
         chat_name = chat_info["chatName"]
 
+        # 2) Log the user's question in the chat history
         await append_user_message(chat_id, payload.question)
-        result = process_question(payload)
+
+        # 3) Process the question (includes RAG flow + chat_id)
+        result = await process_question(payload, chat_id)
+
+        # 4) Log the AI’s answer in the chat
         await append_ai_message(chat_id, result.get("answer", ""))
 
+        # 5) Return a response payload
         response_payload = {
             "chatId": chat_id,
             "chatName": chat_name,
@@ -87,6 +98,7 @@ async def ask_question(payload: QuestionPayload):
         }
         print("DEBUG: Returning response payload:", response_payload)
         return response_payload
+
     except Exception as e:
         print("DEBUG: Exception occurred:", e)
         raise HTTPException(status_code=500, detail=str(e))
