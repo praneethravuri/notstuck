@@ -1,4 +1,5 @@
-# backend/app/routes/ask.py
+# app/routes/ask.py
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
@@ -18,6 +19,7 @@ class QuestionPayload(BaseModel):
     modelName: str
     chatId: Optional[str] = None
     chatName: Optional[str] = None
+    subject: Optional[str] = None  # <-- New optional field for subject filtering
 
 @router.post("/ask")
 async def ask_question(payload: QuestionPayload):
@@ -66,7 +68,8 @@ async def ask_question(payload: QuestionPayload):
             max_tokens=payload.maxTokens,
             response_style=payload.responseStyle,
             namespace="my-namespace",
-            model_name=payload.modelName
+            model_name=payload.modelName,
+            subject_filter=payload.subject  # Pass the subject filter if provided
         )
         print("DEBUG: answer_question returned:", result)
 

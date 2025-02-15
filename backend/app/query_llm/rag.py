@@ -1,4 +1,4 @@
-# app/services/rag/main.py
+# app/query_llm/rag.py
 
 import logging
 from typing import Optional, List
@@ -17,11 +17,12 @@ def answer_question(
     response_style: str,
     namespace: str,
     model_name: str,
-    reasoning: bool = False
+    reasoning: bool = False,
+    subject_filter: Optional[str] = None  # <-- New parameter for filtering
 ) -> dict:
     """
     1) Embed the user question.
-    2) Query Pinecone for top_k relevant chunks (score >= threshold).
+    2) Query Pinecone for top_k relevant chunks (score >= threshold) optionally filtered by subject.
     3) Build a prompt with the retrieved context.
     4) Get and return the answer from the ChatGPT model.
     """
@@ -30,7 +31,7 @@ def answer_question(
     logger.info(
         f"Parameters: top_k={top_k}, threshold={threshold}, temperature={temperature}, "
         f"max_tokens={max_tokens}, response_style={response_style}, namespace={namespace}, "
-        f"model_name={model_name}, reasoning={reasoning}"
+        f"model_name={model_name}, reasoning={reasoning}, subject_filter={subject_filter}"
     )
 
     # 1) Embed the user question.
@@ -45,15 +46,19 @@ def answer_question(
         return {"answer": "Got an empty embedding for your question.", "relevant_chunks": [], "source_files": []}
 
     # 2) Query Pinecone with the user question embedding.
-    # Use the shared Pinecone client instance.
-    index = pinecone_index
+    query_params = {
+        "vector": question_embedding,
+        "top_k": top_k,
+        "include_metadata": True,
+        "namespace": namespace
+    }
+    if subject_filter:
+        query_params["filter"] = {
+            "subjects": {"$in": [subject_filter.lower().strip()]}
+        }
+
     try:
-        query_response = index.query(
-            vector=question_embedding,
-            top_k=top_k,
-            include_metadata=True,
-            namespace=namespace
-        )
+        query_response = pinecone_index.query(**query_params)
     except Exception as e:
         logger.error(f"Error querying Pinecone: {e}")
         return {"answer": "Error querying the database.", "relevant_chunks": [], "source_files": []}
@@ -134,7 +139,8 @@ if __name__ == "__main__":
         response_style="detailed",
         namespace="my-namespace",
         model_name="gpt-3.5-turbo",
-        reasoning=True
+        reasoning=True,
+        subject_filter="general"
     )
     logger.info("FINAL ANSWER (Markdown):")
     logger.info(result)
