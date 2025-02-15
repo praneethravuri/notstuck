@@ -63,6 +63,8 @@
 
 ## Architecture
 
+
+
 Below is a high-level overview of how NotStuck’s components interact:
 
 1. **Frontend (Next.js)**
@@ -241,6 +243,11 @@ Make sure to configure environment variables in your production environment (e.g
 ---
 
 ## Detailed RAG Flow
+
+<p align="center">
+  <img src="./notstuck.jpg" />
+</p>
+
 
 1. **PDF Ingestion**  
    - Documents are uploaded to the backend, stored in `RAW_DATA_PATH`, and chunked with [LangChain text splitter](https://python.langchain.com/docs/modules/data_connection/document_transformers/text_splitters).  
