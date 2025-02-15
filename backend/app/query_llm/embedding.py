@@ -4,6 +4,7 @@ from app.utils.generate_embeddings import get_embedding_function
 
 logger = logging.getLogger(__name__)
 
+
 def embed_question(question: str):
     """
     Embed the user question using the configured embedding function.

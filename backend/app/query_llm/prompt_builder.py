@@ -28,5 +28,6 @@ def build_system_prompt(response_style: str, reasoning: bool = False) -> str:
     system_prompt += "\n\nProvide the answer in Markdown format."
     return system_prompt
 
+
 def build_user_prompt(context_text: str, question: str) -> str:
     return f"Context:\n{context_text}\n\nQuestion:\n{question}"

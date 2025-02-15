@@ -2,6 +2,7 @@ from openai import OpenAI
 import datetime
 from app.clients import openai_client as client
 
+
 async def generate_chat_name_from_llm(question: str) -> str:
     prompt = (
         f"Generate a concise chat title for a conversation about the following topic:\n\n"
@@ -18,7 +19,8 @@ async def generate_chat_name_from_llm(question: str) -> str:
             temperature=0.7,
             max_tokens=10,
         )
-        chat_name = response.choices[0].message.content.strip().replace('"', '')
+        chat_name = response.choices[0].message.content.strip().replace(
+            '"', '')
         return chat_name
     except Exception as e:
         print(e)

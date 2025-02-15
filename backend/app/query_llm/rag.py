@@ -8,6 +8,7 @@ from app.query_llm.openai_client import call_openai_api
 
 logger = logging.getLogger(__name__)
 
+
 def answer_question(
     question: str,
     top_k: int,
@@ -24,7 +25,7 @@ def answer_question(
     Orchestrates the full retrieval-augmented generation process.
     """
     logger.info(f"Received question: {question}")
-    
+
     # 1. Embed the question.
     try:
         question_embedding = embed_question(question)
@@ -36,12 +37,14 @@ def answer_question(
 
     # 2. Query Pinecone.
     try:
-        matches = query_vector(question_embedding, top_k, namespace, subject_filter)
+        matches = query_vector(question_embedding, top_k,
+                               namespace, subject_filter)
     except Exception as e:
         return {"answer": "Error querying the database.", "relevant_chunks": [], "source_files": []}
 
     relevant_chunks, source_files = filter_matches(matches, threshold)
-    context_text = "\n\n---\n\n".join(relevant_chunks) if relevant_chunks else ""
+    context_text = "\n\n---\n\n".join(
+        relevant_chunks) if relevant_chunks else ""
 
     # 3. Build the prompts.
     system_prompt = build_system_prompt(response_style, reasoning)
@@ -50,10 +53,11 @@ def answer_question(
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
-    
+
     # 4. Call the OpenAI API.
     try:
-        final_answer = call_openai_api(model_name, messages, temperature, max_tokens)
+        final_answer = call_openai_api(
+            model_name, messages, temperature, max_tokens)
     except Exception as e:
         return {"answer": "There was an error calling the OpenAI API.", "relevant_chunks": [], "source_files": []}
 

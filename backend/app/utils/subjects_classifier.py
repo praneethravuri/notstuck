@@ -5,6 +5,7 @@ from app.clients import openai_client
 
 logger = logging.getLogger(__name__)
 
+
 def detect_subjects(text: str) -> str:
     """
     Uses the OpenAI API to determine the subject of a given text.
@@ -26,7 +27,8 @@ def detect_subjects(text: str) -> str:
             max_tokens=25
         )
         raw = response.choices[0].message.content.lower().strip()
-        subjects = sorted(list(set([s.strip() for s in raw.split(",") if s.strip()])))
+        subjects = sorted(
+            list(set([s.strip() for s in raw.split(",") if s.strip()])))
         print(f"Subject info: {subjects}")
         return subjects
     except Exception as e:

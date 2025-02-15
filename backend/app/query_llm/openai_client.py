@@ -4,6 +4,7 @@ from app.clients import openai_client
 
 logger = logging.getLogger(__name__)
 
+
 def call_openai_api(model_name: str, messages: list, temperature: float, max_tokens: int) -> str:
     try:
         response = openai_client.chat.completions.create(

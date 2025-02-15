@@ -1,6 +1,7 @@
 import logging
 import sys
 
+
 def setup_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
@@ -12,5 +13,6 @@ def setup_logging():
     handler.setFormatter(formatter)
     if not logger.handlers:
         logger.addHandler(handler)
+
 
 setup_logging()

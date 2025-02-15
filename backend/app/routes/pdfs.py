@@ -19,7 +19,8 @@ def pdf_endpoint(filename: Optional[str] = Query(None)):
         if filename is None:
             if not os.path.isdir(PROCESSED_DATA_PATH):
                 return {"files": []}
-            files = [f for f in os.listdir(PROCESSED_DATA_PATH) if f.lower().endswith(".pdf")]
+            files = [f for f in os.listdir(
+                PROCESSED_DATA_PATH) if f.lower().endswith(".pdf")]
             return {"files": files}
 
         pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)

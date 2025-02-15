@@ -9,6 +9,7 @@ from app.utils.document_chunker import _load_and_split_single_pdf
 
 router = APIRouter()
 
+
 @router.post("/upload")
 async def upload_files(
     files: list[UploadFile] = File(...),
@@ -25,11 +26,12 @@ async def upload_files(
             with open(file_path, "wb") as f:
                 f.write(content)
             file_names.append(file.filename)
-        
+
         # Process PDFs after upload with the provided or detected subjects.
         try:
             print("Processing and pushing PDFs to Pinecone with subjects:", subjects)
-            process_and_push_all_pdfs(namespace="my-namespace", subjects=subjects)
+            process_and_push_all_pdfs(
+                namespace="my-namespace", subjects=subjects)
             return {
                 "message": "Files uploaded and processed successfully",
                 "files": file_names,
@@ -41,6 +43,7 @@ async def upload_files(
                 "error": str(process_error),
                 "files": file_names
             }
-            
+
     except Exception as upload_error:
-        raise HTTPException(status_code=500, detail=f"Upload failed: {str(upload_error)}")
+        raise HTTPException(
+            status_code=500, detail=f"Upload failed: {str(upload_error)}")
