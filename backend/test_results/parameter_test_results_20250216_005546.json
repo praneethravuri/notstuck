@@ -1,0 +1,985 @@
+{
+  "start_time": "2025-02-16T00:45:25.228836",
+  "pdfs_tested": [
+    "economics-ppt.pdf",
+    "economics-textbook.pdf"
+  ],
+  "test_questions": [
+    {
+      "query": "What are the key components of production readiness?",
+      "expected_keywords": [
+        "monitoring",
+        "scaling",
+        "reliability",
+        "deployment"
+      ]
+    },
+    {
+      "query": "How should we handle system failures?",
+      "expected_keywords": [
+        "recovery",
+        "backup",
+        "failover",
+        "resilience"
+      ]
+    }
+  ],
+  "parameters_tested": {
+    "chunk_sizes": [
+      300,
+      500,
+      750,
+      1000
+    ],
+    "chunk_overlaps": [
+      50,
+      100,
+      150
+    ],
+    "thresholds": [
+      0.5,
+      0.7,
+      0.9
+    ]
+  },
+  "results": [
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.75,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.75
+          }
+        ],
+        "test_duration_seconds": 17.818979
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.75,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.75
+          }
+        ],
+        "test_duration_seconds": 13.486721
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 20.159749
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 1.0
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 26.874443
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 16.217439
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 16.498085
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.75
+          }
+        ],
+        "test_duration_seconds": 15.941606
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.75
+          }
+        ],
+        "test_duration_seconds": 16.65049
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 15.311586
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.75
+          }
+        ],
+        "test_duration_seconds": 14.716551
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 17.858162
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 20.527656
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 14.37609
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 17.858385
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 28.203231
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 18.486885
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 16.865247
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 14.366195
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 14.295237
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 15.254281
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.75
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 15.253366
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 13.775188
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 13.638311
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 21.653949
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 22.44643
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 29.283506
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 19.003248
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 12.344814
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.375,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.5
+          }
+        ],
+        "test_duration_seconds": 21.200766
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 16.947901
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 13.588789
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.0
+          }
+        ],
+        "test_duration_seconds": 15.21941
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.0
+          }
+        ],
+        "test_duration_seconds": 14.607884
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.25
+          }
+        ],
+        "test_duration_seconds": 13.379078
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.25,
+        "chunk_counts": {
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.5
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.0
+          }
+        ],
+        "test_duration_seconds": 13.930795
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.125,
+        "chunk_counts": {
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40
+        },
+        "question_scores": [
+          {
+            "question": "What are the key components of production readiness?",
+            "score": 0.25
+          },
+          {
+            "question": "How should we handle system failures?",
+            "score": 0.0
+          }
+        ],
+        "test_duration_seconds": 13.613422
+      }
+    }
+  ],
+  "end_time": "2025-02-16T00:55:46.922428",
+  "total_duration_seconds": 621.693605
+}

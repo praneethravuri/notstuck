@@ -30,19 +30,19 @@ def query_vector(vector, top_k: int, namespace: str, subject_filter: str = None)
 def filter_matches(matches, threshold: float):
     relevant_chunks = []
     sources_metadata = []
+    print(f"\n\n\nMATCHES: {matches}")
     for match in matches:
-        if match.get("score", 0) >= threshold:
-            metadata = match.get("metadata", {})
-            text_content = metadata.get("text", "")
-            source_file = metadata.get("source_file", "unknown source")
-            page_number = metadata.get("page_number", None)
+        metadata = match.get("metadata", {})
+        text_content = metadata.get("text", "")
+        source_file = metadata.get("source_file", "unknown source")
+        page_number = metadata.get("page_number", None)
             
-            relevant_chunks.append(text_content)
+        relevant_chunks.append(text_content)
 
-            sources_metadata.append({
-                "source_file": source_file,
-                "page_number": page_number,
-            })
+        sources_metadata.append({
+            "source_file": source_file,
+            "page_number": page_number,
+        })
 
     return relevant_chunks, sources_metadata
 

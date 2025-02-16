@@ -1,0 +1,3840 @@
+{
+  "start_time": "2025-02-16T01:00:47.560520",
+  "pdfs_tested": [
+    "c5-210.pdf",
+    "economics-ppt.pdf",
+    "economics-textbook.pdf",
+    "martin_jones_what_is_opportunity_cost.pdf",
+    "micro1.pdf"
+  ],
+  "test_questions": [
+    {
+      "query": "What is the basic definition of opportunity cost?",
+      "expected_keywords": [
+        "trade-off",
+        "foregone",
+        "choice",
+        "scarcity"
+      ]
+    },
+    {
+      "query": "How do economists use opportunity cost to measure the cost of production?",
+      "expected_keywords": [
+        "economists",
+        "trade-off",
+        "foregone",
+        "production"
+      ]
+    },
+    {
+      "query": "In microeconomics, how does opportunity cost relate to resource allocation?",
+      "expected_keywords": [
+        "resource allocation",
+        "alternatives",
+        "choice",
+        "foregone benefit"
+      ]
+    },
+    {
+      "query": "Can you provide a real-life example of opportunity cost in personal finance?",
+      "expected_keywords": [
+        "personal finance",
+        "foregone",
+        "trade-off",
+        "sacrifice"
+      ]
+    },
+    {
+      "query": "Why do opportunity costs vary between individuals or firms?",
+      "expected_keywords": [
+        "alternatives",
+        "cost differences",
+        "trade-off",
+        "preferences"
+      ]
+    },
+    {
+      "query": "How does opportunity cost affect investment decisions in capital markets?",
+      "expected_keywords": [
+        "investment",
+        "trade-off",
+        "capital markets",
+        "foregone returns"
+      ]
+    },
+    {
+      "query": "What role does opportunity cost play in government policy-making?",
+      "expected_keywords": [
+        "policy-making",
+        "budgeting",
+        "trade-off",
+        "scarcity"
+      ]
+    },
+    {
+      "query": "Explain the concept of opportunity cost in the context of time management.",
+      "expected_keywords": [
+        "time management",
+        "alternatives",
+        "lost opportunity",
+        "trade-off"
+      ]
+    },
+    {
+      "query": "Is opportunity cost always measured in monetary terms?",
+      "expected_keywords": [
+        "non-monetary",
+        "foregone",
+        "utility",
+        "choice"
+      ]
+    },
+    {
+      "query": "What is the difference between explicit and implicit opportunity costs?",
+      "expected_keywords": [
+        "explicit cost",
+        "implicit cost",
+        "foregone",
+        "trade-off"
+      ]
+    },
+    {
+      "query": "What is the capital city of Canada?",
+      "expected_keywords": [
+        "ottawa",
+        "capital",
+        "geography"
+      ]
+    },
+    {
+      "query": "Who won the 2022 FIFA World Cup?",
+      "expected_keywords": [
+        "argentina",
+        "soccer",
+        "tournament"
+      ]
+    },
+    {
+      "query": "Explain the process of photosynthesis in plants.",
+      "expected_keywords": [
+        "photosynthesis",
+        "chlorophyll",
+        "sunlight"
+      ]
+    },
+    {
+      "query": "What are the main differences between HTTP and HTTPS protocols?",
+      "expected_keywords": [
+        "encryption",
+        "TLS",
+        "port 443"
+      ]
+    },
+    {
+      "query": "How do I bake a classic chocolate cake from scratch?",
+      "expected_keywords": [
+        "cake",
+        "baking",
+        "recipe"
+      ]
+    },
+    {
+      "query": "Describe the orbital path of Earth around the Sun.",
+      "expected_keywords": [
+        "ellipse",
+        "astronomy",
+        "revolution"
+      ]
+    },
+    {
+      "query": "When did the first human land on the Moon?",
+      "expected_keywords": [
+        "apollo 11",
+        "1969",
+        "NASA"
+      ]
+    },
+    {
+      "query": "What are the basic concepts in object-oriented programming?",
+      "expected_keywords": [
+        "encapsulation",
+        "inheritance",
+        "polymorphism"
+      ]
+    },
+    {
+      "query": "Who was Ludwig van Beethoven?",
+      "expected_keywords": [
+        "composer",
+        "classical music",
+        "pianist"
+      ]
+    },
+    {
+      "query": "How can I improve my running stamina?",
+      "expected_keywords": [
+        "cardiovascular",
+        "endurance",
+        "training"
+      ]
+    }
+  ],
+  "parameters_tested": {
+    "chunk_sizes": [
+      300,
+      500,
+      750,
+      1000
+    ],
+    "chunk_overlaps": [
+      50,
+      100,
+      150
+    ],
+    "thresholds": [
+      0.5,
+      0.7,
+      0.9
+    ]
+  },
+  "results": [
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.675,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 73.695667
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6583333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 6,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 15
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 75.274348
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6583333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.75
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 71.623737
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6541666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 8,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 18
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.75
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 73.055935
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6458333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 72.762018
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6458333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 75.175567
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "c5-210.pdf": 11,
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100,
+          "martin_jones_what_is_opportunity_cost.pdf": 34,
+          "micro1.pdf": 25
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.75
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 80.286666
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "c5-210.pdf": 11,
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100,
+          "martin_jones_what_is_opportunity_cost.pdf": 34,
+          "micro1.pdf": 25
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.0
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 81.637462
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "c5-210.pdf": 14,
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122,
+          "martin_jones_what_is_opportunity_cost.pdf": 36,
+          "micro1.pdf": 34
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.5
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.25
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 82.184187
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.625,
+        "chunk_counts": {
+          "c5-210.pdf": 14,
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122,
+          "martin_jones_what_is_opportunity_cost.pdf": 36,
+          "micro1.pdf": 34
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.75
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.75
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.0
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 87.613664
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6208333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 11,
+          "economics-ppt.pdf": 14,
+          "economics-textbook.pdf": 100,
+          "martin_jones_what_is_opportunity_cost.pdf": 34,
+          "micro1.pdf": 25
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 77.526164
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6208333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 19,
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159,
+          "martin_jones_what_is_opportunity_cost.pdf": 39,
+          "micro1.pdf": 39
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.75
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.25
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 84.034931
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6208333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 72.307919
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6208333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 78.340937
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6166666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 10
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.75
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.0
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 71.363133
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.6125,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 74.08553
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.6083333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 10
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.75
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 73.629297
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6083333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 7
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.0
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.5
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 78.208988
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6083333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.25
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 83.265814
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6041666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 19,
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159,
+          "martin_jones_what_is_opportunity_cost.pdf": 39,
+          "micro1.pdf": 39
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 86.551614
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.6041666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 7,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 17
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.25
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.0
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 81.709041
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.6,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 42,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.75
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.0
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 80.158213
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5916666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 6,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 15
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.5
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 81.05797
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5916666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 7,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 17
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 77.161827
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5875,
+        "chunk_counts": {
+          "c5-210.pdf": 6,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 59,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 15
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 72.873135
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5875,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 7
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.0
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 77.270907
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5875,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.0
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 76.958906
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.5791666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 8,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 18
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 79.232557
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5791666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 5,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 44,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 11
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 1.0
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 70.602459
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.575,
+        "chunk_counts": {
+          "c5-210.pdf": 8,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 70,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 18
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.75
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 74.977167
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5666666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 14,
+          "economics-ppt.pdf": 16,
+          "economics-textbook.pdf": 122,
+          "martin_jones_what_is_opportunity_cost.pdf": 36,
+          "micro1.pdf": 34
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.5
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 79.627945
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5583333333333333,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 32,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 9
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.5
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.75
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 75.74712
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 300,
+        "chunk_overlap": 150,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.5541666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 19,
+          "economics-ppt.pdf": 19,
+          "economics-textbook.pdf": 159,
+          "martin_jones_what_is_opportunity_cost.pdf": 39,
+          "micro1.pdf": 39
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.0
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.5
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.25
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.75
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.5
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 1.0
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.0
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 89.581878
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 500,
+        "chunk_overlap": 100,
+        "similarity_threshold": 0.9,
+        "exact_match_threshold": 1.0
+      },
+      "results": {
+        "average_score": 0.55,
+        "chunk_counts": {
+          "c5-210.pdf": 7,
+          "economics-ppt.pdf": 10,
+          "economics-textbook.pdf": 62,
+          "martin_jones_what_is_opportunity_cost.pdf": 22,
+          "micro1.pdf": 17
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 0.75
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.75
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.5
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.0
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 75.014642
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 750,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.7,
+        "exact_match_threshold": 0.8999999999999999
+      },
+      "results": {
+        "average_score": 0.55,
+        "chunk_counts": {
+          "c5-210.pdf": 4,
+          "economics-ppt.pdf": 9,
+          "economics-textbook.pdf": 40,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 10
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.25
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 0.6666666666666666
+          }
+        ],
+        "test_duration_seconds": 74.203197
+      }
+    },
+    {
+      "parameters": {
+        "chunk_size": 1000,
+        "chunk_overlap": 50,
+        "similarity_threshold": 0.5,
+        "exact_match_threshold": 0.7
+      },
+      "results": {
+        "average_score": 0.5416666666666667,
+        "chunk_counts": {
+          "c5-210.pdf": 3,
+          "economics-ppt.pdf": 8,
+          "economics-textbook.pdf": 31,
+          "martin_jones_what_is_opportunity_cost.pdf": 17,
+          "micro1.pdf": 7
+        },
+        "question_scores": [
+          {
+            "question": "What is the basic definition of opportunity cost?",
+            "score": 0.0
+          },
+          {
+            "question": "How do economists use opportunity cost to measure the cost of production?",
+            "score": 1.0
+          },
+          {
+            "question": "In microeconomics, how does opportunity cost relate to resource allocation?",
+            "score": 0.5
+          },
+          {
+            "question": "Can you provide a real-life example of opportunity cost in personal finance?",
+            "score": 0.25
+          },
+          {
+            "question": "Why do opportunity costs vary between individuals or firms?",
+            "score": 0.25
+          },
+          {
+            "question": "How does opportunity cost affect investment decisions in capital markets?",
+            "score": 0.5
+          },
+          {
+            "question": "What role does opportunity cost play in government policy-making?",
+            "score": 0.5
+          },
+          {
+            "question": "Explain the concept of opportunity cost in the context of time management.",
+            "score": 0.25
+          },
+          {
+            "question": "Is opportunity cost always measured in monetary terms?",
+            "score": 0.0
+          },
+          {
+            "question": "What is the difference between explicit and implicit opportunity costs?",
+            "score": 0.25
+          },
+          {
+            "question": "What is the capital city of Canada?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "Who won the 2022 FIFA World Cup?",
+            "score": 0.3333333333333333
+          },
+          {
+            "question": "Explain the process of photosynthesis in plants.",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the main differences between HTTP and HTTPS protocols?",
+            "score": 1.0
+          },
+          {
+            "question": "How do I bake a classic chocolate cake from scratch?",
+            "score": 1.0
+          },
+          {
+            "question": "Describe the orbital path of Earth around the Sun.",
+            "score": 0.0
+          },
+          {
+            "question": "When did the first human land on the Moon?",
+            "score": 0.6666666666666666
+          },
+          {
+            "question": "What are the basic concepts in object-oriented programming?",
+            "score": 1.0
+          },
+          {
+            "question": "Who was Ludwig van Beethoven?",
+            "score": 1.0
+          },
+          {
+            "question": "How can I improve my running stamina?",
+            "score": 1.0
+          }
+        ],
+        "test_duration_seconds": 75.000227
+      }
+    }
+  ],
+  "end_time": "2025-02-16T01:47:21.399935",
+  "total_duration_seconds": 2793.839426
+}
