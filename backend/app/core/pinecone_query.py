@@ -1,4 +1,4 @@
-# app/query_llm/pinecone_query.py
+# app/core/pinecone_query.py
 import logging
 from app.clients import pinecone_index
 

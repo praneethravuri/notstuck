@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from app.database.db import create_chat_session, append_message_to_chat, get_chat_by_id
 from app.utils.chat_name_generator import generate_chat_name_from_llm
-from app.query_llm.rag import answer_question
+from app.core.rag import answer_question
 from app.config import PINECONE_NAMESPACE
 
 router = APIRouter()

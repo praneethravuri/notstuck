@@ -1,4 +1,4 @@
-# app/query_llm/embedding.py
+# app/core/embedding.py
 import logging
 from app.utils.generate_embeddings import get_embedding_function
 

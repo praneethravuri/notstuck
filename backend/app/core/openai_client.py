@@ -1,4 +1,4 @@
-# app/query_llm/openai_client.py
+# app/core/openai_client.py
 import logging
 from app.clients import openai_client
 

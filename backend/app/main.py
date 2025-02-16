@@ -1,12 +1,11 @@
 # app/main.py
+# uvicorn app.main:app --host 0.0.0.0 --port 8000
 
 import logging
 import os
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-
-# Example shared clients (Mongo, Pinecone, etc.)
 from app.clients import pinecone_index, openai_client, mongodb_client
 from app.routes import ask, pdfs, upload, reset_db, chats
 import app.logging_config

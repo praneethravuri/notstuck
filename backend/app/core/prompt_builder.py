@@ -1,4 +1,4 @@
-# app/query_llm/prompt_builder.py
+# app/core/prompt_builder.py
 
 import logging
 from typing import Optional

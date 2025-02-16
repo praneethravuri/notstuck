@@ -1,11 +1,11 @@
-# app/query_llm/rag.py
+# app/core/rag.py
 
 import logging
 from typing import Dict, Optional
-from app.query_llm.embedding import embed_question
-from app.query_llm.pinecone_query import query_vector, filter_matches
-from app.query_llm.prompt_builder import build_system_prompt, build_user_prompt_with_chat
-from app.query_llm.openai_client import call_openai_api
+from app.core.embedding import embed_question
+from app.core.pinecone_query import query_vector, filter_matches
+from app.core.prompt_builder import build_system_prompt, build_user_prompt_with_chat
+from app.core.openai_client import call_openai_api
 from app.utils.text_cleaning import clean_text
 
 logger = logging.getLogger(__name__)
