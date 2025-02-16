@@ -80,7 +80,7 @@ export const UploadSection = ({ uploadHandler, isUploading }: UploadSectionProps
           <div className="flex flex-col items-center justify-center py-8">
             <UploadCloud className="h-10 w-10 text-gray-400 mb-2" />
             <p className="text-sm text-gray-300">Drop files here or click to upload</p>
-            <p className="text-xs text-gray-400 mt-1">PDF, TXT, DOC files supported</p>
+            <p className="text-xs text-gray-400 mt-1">Only PDFs supported</p>
           </div>
         )}
       </div>
