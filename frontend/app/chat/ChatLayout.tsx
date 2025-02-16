@@ -18,8 +18,10 @@ interface PdfFile {
   name: string;
 }
 
-// const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-// console.log(`API Url: ${apiUrl}`)
+interface SourceInfo {
+  source_file: string;
+  page_number?: number;
+}
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState<string[]>([]);
@@ -33,7 +35,7 @@ export default function ChatLayout() {
   const [responseStyle, setResponseStyle] = useState("detailed");
   const [modelName, setModelName] = useState("gpt-4o");
   const [files, setFiles] = useState<PdfFile[]>([]);
-  const [sources, setSources] = useState<string[]>([]);
+  const [sources, setSources] = useState<SourceInfo[]>([]);
   const [relevantChunks, setRelevantChunks] = useState<string[]>([]);
 
   const { toast } = useToast();
@@ -42,6 +44,8 @@ export default function ChatLayout() {
   const handleNewChat = () => {
     setChatId(null);
     setMessages([]);
+    setRelevantChunks([]);
+    setSources([]);
     router.push("/chat");
   };
 
@@ -95,7 +99,6 @@ export default function ChatLayout() {
     toast({
       title: "Uploading files...",
       description: "Starting to upload files and expand knowledge",
-      
     });
     
     try {
@@ -104,7 +107,6 @@ export default function ChatLayout() {
         formData.append("files", file);
       });
   
-      // Call the Next.js API route instead of the backend directly
       const response = await axios.post('/api/upload', formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -157,8 +159,8 @@ export default function ChatLayout() {
 
       const data = await res.json();
       setMessages((prev) => [...prev, `AI: ${data.answer}`]);
-      setRelevantChunks(data.relevant_chunks);
-      setSources(data.source_files);
+      setRelevantChunks(data.relevant_chunks || []);
+      setSources(data.sources_metadata || []);
     } catch (error) {
       console.error("Error fetching from /api/ask:", error);
       setMessages((prev) => [...prev, "Error: Could not fetch answer"]);
@@ -175,7 +177,7 @@ export default function ChatLayout() {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col md:flex-row">
       {/* Left Sidebar */}
-      <aside className="w-full md:w-64  border-r border-gray-800">
+      <aside className="w-full md:w-64 border-r border-gray-800">
         <CustomSidebar>
           <div className="p-4 flex items-center space-x-2">
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
@@ -217,7 +219,6 @@ export default function ChatLayout() {
             setModelName={setModelName}
           />
           <DocumentsSection files={files} />
-          
         </CustomSidebar>
       </aside>
     </div>

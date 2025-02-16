@@ -28,14 +28,21 @@ def query_vector(vector, top_k: int, namespace: str, subject_filter: str = None)
 
 
 def filter_matches(matches, threshold: float):
-    """
-    Filter matches based on the threshold score.
-    """
     relevant_chunks = []
-    source_files = []
+    sources_metadata = []
     for match in matches:
         if match.get("score", 0) >= threshold:
-            relevant_chunks.append(match.get("metadata", {}).get("text", ""))
-            source_files.append(match.get("metadata", {}).get(
-                "source_file", "unknown source"))
-    return relevant_chunks, source_files
+            metadata = match.get("metadata", {})
+            text_content = metadata.get("text", "")
+            source_file = metadata.get("source_file", "unknown source")
+            page_number = metadata.get("page_number", None)
+            
+            relevant_chunks.append(text_content)
+
+            sources_metadata.append({
+                "source_file": source_file,
+                "page_number": page_number,
+            })
+
+    return relevant_chunks, sources_metadata
+

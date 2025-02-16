@@ -36,14 +36,14 @@ async def answer_question(
         return {
             "answer": "Unable to embed your question at this time.",
             "relevant_chunks": [],
-            "source_files": []
+            "sources_metadata": []
         }
 
     if not question_embedding:
         return {
             "answer": "Got an empty embedding for your question.",
             "relevant_chunks": [],
-            "source_files": []
+            "sources_metadata": []
         }
 
     # 2. Query Pinecone
@@ -58,10 +58,10 @@ async def answer_question(
         return {
             "answer": "Error querying the database.",
             "relevant_chunks": [],
-            "source_files": []
+            "sources_metadata": []
         }
 
-    relevant_chunks, source_files = filter_matches(matches, threshold)
+    relevant_chunks, sources_metadata = filter_matches(matches, threshold)
 
     # 3. Prepare a cleaned context text from the matches
     cleaned_chunks = [clean_text(chunk) for chunk in relevant_chunks]
@@ -95,11 +95,11 @@ async def answer_question(
         return {
             "answer": "There was an error calling the OpenAI API.",
             "relevant_chunks": [],
-            "source_files": []
+            "sources_metadata": []
         }
 
     return {
         "answer": final_answer,
         "relevant_chunks": relevant_chunks,
-        "source_files": source_files
+        "sources_metadata": sources_metadata
     }

@@ -85,6 +85,9 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None, subj
         result = similarity_results[i]
         vector_id = None
         matched_score = 0.0
+        
+        original_doc = docs[i]  # docs[i] is the Document that includes metadata
+        page_number = original_doc.metadata.get("page_number", None)
 
         if result and "matches" in result and result["matches"]:
             best_match = result["matches"][0]
@@ -109,7 +112,8 @@ def embed_and_upsert_chunks(pdf_path: str, namespace: Optional[str] = None, subj
             "metadata": {
                 "text": chunk_text,
                 "source_file": os.path.basename(pdf_path),
-                "subjects": subjects  # <-- New subjects metadata field
+                "page_number": page_number,
+                "subjects": subjects
             }
         })
 

@@ -93,11 +93,11 @@ async def ask_question(payload: QuestionPayload):
             "chatName": chat_name,
             "answer": result.get("answer", ""),
             "relevant_chunks": result.get("relevant_chunks", []),
-            "source_files": result.get("source_files", [])
+            "sources_metadata": result.get("sources_metadata", [])
         }
-        print("DEBUG: Returning response payload:", response_payload)
+        print("DEBUG: Returning response payload :", response_payload)
         return response_payload
 
     except Exception as e:
-        print("DEBUG: Exception occurred:", e)
+        print("DEBUG: Exception occurred in ask.py:", e)
         raise HTTPException(status_code=500, detail=str(e))
