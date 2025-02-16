@@ -28,8 +28,8 @@ export default function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [similarityThreshold, setSimilarityThreshold] = useState([0.7]);
-  const [similarResults, setSimilarResults] = useState([7]);
+  const [similarityThreshold, setSimilarityThreshold] = useState([0.9]);
+  const [similarResults, setSimilarResults] = useState([5]);
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([5000]);
   const [responseStyle, setResponseStyle] = useState("detailed");

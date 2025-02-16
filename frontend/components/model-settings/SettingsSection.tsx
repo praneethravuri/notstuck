@@ -149,7 +149,7 @@ export const SettingsSection = ({
                   value: similarResults,
                   setValue: setSimilarResults,
                   min: 5,
-                  max: 15,
+                  max: 10,
                   step: 1,
                   format: (v: number) => v.toString(),
                 },

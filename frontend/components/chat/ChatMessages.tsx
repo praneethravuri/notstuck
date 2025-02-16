@@ -14,20 +14,22 @@ export const ChatMessages = ({ messages, isLoading }: { messages: string[], isLo
   }, [messages, isLoading]);
 
   return (
-    <>
-      {/* Fixed Header */}
-      {/* <div className="fixed top-0 left-0 right-0 bg-stone-950 z-10 border-b border-gray-800">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-2xl font-semibold text-gray-200">Hey Oleve! 👋</h1>
-            <p className="text-sm text-gray-400">Ask me anything about your documents</p>
+    <div className="flex-1 overflow-y-auto h-[calc(100vh-8rem)] mt-24">
+      <div className="max-w-4xl mx-auto px-4">
+        {messages.length === 0 ? (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center space-y-4 max-w-lg px-4">
+            <h1 className="text-3xl font-semibold text-gray-200">Hey Oleve! 👋</h1>
+            <div className="space-y-2">
+              <p className="text-gray-400">I&apos;m here to help you understand your documents better.</p>
+              <p className="text-gray-400">Start by:</p>
+              <ul className="text-gray-400 space-y-2">
+                <li>1. Upload your documents using the upload section</li>
+                <li>2. Ask me any questions about your documents</li>
+                <li>3. Adjust the model settings to fine-tune responses</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </div> */}
-
-      {/* Scrollable Messages Area */}
-      <div className="flex-1 overflow-y-auto h-[calc(100vh-8rem)] mt-24">
-        <div className="max-w-4xl mx-auto px-4">
+        ) : (
           <div className="flex flex-col space-y-6 pb-24">
             {messages.map((message, index) => {
               const isUser = message.startsWith("You:");
@@ -71,8 +73,8 @@ export const ChatMessages = ({ messages, isLoading }: { messages: string[], isLo
             )}
             <div ref={messagesEndRef} />
           </div>
-        </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
