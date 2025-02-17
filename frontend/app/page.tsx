@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import { MessageSquare, ArrowRight, Database, Zap, Shield } from "lucide-react";
-import LoadingPage from "../components/loading-page/LoadingPage";
+import LoadingPage from "../components/LoadingPage";
 
 export default function HomePage() {
   const router = useRouter();

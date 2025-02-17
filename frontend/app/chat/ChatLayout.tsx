@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { ChatMessages } from "../../components/chat/ChatMessages";
-import { ChatInput } from "../../components/chat/ChatInput";
-import CustomSidebar from "../../components/sidebar/CustomSidebar";
-import { SettingsSection } from "../../components/model-settings/SettingsSection";
-import { DocumentsSection } from "../../components/information/DocumentSection";
-import ChatList from "../../components/chat/ChatList";
+import { ChatMessages } from "../../components/ChatMessages";
+import { ChatInput } from "../../components/ChatInput";
+import CustomSidebar from "../../components/CustomSidebar";
+import { DocumentsSection } from "../../components/DocumentSection";
+import ChatList from "../../components/ChatList";
+import { ModelSelector } from "../../components/ModelSelector"
 import { MessageSquare } from "lucide-react";
 import { useToast } from "../../hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -26,11 +26,6 @@ export default function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [similarityThreshold, setSimilarityThreshold] = useState([0.9]);
-  const [similarResults, setSimilarResults] = useState([5]);
-  const [temperature, setTemperature] = useState([0.7]);
-  const [maxTokens, setMaxTokens] = useState([5000]);
-  const [responseStyle, setResponseStyle] = useState("detailed");
   const [modelName, setModelName] = useState("gpt-4o");
   const [files, setFiles] = useState<PdfFile[]>([]);
   const [sources, setSources] = useState<SourceInfo[]>([]);
@@ -141,11 +136,6 @@ export default function ChatLayout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           question: message,
-          similarityThreshold: similarityThreshold[0],
-          similarResults: similarResults[0],
-          temperature: temperature[0],
-          maxTokens: maxTokens[0],
-          responseStyle: responseStyle,
           modelName: modelName,
           chatId: chatId,
         }),
@@ -175,20 +165,26 @@ export default function ChatLayout() {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col md:flex-row">
       {/* Left Sidebar */}
-      <aside className="w-full md:w-64 border-t md:border-t-0 md:border-r border-gray-800">
+      <aside className="w-full md:w-64 border-t md:border-t-0 md:border-r border-gray-800 flex flex-col h-screen">
         <CustomSidebar>
-          <div className="p-4 flex items-center space-x-2 mt-5">
+          <div className="p-4 flex items-center space-x-2">
             <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
               <MessageSquare className="h-5 w-5 text-green-600" />
             </div>
             <span className="font-semibold text-gray-200">!Stuck</span>
           </div>
-          <ChatList onSelectChat={handleSelectChat} onNewChat={handleNewChat} />
+          <div className="flex flex-col h-[calc(100vh-80px)]">
+            <ChatList onSelectChat={handleSelectChat} onNewChat={handleNewChat} />
+            <div className="flex-1 px-4 overflow-hidden">
+              <DocumentsSection files={files} />
+            </div>
+          </div>
         </CustomSidebar>
       </aside>
 
       {/* Main Chat Area */}
       <main className="flex-1 p-4 flex flex-col">
+        <ModelSelector modelName={modelName} setModelName={setModelName} />
         <div className="flex-1 overflow-y-auto">
           <ChatMessages
             messages={messages}
@@ -202,26 +198,6 @@ export default function ChatLayout() {
         </div>
       </main>
 
-      {/* Right Sidebar */}
-      <aside className="w-full md:w-64 border-t md:border-t-0 md:border-l border-gray-800">
-        <CustomSidebar>
-          <SettingsSection
-            similarityThreshold={similarityThreshold}
-            setSimilarityThreshold={setSimilarityThreshold}
-            similarResults={similarResults}
-            setSimilarResults={setSimilarResults}
-            temperature={temperature}
-            setTemperature={setTemperature}
-            maxTokens={maxTokens}
-            setMaxTokens={setMaxTokens}
-            responseStyle={responseStyle}
-            setResponseStyle={setResponseStyle}
-            modelName={modelName}
-            setModelName={setModelName}
-          />
-          <DocumentsSection files={files} />
-        </CustomSidebar>
-      </aside>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 # app/core/rag.py
 import logging
 from typing import Dict, Optional
-from app.core.prompt_builder import build_system_prompt, build_user_prompt_with_chat
+from app.core.prompt_builder import build_user_prompt_with_chat, build_system_prompt
 from app.core.openai_client import call_openai_api
 from app.utils.text_cleaning import clean_text
 
@@ -33,13 +33,8 @@ def hybrid_score_norm(dense, sparse, alpha: float):
 
 async def answer_question(
     question: str,
-    top_k: int,
-    temperature: float,
-    max_tokens: int,
-    response_style: str,
     namespace: str,
     model_name: str,
-    reasoning: bool = False,
     subject_filter: Optional[str] = None,
     chat_id: Optional[str] = None
 ) -> Dict:
@@ -73,7 +68,7 @@ async def answer_question(
     
     # 5. Query Pinecone with both weighted dense and sparse vectors.
     query_response = pinecone_index.query(
-        top_k=top_k,
+        top_k=20,
         vector=weighted_dense,
         sparse_vector=weighted_sparse,
         namespace=namespace,
@@ -103,7 +98,7 @@ async def answer_question(
         context_text = ""  # or you can also set it to a custom note if preferred
     
     # 7. Build prompts.
-    system_prompt = build_system_prompt(response_style, reasoning)
+    system_prompt = build_system_prompt()
     # If no context is found, include a note in the prompt.
     if not filtered_matches:
         fallback_note = "No relevant context was found for this query. Please answer using your general knowledge."
@@ -128,8 +123,8 @@ async def answer_question(
     final_answer = call_openai_api(
         model_name=model_name,
         messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens
+        temperature=0.7,
+        max_tokens=5000
     )
     
     return {

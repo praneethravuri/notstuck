@@ -12,11 +12,6 @@ router = APIRouter()
 
 class QuestionPayload(BaseModel):
     question: str
-    similarityThreshold: float
-    similarResults: int
-    temperature: float
-    maxTokens: int
-    responseStyle: str
     modelName: str
     chatId: Optional[str] = None
     chatName: Optional[str] = None
@@ -57,14 +52,10 @@ async def process_question(payload: QuestionPayload, chat_id: str) -> Dict[str, 
     """
     return await answer_question(
         question=payload.question,
-        top_k=payload.similarResults,
-        temperature=payload.temperature,
-        max_tokens=payload.maxTokens,
-        response_style=payload.responseStyle,
         namespace=PINECONE_NAMESPACE,
         model_name=payload.modelName,
         subject_filter=payload.subject,
-        chat_id=chat_id  # <--- Pass chat_id here
+        chat_id=chat_id
     )
 
 

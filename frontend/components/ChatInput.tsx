@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import { Send, Paperclip, UploadCloud } from "lucide-react";
-import { Button } from "../../components/ui/button";
-import { Progress } from "../../components/ui/progress";
+import { Button } from "./ui/button";
+import { Progress } from "./ui/progress";
 
 interface ChatInputProps {
   uploadHandler?: (files: FileList) => Promise<void>;
@@ -57,7 +57,7 @@ export const ChatInput = ({ onSendMessage, uploadHandler, isUploading }: ChatInp
             </div>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="relative">
           <div className="flex gap-2 items-end">
             <input
@@ -71,7 +71,7 @@ export const ChatInput = ({ onSendMessage, uploadHandler, isUploading }: ChatInp
               }}
               multiple
             />
-            
+
             <Button
               type="button"
               size="icon"
@@ -80,7 +80,7 @@ export const ChatInput = ({ onSendMessage, uploadHandler, isUploading }: ChatInp
             >
               <Paperclip className="h-5 w-5" />
             </Button>
-            
+
             <div className="flex-1 relative">
               <textarea
                 ref={textareaRef}
@@ -101,16 +101,15 @@ export const ChatInput = ({ onSendMessage, uploadHandler, isUploading }: ChatInp
                 }}
               />
             </div>
-            
+
             <Button
               type="submit"
               size="icon"
               disabled={!message.trim()}
-              className={`h-10 w-10 rounded-xl transition-all duration-200 p-6 ${
-                message.trim()
+              className={`h-10 w-10 rounded-xl transition-all duration-200 p-6 ${message.trim()
                   ? 'bg-green-600 hover:bg-green-700 text-white'
                   : 'bg-stone-900 text-gray-500 cursor-not-allowed'
-              }`}
+                }`}
             >
               <Send className="h-5 w-5" />
             </Button>

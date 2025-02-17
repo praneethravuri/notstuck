@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { Database, FileSearch, File, Search } from "lucide-react";
-// import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../ui/accordion";
-import { Input } from "../ui/input";
-import { Card } from "../ui/card";
+import { Input } from "./ui/input";
 
 interface PdfFile {
   name: string;
@@ -23,7 +21,7 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
   );
 
   return (
-    <Card className="p-4 space-y-4 border-none">
+    <div>
       <div className="flex items-center gap-3 mb-6">
         <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
           <Database className="h-4 w-4 text-green-600" />
@@ -66,6 +64,6 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
           ))
         )}
       </div>
-    </Card>
+    </div>
   );
 };
