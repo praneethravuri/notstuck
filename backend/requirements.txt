@@ -16,3 +16,4 @@ pytest
 nltk
 numpy
 scikit-learn
+pinecone-text
