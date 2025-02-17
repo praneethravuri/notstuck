@@ -58,7 +58,6 @@ async def process_question(payload: QuestionPayload, chat_id: str) -> Dict[str, 
     return await answer_question(
         question=payload.question,
         top_k=payload.similarResults,
-        threshold=payload.similarityThreshold,
         temperature=payload.temperature,
         max_tokens=payload.maxTokens,
         response_style=payload.responseStyle,

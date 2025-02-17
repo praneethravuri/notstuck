@@ -27,7 +27,7 @@ if PINECONE_INDEX_NAME not in existing_indexes:
     pinecone_client.create_index(
         name=PINECONE_INDEX_NAME,
         dimension=PINECONE_EMBEDDING_DIMENSIONS,
-        metric="cosine",
+        metric="dotproduct",
         spec=ServerlessSpec(region=PINECONE_ENV, cloud="aws")
     )
 pinecone_index = pinecone_client.Index(PINECONE_INDEX_NAME)
