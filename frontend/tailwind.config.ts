@@ -10,7 +10,7 @@ export default {
   theme: {
   	extend: {
   		colors: {
-			neonGreen: 'hsl(var(--neon-green))',
+  			neonGreen: 'hsl(var(--neon-green))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

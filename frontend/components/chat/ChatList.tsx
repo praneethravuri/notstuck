@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Plus, MessageSquare, MessagesSquare } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { ScrollArea } from "../../components/ui/scroll-area";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "../../components/ui/accordion";
 
 interface Chat {
   chatId: string;
-  name?: string; // new field for the chat name
+  name?: string;
   created_at?: string;
 }
 
@@ -44,24 +38,18 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
     onSelectChat(chatId);
   };
 
+  const truncateText = (text: string, maxLength: number = 20) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength) + "...";
+  };
+
   return (
-    <Accordion type="single" collapsible defaultValue="chats" className="space-y-2">
-      <AccordionItem value="chats" className="border-none">
-        <AccordionTrigger className="py-4 px-4 hover:no-underline hover:bg-stone-900/50">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-              <MessagesSquare className="h-4 w-4 text-green-500" />
-            </div>
-            <div>
-              <h2 className="text-base font-medium text-gray-200">Chat History</h2>
-            </div>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent>
+
           <div className="space-y-4 px-4">
             <Button 
               onClick={onNewChat}
-              className="w-full bg-stone-900/50 border border-gray-800 hover:bg-stone-800 text-gray-200 h-10 gap-2"
+              className="w-full h-10 gap-2"
+              variant="outline"
             >
               <Plus className="h-4 w-4" />
               <span className="font-medium">New Chat</span>
@@ -71,7 +59,6 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
               <div className="space-y-2 pr-4">
                 {chats.length === 0 ? (
                   <div className="text-center py-8 space-y-3">
-                    <MessageSquare className="mx-auto h-12 w-12 text-gray-500/50" />
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-gray-300">No chat history yet</p>
                       <p className="text-xs text-gray-500">Start a new conversation</p>
@@ -82,31 +69,21 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
                     <button
                       key={chat.chatId}
                       onClick={() => handleChatSelect(chat.chatId)}
-                      className={`w-full group flex items-center justify-between p-3 rounded-lg border transition-all duration-200 ${
+                      className={`w-full text-left px-4 py-3 rounded-lg border transition-all duration-200 ${
                         selectedChatId === chat.chatId
-                          ? "border-green-500/50 bg-green-500/10 text-green-500"
+                          ? "border-green-500/50 bg-green-500/10 text-green-500 w-full"
                           : "border-gray-800 bg-stone-900/50 text-gray-400 hover:bg-stone-800"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <MessageSquare 
-                          className={`h-4 w-4 ${
-                            selectedChatId === chat.chatId ? "text-green-500" : "text-gray-500"
-                          }`}
-                        />
-                        <span className="text-sm font-medium">
-                          {chat.name ? chat.name : `Chat ${chat.chatId.slice(-5)}`}
-                        </span>
-                      </div>
+                      <span className="text-sm font-medium block truncate">
+                        {truncateText(chat.name ? chat.name : `Chat ${chat.chatId.slice(-5)}`)}
+                      </span>
                     </button>
                   ))
                 )}
               </div>
             </ScrollArea>
           </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
   );
 };
 

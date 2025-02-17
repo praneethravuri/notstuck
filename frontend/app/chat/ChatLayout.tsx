@@ -7,8 +7,6 @@ import { ChatInput } from "../../components/chat/ChatInput";
 import CustomSidebar from "../../components/sidebar/CustomSidebar";
 import { SettingsSection } from "../../components/model-settings/SettingsSection";
 import { DocumentsSection } from "../../components/information/DocumentSection";
-import { SourcesSection } from "../../components/information/SourcesSection";
-import { UploadSection } from "../../components/information/UploadSection";
 import ChatList from "../../components/chat/ChatList";
 import { MessageSquare } from "lucide-react";
 import { useToast } from "../../hooks/use-toast";
@@ -100,25 +98,25 @@ export default function ChatLayout() {
       title: "Uploading files...",
       description: "Starting to upload files and expand knowledge",
     });
-    
+
     try {
       const formData = new FormData();
       Array.from(files).forEach((file) => {
         formData.append("files", file);
       });
-  
+
       const response = await axios.post('/api/upload', formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-  
+
       console.log("Upload is successful:", response.data);
-  
+
       toast({
         title: "Upload Successful",
         description: "Your document has been uploaded successfully.",
         variant: "success"
       });
-  
+
       loadFiles();
     } catch (error) {
       console.error("Upload failed:", error);
@@ -177,27 +175,30 @@ export default function ChatLayout() {
   return (
     <div className="min-h-screen bg-stone-950 flex flex-col md:flex-row">
       {/* Left Sidebar */}
-      <aside className="w-full md:w-64 border-r border-gray-800">
+      <aside className="w-full md:w-64 border-t md:border-t-0 md:border-r border-gray-800">
         <CustomSidebar>
-          <div className="p-4 flex items-center space-x-2">
-            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-              <MessageSquare className="h-5 w-5 text-white" />
+          <div className="p-4 flex items-center space-x-2 mt-5">
+            <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+              <MessageSquare className="h-5 w-5 text-green-600" />
             </div>
-            <span className="font-semibold text-gray-200">NotStuck</span>
+            <span className="font-semibold text-gray-200">!Stuck</span>
           </div>
           <ChatList onSelectChat={handleSelectChat} onNewChat={handleNewChat} />
-          <SourcesSection relevantChunks={relevantChunks} sources={sources} />
-          <UploadSection uploadHandler={handleFileUpload} isUploading={isUploading} />
         </CustomSidebar>
       </aside>
 
       {/* Main Chat Area */}
       <main className="flex-1 p-4 flex flex-col">
         <div className="flex-1 overflow-y-auto">
-          <ChatMessages messages={messages} isLoading={isLoading} />
+          <ChatMessages
+            messages={messages}
+            isLoading={isLoading}
+            sources={sources}
+            relevantChunks={relevantChunks}
+          />
         </div>
         <div className="mt-4">
-          <ChatInput onSendMessage={handleSendMessage} />
+          <ChatInput onSendMessage={handleSendMessage} uploadHandler={handleFileUpload} isUploading={isUploading} />
         </div>
       </main>
 
