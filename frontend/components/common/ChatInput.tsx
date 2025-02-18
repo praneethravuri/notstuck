@@ -90,7 +90,7 @@ export const ChatInput = ({ onSendMessage, uploadHandler, isUploading }: ChatInp
                 placeholder="Message or drop files here..."
                 rows={1}
                 className="w-full bg-stone-900 border border-gray-800 focus:border-green-600/50 focus:ring-0 rounded-xl
-                        px-4 py-3 text-sm text-gray-200 focus:outline-none
+                        px-4 py-3 p-1 text-sm text-gray-200 focus:outline-none
                         placeholder-gray-400 resize-none max-h-[150px] overflow-hidden"
                 onDragOver={(e: React.DragEvent<HTMLTextAreaElement>) => e.preventDefault()}
                 onDrop={(e: React.DragEvent<HTMLTextAreaElement>) => {

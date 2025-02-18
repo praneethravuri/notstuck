@@ -1,7 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Loader2, FileText, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import _ from "lodash";
 
 export interface MessageSource {
   source_file: string;
@@ -18,6 +19,12 @@ export interface ChatMessage {
 interface ChatMessagesProps {
   messages: ChatMessage[];
   isLoading: boolean;
+}
+
+interface GroupedSource {
+  source_file: string;
+  page_number?: number;
+  texts: string[];
 }
 
 export const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -40,6 +47,26 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
       ...prev,
       [messageIndex]: !prev[messageIndex],
     }));
+  };
+
+  const groupSources = (sources: MessageSource[]): GroupedSource[] => {
+    const grouped = _.groupBy(sources, source => 
+      `${source.source_file}-${source.page_number ?? 'no-page'}`
+    );
+    
+    // Create grouped sources array and sort it
+    const groupedSources = Object.values(grouped).map(group => ({
+      source_file: group[0].source_file,
+      page_number: group[0].page_number,
+      texts: group.map(source => source.text)
+    }));
+
+    // Sort by source_file first, then by page_number
+    return _.orderBy(
+      groupedSources, 
+      ['source_file', 'page_number'],
+      ['asc', 'asc']
+    );
   };
 
   return (
@@ -87,6 +114,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
               const text = message.text;
               const messageSources = !isUser && message.sources ? message.sources : [];
               const hasExpandedSources = expandedSources[index];
+              const groupedSources = groupSources(messageSources);
 
               return (
                 <div key={index} className="flex flex-col space-y-3 group">
@@ -134,7 +162,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
 
                         {hasExpandedSources && (
                           <div className="mt-3 space-y-3">
-                            {messageSources.map((source, sourceIndex) => (
+                            {groupedSources.map((source, sourceIndex) => (
                               <div
                                 key={sourceIndex}
                                 className="bg-stone-900/30 rounded-xl border border-gray-800/50 overflow-hidden transition-all duration-200 hover:border-gray-700/50"
@@ -151,7 +179,14 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                                   </div>
                                 </div>
                                 <div className="px-4 py-3 text-sm text-gray-400 leading-relaxed">
-                                  {source.text}
+                                  {source.texts.map((text, textIndex) => (
+                                    <React.Fragment key={textIndex}>
+                                      <p>{text}</p>
+                                      {textIndex < source.texts.length - 1 && (
+                                        <div className="my-2 border-t border-gray-700" />
+                                      )}
+                                    </React.Fragment>
+                                  ))}
                                 </div>
                               </div>
                             ))}
@@ -183,3 +218,5 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
     </div>
   );
 };
+
+export default ChatMessages;
