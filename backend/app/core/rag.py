@@ -7,7 +7,7 @@ from app.utils.text_cleaning import clean_text
 from app.clients.openai_embeddings import get_embedding_function
 from pinecone_text.sparse import BM25Encoder
 from app.clients.pinecone_client import pinecone_index
-from app.config import HYBRID_WEIGHT_RATIO, TOP_K, SIMILARITY_THRESHOLD, BM25_JSON_PATH
+from app.config import HYBRID_WEIGHT_RATIO, TOP_K, SIMILARITY_THRESHOLD, BM25_JSON_PATH, TEMPERATURE, MAX_TOKENS
 
 logger = logging.getLogger(__name__)
 
@@ -121,8 +121,8 @@ async def answer_question(
         final_answer = query_llm(
             model_name=model_name,
             messages=messages,
-            temperature=0.7,
-            max_tokens=5000
+            temperature=TEMPERATURE,
+            max_tokens=MAX_TOKENS
         )
 
         logger.info("Successfully generated an answer.")
