@@ -1,10 +1,7 @@
-# app/utils/subject_classifier.py
-
 import logging
-from app.clients import openai_client
+from app.clients.openai_client import openai_client
 
 logger = logging.getLogger(__name__)
-
 
 def detect_subjects(text: str) -> str:
     """
@@ -28,9 +25,10 @@ def detect_subjects(text: str) -> str:
         )
         raw = response.choices[0].message.content.lower().strip()
         subjects = sorted(
-            list(set([s.strip() for s in raw.split(",") if s.strip()])))
-        print(f"Subject info: {subjects}")
+            list(set([s.strip() for s in raw.split(",") if s.strip()]))
+        )
+        logger.info("Detected subjects: %s", subjects)
         return subjects
     except Exception as e:
-        logger.error(f"Error detecting subject: {e}")
+        logger.error("Error detecting subject: %s", e, exc_info=True)
         return "general"

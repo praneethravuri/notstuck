@@ -2,11 +2,13 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 from app.database.db import create_chat_session, append_message_to_chat, get_chat_by_id
-from app.utils.chat_name_generator import generate_chat_name_from_llm
+from app.helpers.chat_name_generator import generate_chat_name_from_llm
 from app.core.rag import answer_question
 from app.config import PINECONE_NAMESPACE
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 class QuestionPayload(BaseModel):
     question: str
@@ -15,10 +17,9 @@ class QuestionPayload(BaseModel):
     chatName: Optional[str] = None
     subject: Optional[str] = None
 
-
 async def get_or_create_chat(payload: QuestionPayload) -> Dict[str, str]:
     if payload.chatId:
-        print("DEBUG: Chat ID provided; fetching existing chat details...")
+        logger.debug("Chat ID provided; fetching existing chat details...")
         chat = await get_chat_by_id(payload.chatId)
         if not chat:
             raise HTTPException(status_code=404, detail="Chat session not found")
@@ -34,10 +35,8 @@ async def get_or_create_chat(payload: QuestionPayload) -> Dict[str, str]:
         chat_name = chat_session["name"]
     return {"chatId": chat_id, "chatName": chat_name}
 
-
 async def append_user_message(chat_id: str, question: str) -> None:
     await append_message_to_chat(chat_id, {"role": "user", "content": question})
-
 
 # Modified to accept an optional "sources" parameter.
 async def append_ai_message(chat_id: str, answer: str, sources: Optional[list] = None) -> None:
@@ -45,7 +44,6 @@ async def append_ai_message(chat_id: str, answer: str, sources: Optional[list] =
     if sources:
         message["sources"] = sources
     await append_message_to_chat(chat_id, message)
-
 
 # Change process_question to ASYNC so we can await answer_question
 async def process_question(payload: QuestionPayload, chat_id: str) -> Dict[str, Any]:
@@ -60,11 +58,10 @@ async def process_question(payload: QuestionPayload, chat_id: str) -> Dict[str, 
         chat_id=chat_id
     )
 
-
 @router.post("/ask")
 async def ask_question(payload: QuestionPayload):
     try:
-        print("DEBUG: Received payload:", payload.dict())
+        logger.debug("Received payload: %s", payload.dict())
         # 1) Create or fetch an existing chat session
         chat_info = await get_or_create_chat(payload)
         chat_id = chat_info["chatId"]
@@ -91,9 +88,9 @@ async def ask_question(payload: QuestionPayload):
             "relevant_chunks": result.get("relevant_chunks", []),
             "sources_metadata": result.get("sources_metadata", [])
         }
-        print("DEBUG: Returning response payload :", response_payload)
+        logger.debug("Returning response payload: %s", response_payload)
         return response_payload
 
     except Exception as e:
-        print("DEBUG: Exception occurred in ask.py:", e)
+        logger.error("Exception occurred in ask_question: %s", e, exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

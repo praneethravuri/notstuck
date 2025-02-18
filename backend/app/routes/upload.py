@@ -1,11 +1,9 @@
-# app/routes/upload.py
-import os
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from app.vector_db.pinecone_db import process_chunks_and_upsert
-from app.utils.document_processor import process_pdf_files
-from app.config import RAW_DATA_PATH, PROCESSED_DATA_PATH
+from app.services.upload_services import save_files, process_and_upsert
+import logging
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 @router.post("/upload")
 async def upload_files(
@@ -13,34 +11,22 @@ async def upload_files(
     subjects: str = Form(None)
 ):
     try:
-        os.makedirs(RAW_DATA_PATH, exist_ok=True)
-        os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
-
-        # Save files temporarily and collect paths
-        file_paths = []
-        for file in files:
-            file_path = os.path.join(RAW_DATA_PATH, file.filename)
-            content = await file.read()
-            with open(file_path, "wb") as f:
-                f.write(content)
-            file_paths.append(file_path)
-
-        # Process PDFs through document chunker
+        logger.info("Received upload request for %d files.", len(files))
+        
+        # Save files to disk
+        file_paths = save_files(files)
+        logger.info("Files saved to disk: %s", file_paths)
+        
+        # Process PDFs and upsert to Pinecone
         try:
-            processed_documents = process_pdf_files(file_paths)
-
-            # Send to Pinecone for processing
-            process_chunks_and_upsert(
-                processed_documents,
-                namespace="my-namespace"
-            )
-
+            process_and_upsert(file_paths, namespace="my-namespace")
+            logger.info("Files processed and upserted to Pinecone successfully.")
             return {
                 "message": "Files uploaded and processed successfully",
                 "files": [f.filename for f in files]
             }
-
         except Exception as process_error:
+            logger.error("Error during processing and upsert: %s", process_error, exc_info=True)
             return {
                 "message": "Files uploaded but processing failed",
                 "error": str(process_error),
@@ -48,6 +34,7 @@ async def upload_files(
             }
 
     except Exception as upload_error:
+        logger.error("Upload failed: %s", upload_error, exc_info=True)
         raise HTTPException(
             status_code=500,
             detail=f"Upload failed: {str(upload_error)}"

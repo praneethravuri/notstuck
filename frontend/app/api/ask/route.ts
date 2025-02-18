@@ -7,13 +7,8 @@ export async function POST(req: NextRequest) {
         // Parse incoming data from the client, now including an optional chatId.
         const {
             question,
-            similarityThreshold,
-            similarResults,
-            temperature,
-            maxTokens,
-            responseStyle,
             modelName,
-            chatId  // New field!
+            chatId
         } = await req.json();
 
         // Forward the question and settings (including chatId, if available) to the FastAPI backend.
@@ -24,11 +19,6 @@ export async function POST(req: NextRequest) {
             },
             body: JSON.stringify({ 
                 question,
-                similarityThreshold,
-                similarResults,
-                temperature,
-                maxTokens,
-                responseStyle,
                 modelName,
                 chatId,  // Forward the chat session ID
             }),

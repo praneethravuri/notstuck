@@ -12,6 +12,18 @@ PROCESSED_DATA_PATH = os.path.join(BACKEND_DIR, "data", "processed")
 RAW_TEST_DATA_PATH = os.path.join(BACKEND_DIR, "test_data", "raw")
 PROCESSED_TEST_DATA_PATH = os.path.join(BACKEND_DIR, "test_data", "processed")
 
+# Directories for BM25 values and logs.
+BM25_JSON_VALUES = os.path.join(APP_DIR, "bm25_values")
+LOG_DIR = os.path.join(APP_DIR, "logs")
+
+# Ensure the directories exist.
+os.makedirs(BM25_JSON_VALUES, exist_ok=True)
+os.makedirs(LOG_DIR, exist_ok=True)
+
+# Full paths for the BM25 JSON file and the application log file.
+BM25_JSON_PATH = os.path.join(BM25_JSON_VALUES, "bm25_values.json")
+LOG_FILE_PATH = os.path.join(LOG_DIR, "application.log")
+
 # MongoDB
 MONGODB_URI = os.getenv("MONGODB_URI")
 MONGO_DATABASE_NAME = "unstuck"

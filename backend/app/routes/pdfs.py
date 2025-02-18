@@ -1,13 +1,12 @@
-# app/routes/pdfs.py
-
 import os
+import logging
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import FileResponse
-from app.config import PROCESSED_DATA_PATH
+from app.services.pdf_services import list_pdfs, get_pdf_path
 
 router = APIRouter()
-
+logger = logging.getLogger(__name__)
 
 @router.get("/get-pdfs")
 def pdf_endpoint(filename: Optional[str] = Query(None)):
@@ -17,17 +16,17 @@ def pdf_endpoint(filename: Optional[str] = Query(None)):
     """
     try:
         if filename is None:
-            if not os.path.isdir(PROCESSED_DATA_PATH):
-                return {"files": []}
-            files = [f for f in os.listdir(
-                PROCESSED_DATA_PATH) if f.lower().endswith(".pdf")]
+            logger.info("Listing available PDFs.")
+            files = list_pdfs()
+            logger.debug("PDF files found: %s", files)
             return {"files": files}
-
-        pdf_path = os.path.join(PROCESSED_DATA_PATH, filename)
-        if not os.path.isfile(pdf_path) or not filename.lower().endswith(".pdf"):
-            raise HTTPException(status_code=404, detail="PDF not found")
+        
+        logger.info("Requesting PDF file: %s", filename)
+        pdf_path = get_pdf_path(filename)
+        logger.info("Serving PDF file from path: %s", pdf_path)
         return FileResponse(pdf_path, media_type="application/pdf")
     except Exception as e:
+        logger.error("Error in pdf_endpoint: %s", e, exc_info=True)
         if isinstance(e, HTTPException):
             raise e
         raise HTTPException(status_code=500, detail=str(e))

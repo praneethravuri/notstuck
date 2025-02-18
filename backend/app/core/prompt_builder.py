@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from app.utils.chat_summary import summarize_chat_history
+from app.helpers.chat_summary import summarize_chat_history
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ async def build_user_prompt_with_chat(
             if not chat_summary.strip():
                 logger.info(f"No summary available for chat_id={chat_id}.")
         except Exception as e:
-            logger.error(f"Error summarizing chat history for chat_id={chat_id}: {e}")
+            logger.error(f"Error summarizing chat history for chat_id={chat_id}: {e}", exc_info=True)
             chat_summary = ""
 
     user_prompt = (
@@ -41,5 +41,5 @@ async def build_user_prompt_with_chat(
         f"Question:\n{question}"
     )
     
-    print(f"user prompt: {user_prompt}")
+    logger.debug(f"user prompt: {user_prompt}")
     return user_prompt

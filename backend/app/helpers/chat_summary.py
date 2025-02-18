@@ -3,7 +3,7 @@
 import logging
 from fastapi import HTTPException
 from app.database.db import get_chat_by_id
-from app.clients import openai_client as client
+from app.clients.openai_client import openai_client
 from app.utils.text_cleaning import clean_text
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ async def summarize_chat_history(chat_id: str) -> str:
 
     messages = chat.get("messages", [])
     if not messages:
-        logger.info("No messages to summarize.")
+        logger.info("No messages to summarize for chat_id=%s.", chat_id)
         return ""
 
     conversation_lines = []
@@ -29,17 +29,22 @@ async def summarize_chat_history(chat_id: str) -> str:
         return ""
 
     try:
-        response = client.chat.completions.create(
+        response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant. Summarize the conversation below."},
+                {
+                    "role": "system", 
+                    "content": "You are a helpful assistant. Summarize the conversation below."
+                },
                 {"role": "user", "content": conversation_text}
             ],
             temperature=0.7,
             max_tokens=100
         )
         summary = response.choices[0].message.content.strip()
+        logger.info("Chat summary generated successfully for chat_id=%s.", chat_id)
         return summary
     except Exception as e:
-        logger.error(f"Error summarizing chat: {e}")
-        return conversation_text  # fallback
+        logger.error("Error summarizing chat for chat_id=%s: %s", chat_id, e, exc_info=True)
+        # Fallback: return the raw conversation text if summarization fails.
+        return conversation_text

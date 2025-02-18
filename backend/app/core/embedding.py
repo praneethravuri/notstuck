@@ -1,9 +1,8 @@
 # app/core/embedding.py
 import logging
-from app.utils.generate_embeddings import get_embedding_function
+from app.clients.openai_embeddings import get_embedding_function
 
 logger = logging.getLogger(__name__)
-
 
 def embed_question(question: str):
     """
@@ -13,5 +12,5 @@ def embed_question(question: str):
     try:
         return embedding_func.embed_query(question)
     except Exception as e:
-        logger.error(f"Error embedding question: {e}")
-        raise e
+        logger.error(f"Error embedding question: {e}", exc_info=True)
+        raise

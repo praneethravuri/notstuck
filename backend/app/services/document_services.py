@@ -1,12 +1,14 @@
-# app/utils/document_chunker.py
 import os
 import concurrent.futures
+import logging
 from typing import Union, List, Dict
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from app.config import CHUNK_SIZE, CHUNK_OVERLAP
 from app.utils.pdf_text_cleaner import clean_pdf_text
-from app.utils.subjects_classifier import detect_subjects
+from app.helpers.subjects_classifier import detect_subjects
+
+logger = logging.getLogger(__name__)
 
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=CHUNK_SIZE,
@@ -16,7 +18,7 @@ splitter = RecursiveCharacterTextSplitter(
 
 def process_single_pdf(pdf_path: str) -> Dict:
     """
-    Process a single PDF and return structured data with chunks and metadata
+    Process a single PDF and return structured data with chunks and metadata.
     """
     try:
         # Load PDF
@@ -51,6 +53,7 @@ def process_single_pdf(pdf_path: str) -> Dict:
                         "page_num": page_num
                     })
         
+        logger.info("Processed PDF '%s' successfully.", pdf_name)
         return {
             "pdf_name": pdf_name,
             "tags": tags,
@@ -58,12 +61,12 @@ def process_single_pdf(pdf_path: str) -> Dict:
         }
         
     except Exception as exc:
-        print(f"Error processing PDF '{pdf_path}': {exc}")
+        logger.error("Error processing PDF '%s': %s", pdf_path, exc, exc_info=True)
         return None
 
 def process_pdf_files(pdf_paths: List[str]) -> List[Dict]:
     """
-    Process multiple PDF files concurrently and return structured data
+    Process multiple PDF files concurrently and return structured data.
     """
     processed_documents = []
     
@@ -80,6 +83,7 @@ def process_pdf_files(pdf_paths: List[str]) -> List[Dict]:
                 if result:
                     processed_documents.append(result)
             except Exception as e:
-                print(f"Error processing {pdf_path}: {e}")
+                logger.error("Error processing %s: %s", pdf_path, e, exc_info=True)
     
+    logger.info("Processed %d PDF file(s).", len(processed_documents))
     return processed_documents

@@ -1,28 +1,28 @@
-# app/vector_db/pinecone_db.py
 import os
 import shutil
 import uuid
 import logging
 from typing import List, Optional, Dict
-
-from app.clients import pinecone_index
-from app.config import RAW_DATA_PATH, PROCESSED_DATA_PATH
+from app.clients.pinecone_client import pinecone_client, pinecone_index
+from app.config import RAW_DATA_PATH, PROCESSED_DATA_PATH, BM25_JSON_VALUES
 
 logger = logging.getLogger(__name__)
 
-BM25_JSON_PATH = "bm25_values.json"
+# Ensure the BM25 encoder directory exists
+os.makedirs(BM25_JSON_VALUES, exist_ok=True)
+BM25_JSON_PATH = os.path.join(BM25_JSON_VALUES, "bm25_values.json")
 
 def delete_all_data(namespace: Optional[str] = None):
     index = pinecone_index
     index.delete(delete_all=True, namespace=namespace)
-    logger.info(f"Deleted all data{' in namespace ' + namespace if namespace else ''}.")
+    logger.info("Deleted all data%s.", f" in namespace {namespace}" if namespace else "")
 
 def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Optional[str] = None):
     """
     Processes document chunks, generates both dense and sparse embeddings,
     upserts them to Pinecone, and updates the BM25 encoder state stored in a JSON file.
     """
-    from app.utils.generate_embeddings import get_embedding_function
+    from app.clients.openai_embeddings import get_embedding_function
     from pinecone_text.sparse import BM25Encoder
 
     # Gather all chunk texts from the processed documents.
@@ -36,28 +36,28 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
     if all_chunk_texts:
         try:
             bm25_encoder.fit(all_chunk_texts)
-            print(f"DEBUG: BM25Encoder fitted on corpus with {len(all_chunk_texts)} texts.")
+            logger.debug("BM25Encoder fitted on corpus with %d texts.", len(all_chunk_texts))
         except Exception as fit_err:
-            print(f"DEBUG: Error fitting BM25Encoder: {fit_err}")
+            logger.error("Error fitting BM25Encoder: %s", fit_err, exc_info=True)
             bm25_encoder = BM25Encoder().default()
-            print("DEBUG: Using default BM25Encoder values due to fitting error.")
+            logger.debug("Using default BM25Encoder values due to fitting error.")
     else:
         bm25_encoder = BM25Encoder().default()
-        print("DEBUG: No chunk texts found; using default BM25Encoder values.")
+        logger.debug("No chunk texts found; using default BM25Encoder values.")
 
     # Dump the BM25 encoder state to JSON.
     try:
         bm25_encoder.dump(BM25_JSON_PATH)
-        print(f"DEBUG: BM25 encoder state saved to {BM25_JSON_PATH}")
+        logger.debug("BM25 encoder state saved to %s", BM25_JSON_PATH)
     except Exception as e:
-        print(f"DEBUG: Error dumping BM25 encoder state: {e}")
+        logger.error("Error dumping BM25 encoder state: %s", e, exc_info=True)
 
     # Obtain the dense embedding function.
     try:
         dense_embedding_func = get_embedding_function()
-        print("DEBUG: Obtained dense embedding function successfully.")
+        logger.debug("Obtained dense embedding function successfully.")
     except Exception as e:
-        print(f"DEBUG: Error obtaining dense embedding function: {e}")
+        logger.error("Error obtaining dense embedding function: %s", e, exc_info=True)
         return
 
     index = pinecone_index
@@ -71,11 +71,11 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
 
         try:
             dense_embeddings = dense_embedding_func.embed_documents(chunk_texts)
-            print(f"DEBUG: Generated dense embeddings for {len(chunk_texts)} chunks in '{pdf_name}'.")
+            logger.debug("Generated dense embeddings for %d chunks in '%s'.", len(chunk_texts), pdf_name)
             sparse_embeddings = bm25_encoder.encode_documents(chunk_texts)
-            print(f"DEBUG: Generated sparse embeddings for {len(chunk_texts)} chunks in '{pdf_name}'.")
+            logger.debug("Generated sparse embeddings for %d chunks in '%s'.", len(chunk_texts), pdf_name)
         except Exception as e:
-            print(f"DEBUG: Error generating embeddings for '{pdf_name}': {e}")
+            logger.error("Error generating embeddings for '%s': %s", pdf_name, e, exc_info=True)
             continue
 
         vectors = []
@@ -84,7 +84,7 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
         ):
             try:
                 vector_id = str(uuid.uuid4())
-                print(f"DEBUG: Processing chunk {i} for '{pdf_name}'.")
+                logger.debug("Processing chunk %d for '%s'.", i, pdf_name)
 
                 # Convert dense embedding to a list if needed.
                 dense_values = dense_embedding.tolist() if hasattr(dense_embedding, "tolist") else dense_embedding
@@ -97,7 +97,7 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
                         "indices": list(range(len(sparse_embedding))),
                         "values": sparse_embedding
                     }
-                
+
                 vector = {
                     "id": vector_id,
                     "values": dense_values,
@@ -111,22 +111,22 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
                 }
                 vectors.append(vector)
             except Exception as e:
-                print(f"DEBUG: Error processing chunk {i} for '{pdf_name}': {e}")
+                logger.error("Error processing chunk %d for '%s': %s", i, pdf_name, e, exc_info=True)
                 continue
 
         if vectors:
             try:
                 index.upsert(vectors=vectors, namespace=namespace)
-                print(f"DEBUG: Hybrid upserted {len(vectors)} vectors from '{pdf_name}'.")
+                logger.debug("Hybrid upserted %d vectors from '%s'.", len(vectors), pdf_name)
             except Exception as e:
-                print(f"DEBUG: Error upserting vectors for '{pdf_name}': {e}")
+                logger.error("Error upserting vectors for '%s': %s", pdf_name, e, exc_info=True)
 
         try:
             src_path = os.path.join(RAW_DATA_PATH, pdf_name)
             dest_path = os.path.join(PROCESSED_DATA_PATH, pdf_name)
             shutil.move(src_path, dest_path)
-            print(f"DEBUG: Moved processed PDF to: {dest_path}")
+            logger.debug("Moved processed PDF to: %s", dest_path)
         except Exception as move_err:
-            print(f"DEBUG: Error moving PDF '{pdf_name}' to processed dir: {move_err}")
+            logger.error("Error moving PDF '%s' to processed dir: %s", pdf_name, move_err, exc_info=True)
 
-    print("DEBUG: ✅ Done. All documents have been processed and moved.")
+    logger.info("All documents have been processed and moved.")
