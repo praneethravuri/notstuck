@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Database, FileSearch, File, Search } from "lucide-react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 
 interface PdfFile {
   name: string;

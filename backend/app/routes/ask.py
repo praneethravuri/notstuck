@@ -1,5 +1,3 @@
-# app/routes/ask.py
-
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
@@ -41,8 +39,12 @@ async def append_user_message(chat_id: str, question: str) -> None:
     await append_message_to_chat(chat_id, {"role": "user", "content": question})
 
 
-async def append_ai_message(chat_id: str, answer: str) -> None:
-    await append_message_to_chat(chat_id, {"role": "ai", "content": answer})
+# Modified to accept an optional "sources" parameter.
+async def append_ai_message(chat_id: str, answer: str, sources: Optional[list] = None) -> None:
+    message = {"role": "ai", "content": answer}
+    if sources:
+        message["sources"] = sources
+    await append_message_to_chat(chat_id, message)
 
 
 # Change process_question to ASYNC so we can await answer_question
@@ -74,8 +76,12 @@ async def ask_question(payload: QuestionPayload):
         # 3) Process the question (includes RAG flow + chat_id)
         result = await process_question(payload, chat_id)
 
-        # 4) Log the AI’s answer in the chat
-        await append_ai_message(chat_id, result.get("answer", ""))
+        # 4) Log the AI’s answer in the chat (including its sources)
+        await append_ai_message(
+            chat_id,
+            result.get("answer", ""),
+            result.get("sources_metadata", [])
+        )
 
         # 5) Return a response payload
         response_payload = {

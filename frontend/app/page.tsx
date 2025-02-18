@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../components/ui/button";
 import { MessageSquare, ArrowRight, Database, Zap, Shield } from "lucide-react";
-import LoadingPage from "../components/LoadingPage";
+import LoadingPage from "../components/common/LoadingPage";
 
 export default function HomePage() {
   const router = useRouter();
@@ -57,8 +57,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-stone-950 overflow-hidden">
       {/* Gradient Background */}
-      <div 
-        className="absolute inset-0" 
+      <div
+        className="absolute inset-0"
         style={{
           background: "linear-gradient(to bottom right, rgba(34, 197, 94, 0.1), transparent, rgba(168, 85, 247, 0.1))"
         }}
@@ -142,8 +142,8 @@ export default function HomePage() {
 
       {/* Background Grid Decoration */}
       <div className="fixed inset-0 pointer-events-none">
-        <div 
-          className="absolute inset-0" 
+        <div
+          className="absolute inset-0"
           style={{
             backgroundImage: "linear-gradient(to right, rgba(128, 128, 128, 0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(128, 128, 128, 0.07) 1px, transparent 1px)",
             backgroundSize: "24px 24px"

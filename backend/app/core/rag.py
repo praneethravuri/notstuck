@@ -1,16 +1,18 @@
 # app/core/rag.py
+
+import os
 import logging
 from typing import Dict, Optional
 from app.core.prompt_builder import build_user_prompt_with_chat, build_system_prompt
 from app.core.openai_client import call_openai_api
 from app.utils.text_cleaning import clean_text
-
 from app.utils.generate_embeddings import get_embedding_function
 from pinecone_text.sparse import BM25Encoder
-import os
 from app.clients import pinecone_index
+from app.config import HYBRID_WEIGHT_RATIO, TOP_K, SIMILARITY_THRESHOLD
 
 BM25_JSON_PATH = "bm25_values.json"
+
 
 def load_bm25_encoder(json_path: str = BM25_JSON_PATH):
     try:
@@ -21,6 +23,7 @@ def load_bm25_encoder(json_path: str = BM25_JSON_PATH):
         encoder = BM25Encoder().default()
     return encoder
 
+
 def hybrid_score_norm(dense, sparse, alpha: float):
     if alpha < 0 or alpha > 1:
         raise ValueError("Alpha must be between 0 and 1")
@@ -30,6 +33,7 @@ def hybrid_score_norm(dense, sparse, alpha: float):
     }
     hdense = [v * alpha for v in dense]
     return hdense, hsparse
+
 
 async def answer_question(
     question: str,
@@ -51,37 +55,40 @@ async def answer_question(
     # 1. Generate dense query vector.
     dense_embedding_func = get_embedding_function()
     dense_query = dense_embedding_func.embed_query(question)
-    
+
     # 2. Generate sparse query vector.
     bm25_encoder = load_bm25_encoder()
     sparse_query_list = bm25_encoder.encode_documents([question])
-    sparse_query = sparse_query_list[0] if sparse_query_list else BM25Encoder().default()
-    
+    sparse_query = sparse_query_list[0] if sparse_query_list else BM25Encoder(
+    ).default()
+
     # 3. Apply hybrid weighting.
-    alpha = 0.75
-    weighted_dense, weighted_sparse = hybrid_score_norm(dense_query, sparse_query, alpha)
-    
+    alpha = HYBRID_WEIGHT_RATIO
+    weighted_dense, weighted_sparse = hybrid_score_norm(
+        dense_query, sparse_query, alpha)
+
     # 4. Build filter if needed.
     filter_criteria = None
     if subject_filter:
-        filter_criteria = {"subjects": {"$in": [subject_filter.lower().strip()]}}
-    
+        filter_criteria = {"subjects": {
+            "$in": [subject_filter.lower().strip()]}}
+
     # 5. Query Pinecone with both weighted dense and sparse vectors.
     query_response = pinecone_index.query(
-        top_k=20,
+        top_k= TOP_K,
         vector=weighted_dense,
         sparse_vector=weighted_sparse,
         namespace=namespace,
         filter=filter_criteria,
         include_metadata=True
     )
-    
+
     matches = query_response.get("matches", [])
-    
+
     # 6. Post-filter matches by a similarity threshold.
-    similarity_threshold = 0.4
-    filtered_matches = [m for m in matches if m["score"] >= similarity_threshold]
-    
+    filtered_matches = [
+        m for m in matches if m["score"] >= SIMILARITY_THRESHOLD]
+
     if filtered_matches:
         # Build context from retrieved matches.
         context_chunks = []
@@ -96,7 +103,7 @@ async def answer_question(
         # If no matches pass the threshold, use empty context with a note.
         print("DEBUG: No relevant context found; using fallback prompt.")
         context_text = ""  # or you can also set it to a custom note if preferred
-    
+
     # 7. Build prompts.
     system_prompt = build_system_prompt()
     # If no context is found, include a note in the prompt.
@@ -113,12 +120,12 @@ async def answer_question(
             question=question,
             chat_id=chat_id
         )
-    
+
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt}
     ]
-    
+
     # 8. Call the LLM API.
     final_answer = call_openai_api(
         model_name=model_name,
@@ -126,7 +133,7 @@ async def answer_question(
         temperature=0.7,
         max_tokens=5000
     )
-    
+
     return {
         "answer": final_answer,
         "relevant_chunks": context_chunks if filtered_matches else [],

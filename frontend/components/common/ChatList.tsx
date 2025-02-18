@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
-import { Button } from "./ui/button";
-import { ScrollArea } from "./ui/scroll-area";
+import { Button } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface Chat {
   chatId: string;
@@ -72,8 +72,8 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
                 key={chat.chatId}
                 onClick={() => handleChatSelect(chat.chatId)}
                 className={`w-full text-left p-2 rounded-lg hover:bg-stone-800 transition-all duration-200 ${selectedChatId === chat.chatId
-                    ? "border-green-500/50 bg-green-500/10 text-green-500 hover:bg-green-500/10"
-                    : ""
+                  ? "border-green-500/50 bg-green-500/10 text-green-500 hover:bg-green-500/10"
+                  : ""
                   }`}
               >
                 <div className="flex flex-col space-y-1">
