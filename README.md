@@ -88,6 +88,11 @@ NotStuck's architecture is designed for speed, accuracy, and scalability:
 4. **Hybrid Search:**
    - The innovative blend of **dense neural embeddings** and **sparse BM25 vectors** ensures that NotStuck retrieves the most contextually relevant document chunks, even in large datasets.
 
+<p align="center">
+  <img src="./notstuck_architecture.jpg" alt="Sublime's custom image"/>
+</p>
+
+
 ---
 
 ## Installation and Setup
