@@ -13,6 +13,7 @@ uvicorn
 python-multipart
 motor
 pytest
+pytest-asyncio
 nltk
 numpy
 scikit-learn
