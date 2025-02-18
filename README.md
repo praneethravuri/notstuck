@@ -1,7 +1,3 @@
-Below is a re-written version of your `README.md` that reflects your latest changes and highlights hybrid search as a primary feature:
-
----
-
 # NotStuck: AI-Powered Document Assistant
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)  
