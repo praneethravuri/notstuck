@@ -145,7 +145,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
                                     <span>{source.source_file}</span>
                                     {source.page_number !== undefined && (
                                       <span className="px-2 py-0.5 rounded-full bg-stone-800 text-xs">
-                                        Page {source.page_number}
+                                        Page {source.page_number + 1}
                                       </span>
                                     )}
                                   </div>
