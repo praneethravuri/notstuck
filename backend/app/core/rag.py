@@ -1,40 +1,12 @@
-import os
 import logging
 from typing import Dict, Optional
 from app.core.prompt_builder import build_user_prompt_with_chat, build_system_prompt
 from app.core.query_llm import query_llm
-from app.utils.text_cleaning import clean_text
-from app.clients.openai_embeddings import get_embedding_function
-from pinecone_text.sparse import BM25Encoder
-from app.clients.pinecone_client import pinecone_index
-from app.config import HYBRID_WEIGHT_RATIO, TOP_K, SIMILARITY_THRESHOLD, BM25_JSON_PATH, TEMPERATURE, MAX_TOKENS
+from app.config import TEMPERATURE, MAX_TOKENS
+from app.core.rag_utils import generate_queries, apply_hybrid_weighting, build_filter, build_context_text
+from app.core.pinecone_query import retrieve_matches, filter_matches_by_threshold
 
 logger = logging.getLogger(__name__)
-
-def load_bm25_encoder(json_path: str = BM25_JSON_PATH):
-    """
-    Load the BM25 encoder from a JSON file, or fallback to the default encoder if loading fails.
-    """
-    try:
-        encoder = BM25Encoder().load(json_path)
-        logger.info(f"Loaded BM25 encoder state from {json_path}")
-    except Exception as e:
-        logger.error(f"Error loading BM25 state: {e}. Using default encoder.", exc_info=True)
-        encoder = BM25Encoder().default()
-    return encoder
-
-def hybrid_score_norm(dense, sparse, alpha: float):
-    """
-    Normalize hybrid scores by applying a convex weighting.
-    """
-    if alpha < 0 or alpha > 1:
-        raise ValueError("Alpha must be between 0 and 1")
-    hsparse = {
-        'indices': sparse['indices'],
-        'values': [v * (1 - alpha) for v in sparse['values']]
-    }
-    hdense = [v * alpha for v in dense]
-    return hdense, hsparse
 
 async def answer_question(
     question: str,
@@ -46,58 +18,35 @@ async def answer_question(
     """
     Performs a hybrid search query and uses retrieved context to answer the given question.
     """
-    logger.info(f"Starting answer generation for question: {question[:100]}")  # Log first 100 chars of the question
+    logger.info(f"Starting answer generation for question: {question[:100]}")
 
     try:
-        # 1. Generate dense query vector.
-        dense_embedding_func = get_embedding_function()
-        dense_query = dense_embedding_func.embed_query(question)
+        # 1. Generate dense and sparse query vectors.
+        dense_query, sparse_query = generate_queries(question)
 
-        # 2. Generate sparse query vector.
-        bm25_encoder = load_bm25_encoder()
-        sparse_query_list = bm25_encoder.encode_documents([question])
-        sparse_query = sparse_query_list[0] if sparse_query_list else BM25Encoder().default()
+        # 2. Apply hybrid weighting.
+        weighted_dense, weighted_sparse = apply_hybrid_weighting(dense_query, sparse_query)
 
-        # 3. Apply hybrid weighting.
-        alpha = HYBRID_WEIGHT_RATIO
-        weighted_dense, weighted_sparse = hybrid_score_norm(dense_query, sparse_query, alpha)
+        # 3. Build filter criteria if needed.
+        filter_criteria = build_filter(subject_filter)
 
-        # 4. Build filter if needed.
-        filter_criteria = None
-        if subject_filter:
-            filter_criteria = {"subjects": {"$in": [subject_filter.lower().strip()]}}
-        
-        # 5. Query Pinecone with both weighted dense and sparse vectors.
-        query_response = pinecone_index.query(
-            top_k=TOP_K,
-            vector=weighted_dense,
-            sparse_vector=weighted_sparse,
-            namespace=namespace,
-            filter=filter_criteria,
-            include_metadata=True
-        )
+        # 4. Retrieve matches from Pinecone.
+        matches = retrieve_matches(weighted_dense, weighted_sparse, filter_criteria, namespace)
 
-        matches = query_response.get("matches", [])
+        # 5. Filter matches by similarity threshold.
+        filtered_matches = filter_matches_by_threshold(matches)
 
-        # 6. Post-filter matches by a similarity threshold.
-        filtered_matches = [m for m in matches if m["score"] >= SIMILARITY_THRESHOLD]
-
+        # 6. Build context text.
         if filtered_matches:
-            # Build context from retrieved matches.
-            context_chunks = [
-                clean_text(match["metadata"].get("text", ""))
-                for match in filtered_matches if match.get("metadata", {}).get("text")
-            ]
-            context_text = "\n\n---\n\n".join(context_chunks)
+            context_text, context_chunks = build_context_text(filtered_matches)
             logger.debug(f"Context text (first 200 chars): {context_text[:200]}")
         else:
-            # If no matches pass the threshold, use empty context with a note.
             logger.info("No relevant context found; using fallback prompt.")
-            context_text = ""  # or you can also set it to a custom note if preferred
+            context_text = ""
+            context_chunks = []
 
-        # 7. Build prompts.
+        # 7. Build system and user prompts.
         system_prompt = build_system_prompt()
-        # If no context is found, include a note in the prompt.
         if not filtered_matches:
             fallback_note = "No relevant context was found for this query. Please answer using your general knowledge."
             user_prompt = await build_user_prompt_with_chat(
@@ -129,8 +78,8 @@ async def answer_question(
 
         return {
             "answer": final_answer,
-            "relevant_chunks": context_chunks if filtered_matches else [],
-            "sources_metadata": [m["metadata"] for m in filtered_matches] if filtered_matches else []
+            "relevant_chunks": context_chunks,
+            "sources_metadata": [m["metadata"] for m in filtered_matches]
         }
 
     except Exception as e:
