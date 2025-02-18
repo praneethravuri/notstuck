@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "../ui/button";
@@ -14,7 +15,7 @@ interface ChatListProps {
   onNewChat: () => void;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
+export const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
@@ -44,7 +45,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
   };
 
   return (
-    <div className="flex flex-col space-y-4 px-4 py-2 h-[calc(50vh-100px)]">
+    <div className="flex flex-col space-y-4 p-4">
       <Button
         onClick={onNewChat}
         className="w-full py-6 gap-2 bg-stone-900 hover:bg-stone-800 border-gray-800 text-gray-200 hover:text-white transition-all duration-200"
@@ -53,8 +54,7 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
         <Plus className="h-5 w-5" />
         <span className="font-medium text-base">New Chat</span>
       </Button>
-
-      <ScrollArea className="">
+      <ScrollArea className="h-[280px]">
         <div className="space-y-2 pr-4">
           {chats.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-4">
@@ -71,10 +71,11 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
               <button
                 key={chat.chatId}
                 onClick={() => handleChatSelect(chat.chatId)}
-                className={`w-full text-left p-2 rounded-lg hover:bg-stone-800 transition-all duration-200 ${selectedChatId === chat.chatId
-                  ? "border-green-500/50 bg-green-500/10 text-green-500 hover:bg-green-500/10"
-                  : ""
-                  }`}
+                className={`w-full text-left p-2 rounded-lg hover:bg-stone-800 transition-all duration-200 ${
+                  selectedChatId === chat.chatId
+                    ? "border-green-500/50 bg-green-500/10 text-green-500 hover:bg-green-500/10"
+                    : ""
+                }`}
               >
                 <div className="flex flex-col space-y-1">
                   <span className="text-sm font-medium block truncate">
@@ -89,5 +90,3 @@ const ChatList: React.FC<ChatListProps> = ({ onSelectChat, onNewChat }) => {
     </div>
   );
 };
-
-export default ChatList;

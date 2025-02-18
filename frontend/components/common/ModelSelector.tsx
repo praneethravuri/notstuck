@@ -19,17 +19,24 @@ export const ModelSelector = ({ modelName, setModelName }: ModelSelectorProps) =
   ];
 
   return (
-    <div className="p-2 flex items-center">
+    <div className="p-4 flex items-center">
       <Select value={modelName} onValueChange={setModelName}>
-        <SelectTrigger className="w-50 border-none focus:bg-stone-950 ring-0 focus:border-none focus:ring-0">
-          <SelectValue placeholder="Select model" />
+        <SelectTrigger 
+          className="w-40 border-none focus:bg-stone-950 ring-0 focus:border-none focus:ring-0
+          hover:bg-stone-800 transition-colors duration-200 rounded-lg px-4 py-2 flex items-center justify-between"
+        >
+          <SelectValue 
+            placeholder="Select model" 
+            className="text-lg font-medium"
+          />
         </SelectTrigger>
-        <SelectContent className="bg-stone-950">
+        <SelectContent className="bg-stone-950 border border-stone-800 rounded-lg shadow-lg">
           {models.map((model) => (
             <SelectItem
               key={model.modelName}
               value={model.modelName}
-              className="py-3 focus:bg-green-500/10"
+              className="py-3 px-4 focus:bg-green-500/10 hover:bg-stone-800 
+              transition-colors duration-200 cursor-pointer text-lg font-medium"
             >
               {model.displayName}
             </SelectItem>
@@ -39,3 +46,5 @@ export const ModelSelector = ({ modelName, setModelName }: ModelSelectorProps) =
     </div>
   );
 };
+
+export default ModelSelector;
