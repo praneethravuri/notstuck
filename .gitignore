@@ -141,3 +141,5 @@ __pycache__/
 
 backend/**/**.pyc
 backend/**/*.pyc
+
+backend/bm25_values/*.json
