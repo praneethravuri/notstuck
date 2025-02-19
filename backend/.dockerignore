@@ -10,3 +10,6 @@ backend/repomix-output.txt
 __pycache__/
 *.pyc
 *.pdf
+
+backend/bm25_values/*.json
+bm25_values/*.json
