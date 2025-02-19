@@ -116,8 +116,11 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
 
         if vectors:
             try:
-                index.upsert(vectors=vectors, namespace=namespace)
-                logger.debug("Hybrid upserted %d vectors from '%s'.", len(vectors), pdf_name)
+                BATCH_SIZE = 100  # Adjust this value as needed.
+                for i in range(0, len(vectors), BATCH_SIZE):
+                    batch = vectors[i:i+BATCH_SIZE]
+                    index.upsert(vectors=batch, namespace=namespace)
+                    logger.debug("Hybrid upserted batch of %d vectors from '%s'.", len(batch), pdf_name)
             except Exception as e:
                 logger.error("Error upserting vectors for '%s': %s", pdf_name, e, exc_info=True)
 
