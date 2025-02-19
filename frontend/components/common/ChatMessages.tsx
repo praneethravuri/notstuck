@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Loader2, FileText, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import _ from "lodash";
 
 export interface MessageSource {
