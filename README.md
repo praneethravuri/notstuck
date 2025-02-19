@@ -1,15 +1,6 @@
 # NotStuck: AI-Powered Document Assistant
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)  
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)  
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-green.svg)](https://fastapi.tiangolo.com/)  
-[![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/)  
-[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://www.mongodb.com/)  
-[![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/)  
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/)  
-[![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/)  
-[![CI/CD](https://github.com/praneethravuri/notstuck/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions)  
-[![Fly.io Deployment](https://github.com/praneethravuri/notstuck/actions/workflows/fly.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-green.svg)](https://fastapi.tiangolo.com/) [![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://www.mongodb.com/) [![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/) [![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/) [![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/) [![CI/CD](https://github.com/praneethravuri/notstuck/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions) [![Fly.io Deployment](https://github.com/praneethravuri/notstuck/actions/workflows/fly.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions)
 
 ---
 
@@ -150,7 +141,7 @@ docker-compose up --build
    python -m venv .venv
    source .venv/bin/activate   # or .venv\Scripts\activate on Windows
    pip install -r requirements.txt
-   uvicorn app.main:app --host 0.0.0.0 --port 8000
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
    ```
 
 2. **Frontend (Next.js):**
