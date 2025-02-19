@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Loader2, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "../../components/ui/button";
-import _ from "lodash";
 
 export interface MessageSource {
   source_file: string;
@@ -16,15 +15,15 @@ export interface ChatMessage {
   sources?: MessageSource[];
 }
 
-interface ChatMessagesProps {
-  messages: ChatMessage[];
-  isLoading: boolean;
-}
-
 interface GroupedSource {
   source_file: string;
   page_number?: number;
   texts: string[];
+}
+
+interface ChatMessagesProps {
+  messages: ChatMessage[];
+  isLoading: boolean;
 }
 
 export const ChatMessages: React.FC<ChatMessagesProps> = ({
@@ -43,30 +42,42 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
   }, [messages, isLoading]);
 
   const toggleSource = (messageIndex: number) => {
-    setExpandedSources(prev => ({
+    setExpandedSources((prev) => ({
       ...prev,
       [messageIndex]: !prev[messageIndex],
     }));
   };
 
+  // Replace lodash's groupBy and orderBy with native JavaScript
   const groupSources = (sources: MessageSource[]): GroupedSource[] => {
-    const grouped = _.groupBy(sources, source => 
-      `${source.source_file}-${source.page_number ?? 'no-page'}`
-    );
-    
-    // Create grouped sources array and sort it
-    const groupedSources = Object.values(grouped).map(group => ({
+    // Group sources by a composite key
+    const grouped = sources.reduce((acc: Record<string, MessageSource[]>, source) => {
+      const key = `${source.source_file}-${source.page_number ?? "no-page"}`;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(source);
+      return acc;
+    }, {});
+
+    // Map the grouped object to an array of GroupedSource
+    const groupedSources: GroupedSource[] = Object.values(grouped).map((group) => ({
       source_file: group[0].source_file,
       page_number: group[0].page_number,
-      texts: group.map(source => source.text)
+      texts: group.map((source) => source.text),
     }));
 
-    // Sort by source_file first, then by page_number
-    return _.orderBy(
-      groupedSources, 
-      ['source_file', 'page_number'],
-      ['asc', 'asc']
-    );
+    // Sort by source_file and then by page_number (undefined page_number goes last)
+    groupedSources.sort((a, b) => {
+      const fileCompare = a.source_file.localeCompare(b.source_file);
+      if (fileCompare !== 0) return fileCompare;
+      if (a.page_number === b.page_number) return 0;
+      if (a.page_number === undefined) return 1;
+      if (b.page_number === undefined) return -1;
+      return a.page_number - b.page_number;
+    });
+
+    return groupedSources;
   };
 
   return (
