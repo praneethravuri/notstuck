@@ -88,7 +88,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-500/10 mb-2">
               <FileText className="h-8 w-8 text-green-500" />
             </div>
-            <h1 className="text-4xl font-semibold text-gray-200">Hey Oleve! 👋</h1>
+            <h1 className="text-4xl font-semibold text-gray-200">Hey👋</h1>
             <div className="space-y-4">
               <p className="text-gray-400 text-lg">
                 I&apos;m here to help you understand your documents better.
