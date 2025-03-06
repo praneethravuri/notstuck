@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for notstuck-app on 2025-02-11T19:34:51-06:00
+# fly.toml app configuration file generated for notstuck-app on 2025-03-05T21:41:23-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,9 +7,10 @@ app = 'notstuck-app'
 primary_region = 'dfw'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
+
   [build.args]
-    NEXT_PUBLIC_BACKEND_URL = "https://notstuck-backend.fly.dev"
+    NEXT_PUBLIC_BACKEND_URL = 'https://notstuck-backend.fly.dev'
 
 [http_service]
   internal_port = 3000

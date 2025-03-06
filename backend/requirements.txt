@@ -6,7 +6,6 @@ langchain-community
 langchain-openai
 pypdf
 openai
-pinecone-client
 fastapi
 pydantic
 uvicorn
