@@ -17,10 +17,15 @@ def retrieve_matches(weighted_dense: List[float], weighted_sparse: Dict, filter_
         filter=filter_criteria,
         include_metadata=True
     )
+    logger.info(f"Query response: {query_response}")
     return query_response.get("matches", [])
 
 def filter_matches_by_threshold(matches: List[Dict]) -> List[Dict]:
     """
     Filter matches to include only those with a score above the SIMILARITY_THRESHOLD.
     """
-    return [m for m in matches if m["score"] >= SIMILARITY_THRESHOLD]
+    # return [m for m in matches if m["score"] >= SIMILARITY_THRESHOLD]
+    
+    scores = [m["score"] for m in matches]
+    avg_score = sum(scores) / len(scores)
+    return [m for m in matches if m["score"] >= avg_score]
