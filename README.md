@@ -1,83 +1,169 @@
 # NotStuck: AI-Powered Document Assistant
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-green.svg)](https://fastapi.tiangolo.com/) [![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/) [![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://www.mongodb.com/) [![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/) [![OpenAI](https://img.shields.io/badge/OpenAI-GPT-9cf.svg)](https://openai.com/) [![Docker](https://img.shields.io/badge/Docker-20.10.17-blue.svg)](https://www.docker.com/) [![CI/CD](https://github.com/praneethravuri/notstuck/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions) [![Fly.io Deployment](https://github.com/praneethravuri/notstuck/actions/workflows/fly.yml/badge.svg)](https://github.com/praneethravuri/notstuck/actions)
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-green.svg)](https://fastapi.tiangolo.com/) [![Next.js](https://img.shields.io/badge/Next.js-15.1.6-blue.svg)](https://nextjs.org/) [![Pinecone](https://img.shields.io/badge/Pinecone-Vector%20DB-orange.svg)](https://www.pinecone.io/) [![OpenRouter](https://img.shields.io/badge/OpenRouter-Multi--Model-9cf.svg)](https://openrouter.ai/)
 
 ---
 
 ## Overview
 
-**NotStuck** is an AI-powered knowledge base assistant designed to help you get "unstuck" by providing intelligent, context-aware answers derived from your own documents. Whether you're researching, studying, or managing projects, NotStuck makes it easy to upload documents, ask questions, and receive responses backed by both dense and sparse semantic search.
+**NotStuck** is a production-ready, AI-powered RAG (Retrieval-Augmented Generation) system that helps you extract insights from your documents using cutting-edge AI models. Upload PDFs, ask questions, and receive intelligent answers powered by **hybrid search** and your choice of 10+ LLM models through OpenRouter.
 
-> **Hybrid Search at Its Core:**  
-> NotStuck's standout feature is its **hybrid search** capability. By combining **dense embeddings** (generated with OpenAI models) and **sparse vectors** (powered by a BM25 encoder), the system delivers highly accurate, context-aware results from your document data.
+> **Multi-Model Hybrid RAG System:**
+> NotStuck combines **advanced hybrid search** (dense semantic + sparse BM25 embeddings), **intelligent context optimization** (deduplication, adaptive filtering), and **multi-model LLM support** (GPT-4, Claude, Gemini, Llama, and more) to deliver highly accurate, context-aware answers from your documents.
 
 ---
 
 ## Key Features
 
-- **Hybrid Search:**  
-  Seamlessly combines dense (neural) and sparse (BM25-based) embeddings to deliver precise retrieval of document chunks, ensuring relevant context for every query.
+### 🚀 **Multi-Model LLM Support**
+- Choose from **10+ AI models** via OpenRouter: GPT-4o, Claude 3.5, Gemini Pro, Llama 3.1, Mistral, and more
+- Dynamic model selection in the UI
+- Model-specific optimizations for different use cases
 
-- **Document Upload & Processing:**  
-  Easily upload PDFs through a user-friendly interface. Documents are automatically chunked, cleaned, and embedded.
+### 🔍 **Advanced Hybrid Search**
+- **Dense embeddings** (OpenAI text-embedding-3-large) for semantic understanding
+- **Sparse embeddings** (BM25) for keyword matching
+- **Adaptive filtering** using statistical thresholds (mean ± std dev)
+- **Cosine similarity metric** for better accuracy
+- **TOP_K=30** for improved recall
 
-- **Vector Database Integration:**  
-  Store and query document embeddings using [Pinecone](https://www.pinecone.io/), enabling lightning-fast similarity searches.
+### 📄 **Smart Document Processing**
+- **Semantic-aware chunking** with configurable overlap (1000 chars, 200 overlap)
+- **Automatic text cleaning** and normalization
+- **LLM-based subject detection** for intelligent tagging
+- **Temporary file processing** - no local storage required
+- **Batch processing** with concurrent execution
 
-- **Conversational Chat Interface:**  
-  Engage in interactive sessions where you can ask questions and receive answers that reference your uploaded documents. All chat sessions are stored in MongoDB for future reference.
+### 🧠 **Intelligent Context Building**
+- **Jaccard similarity deduplication** (85% threshold)
+- **Token-aware truncation** (8000 max context tokens)
+- **Preserves highest relevance chunks**
+- **Smart prompt engineering** with structured context/question format
 
-- **Context-Aware Answer Generation:**  
-  Leverages OpenAI's GPT models to generate responses that are informed by both the document context and prior conversation history.
+### ⚡ **Production-Ready Features**
+- **Full Pydantic validation** for all API endpoints
+- **Comprehensive error handling** with graceful degradation
+- **Detailed logging** at all stages (requests, processing, errors)
+- **Auto database reset** on startup for testing
+- **Type-safe** throughout the entire pipeline
 
-- **Robust Logging & Configurable Storage:**  
-  BM25 encoder states and application logs are saved in designated directories for easy management and debugging.
+### 💎 **Developer Experience**
+- **Interactive API docs** at `/docs`
+- **Clean, modular architecture**
+- **uv** for fast dependency management
+- **Concurrently** runs backend first, then frontend
+- **Hot reload** for rapid development
 
 ---
 
 ## Tech Stack
 
-1. **Backend**
-   - **[FastAPI](https://fastapi.tiangolo.com/)** for building high-performance APIs.
-   - **[MongoDB](https://www.mongodb.com/)** to store chat sessions and metadata.
-   - **[Pinecone](https://www.pinecone.io/)** as the vector database for storing document embeddings.
-   - **[OpenAI](https://openai.com/)** for embeddings and GPT-based response generation.
-   - **[LangChain](https://github.com/hwchase17/langchain)** for document chunking and retrieval-augmented generation.
+### **Backend**
+- **[FastAPI](https://fastapi.tiangolo.com/)** - High-performance async API framework
+- **[Pydantic](https://pydantic.dev/)** - Data validation and settings management
+- **[Pinecone](https://www.pinecone.io/)** - Vector database with cosine similarity
+- **[OpenRouter](https://openrouter.ai/)** - Unified API for 10+ LLM providers
+- **[OpenAI Embeddings](https://platform.openai.com/docs/guides/embeddings)** - text-embedding-3-large (3072 dimensions)
+- **[LangChain](https://github.com/langchain-ai/langchain)** - Document processing and chunking
+- **[BM25](https://en.wikipedia.org/wiki/Okapi_BM25)** - Sparse embeddings for keyword search
+- **[PyPDF](https://pypdf.readthedocs.io/)** - PDF text extraction
+- **[NumPy](https://numpy.org/)** & **[scikit-learn](https://scikit-learn.org/)** - Statistical analysis
+- **[uv](https://github.com/astral-sh/uv)** - Ultra-fast Python package manager
 
-2. **Frontend**
-   - **[Next.js](https://nextjs.org/)** for the interactive web interface.
-   - **[Tailwind CSS](https://tailwindcss.com/)** for rapid and responsive UI design.
+### **Frontend**
+- **[Next.js 15](https://nextjs.org/)** - React framework with Turbopack
+- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Shadcn/ui](https://ui.shadcn.com/)** - Re-usable component library
+- **[Axios](https://axios-http.com/)** - HTTP client for API calls
 
-3. **Deployment & DevOps**
-   - **[Docker](https://www.docker.com/)** for containerizing backend and frontend services.
-   - **[GitHub Actions](https://docs.github.com/en/actions)** for CI/CD pipelines.
-   - **[Fly.io](https://fly.io/)** for scalable deployment of containerized applications.
+### **Development Tools**
+- **[Concurrently](https://www.npmjs.com/package/concurrently)** - Run multiple dev servers
+- **[Pytest](https://pytest.org/)** - Python testing framework
+- **[NLTK](https://www.nltk.org/)** - Natural language processing
 
 ---
 
 ## Architecture
 
-NotStuck's architecture is designed for speed, accuracy, and scalability:
+### **Complete RAG Pipeline**
 
-1. **Frontend (Next.js):**
-   - **Upload Documents:** Users upload PDFs via an intuitive interface.
-   - **Chat Interface:** Users interact via chat to ask questions and receive context-aware responses.
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    1. DOCUMENT UPLOAD                        │
+│  User uploads PDF → Frontend validates → Backend processes  │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 2. DOCUMENT PROCESSING                       │
+│  ├─ PyPDF extraction                                        │
+│  ├─ Semantic chunking (1000 chars, 200 overlap)           │
+│  ├─ Text cleaning & normalization                          │
+│  ├─ LLM subject detection (GPT-4o via OpenRouter)         │
+│  └─ Minimum size filtering (100 chars)                     │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   3. EMBEDDING GENERATION                    │
+│  ├─ Dense: OpenAI text-embedding-3-large (3072 dims)       │
+│  ├─ Sparse: BM25 encoder (fitted on corpus)               │
+│  └─ Batch processing for efficiency                        │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  4. PINECONE UPSERT                          │
+│  ├─ Hybrid vectors (dense + sparse)                        │
+│  ├─ Metadata (text, source, page, subjects)               │
+│  ├─ Cosine similarity metric                               │
+│  └─ Batch upsert (100 vectors per batch)                  │
+└─────────────────────────────────────────────────────────────┘
 
-2. **Backend (FastAPI):**
-   - **Document Processing Pipeline:**
-     - **Chunking & Cleaning:** PDFs are split into manageable chunks.
-     - **Hybrid Embedding Generation:** Dense embeddings from OpenAI and sparse BM25 embeddings are generated.
-     - **Vector Upsertion:** Embeddings are stored in Pinecone for efficient retrieval.
-   - **Retrieval-Augmented Generation (RAG):**
-     - For each query, the system retrieves the most relevant document chunks using hybrid search.
-     - A dynamic prompt is constructed and sent to a GPT model for answer generation.
-   - **Chat Session Management:** User interactions are logged in MongoDB for persistent chat sessions.
+┌─────────────────────────────────────────────────────────────┐
+│                      5. USER QUERY                           │
+│  User asks question → Model selection → Backend processes   │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    6. HYBRID SEARCH                          │
+│  ├─ Generate dense query embedding                         │
+│  ├─ Generate sparse query (BM25)                           │
+│  ├─ Apply weighting (70% semantic, 30% keyword)           │
+│  ├─ Query Pinecone (TOP_K=30, cosine)                     │
+│  └─ Retrieve matches with scores                           │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   7. CONTEXT OPTIMIZATION                    │
+│  ├─ Adaptive filtering (mean - 0.5*std, min 3 chunks)     │
+│  ├─ Deduplication (Jaccard > 85%)                         │
+│  ├─ Token-aware truncation (8000 max)                     │
+│  └─ Build formatted context string                         │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   8. PROMPT CONSTRUCTION                     │
+│  ├─ System prompt (RAG instructions)                       │
+│  ├─ User prompt (context + question)                       │
+│  └─ Structured format for clarity                          │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   9. LLM GENERATION                          │
+│  ├─ Call OpenRouter with user-selected model               │
+│  ├─ Temperature: 0.3 (focused answers)                     │
+│  ├─ Max tokens: 3000                                        │
+│  └─ Stream or return complete response                     │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   10. RESPONSE DELIVERY                      │
+│  ├─ Pydantic validation                                     │
+│  ├─ Format with sources & chunks                           │
+│  └─ Frontend renders answer with citations                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
-3. **Vector Database (Pinecone):**
-   - Provides high-performance, scalable storage and similarity search for document embeddings.
-
-4. **Hybrid Search:**
-   - The innovative blend of **dense neural embeddings** and **sparse BM25 vectors** ensures that NotStuck retrieves the most contextually relevant document chunks, even in large datasets.
+See [backend/PIPELINE_FLOW.md](./backend/PIPELINE_FLOW.md) for detailed documentation.
 
 <p align="center">
   <img src="./notstuck_architecture.jpg" alt="Sublime's custom image"/>
@@ -90,12 +176,11 @@ NotStuck's architecture is designed for speed, accuracy, and scalability:
 
 ### 1. Prerequisites
 
-- **Python 3.10+**
+- **Python 3.11+**
 - **Node.js 20+**
-- **Docker & Docker Compose**
-- **MongoDB** (local or remote)
-- **Pinecone API Key**
-- **OpenAI API Key**
+- **Pinecone API Key** - [Sign up](https://www.pinecone.io/) and create an index
+- **OpenRouter API Key** - [Sign up](https://openrouter.ai/) and add credits
+- **(Optional) OpenAI API Key** - For direct OpenAI usage instead of OpenRouter
 
 ### 2. Clone the Repository
 
@@ -104,130 +189,242 @@ git clone https://github.com/praneethravuri/notstuck.git
 cd notstuck
 ```
 
-### 3. Environment Variables
+### 3. Environment Configuration
 
-
-| Variable             | Description                                                        | Location  |
-|----------------------|--------------------------------------------------------------------|-----------|
-| `OPENAI_API_KEY`     | API Key from [OpenAI](https://platform.openai.com/account/api-keys) | Backend   |
-| `PINECONE_API_KEY`   | API Key from [Pinecone](https://docs.pinecone.io/guides/get-started/quickstart)                                                   | Backend   |
-| `PINECONE_ENV`       | Pinecone environment (e.g., `us-west1-gcp`)                        | Backend   |
-| `PINECONE_INDEX_NAME`| Name of the Pinecone index                                         | Backend   |
-| `MONGODB_URI`        | MongoDB connection URI (e.g., `mongodb://...`)                     | Backend   |
-| `NEXT_PUBLIC_BACKEND_URL` | URL where the FastAPI backend can be reached (e.g. `http://localhost:8000`) | Frontend |
-
-> **Note**: For local development, create a `.env` file in `backend/` and `frontend/` respectively. See `.env.example` patterns or references in the existing `.gitignore`.
-
-### 4. Local Development
-
-#### A. Using Docker Compose (Recommended)
-
-From the root of the repository:
+#### **Backend** (`backend/.env`)
 
 ```bash
-docker-compose up --build
+# OpenRouter Configuration
+OPENROUTER_API_KEY=your_openrouter_api_key_here
+OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+
+# Pinecone Configuration
+PINECONE_API_KEY=your_pinecone_api_key_here
+PINECONE_ENV=us-east-1
+PINECONE_INDEX_NAME=notstuck-index
+
+# Optional: Model Configuration (can be changed in UI)
+DEFAULT_LLM_MODEL=openai/gpt-4o
+DEFAULT_EMBEDDING_MODEL=openai/text-embedding-3-large
 ```
 
-- **MongoDB** will be accessible on `localhost:27017`.
-- **FastAPI backend** will be available on `localhost:8000`.
-- **Next.js frontend** will run on `localhost:3000`.
+#### **Frontend** (`frontend/.env.local`)
 
-#### B. Manual Setup
+```bash
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
+```
 
-1. **Install Dependencies:**
+> **Note**: A `.env.example` file is provided in `backend/` for reference. Never commit your `.env` file.
 
-   ```bash
-   # Backend
-   cd backend
-   python -m venv .venv
-   source .venv/bin/activate   # or .venv\Scripts\activate on Windows
-   pip install -r requirements.txt
-   cd ..
+### 4. Installation & Running
 
-   # Frontend
-   cd frontend
-   npm install
-   cd ..
+#### **Quick Start (Recommended)**
 
-   # Root (for unified dev command)
-   npm install
-   ```
+From the root directory:
 
-2. **Run Both Services (Recommended):**
+```bash
+# Install root dependencies (concurrently)
+npm install
 
-   From the root directory:
+# Install frontend dependencies
+cd frontend && npm install && cd ..
 
-   ```bash
-   npm run dev
-   ```
+# Install backend dependencies (using uv - ultra fast!)
+cd backend && uv sync && cd ..
 
-   This starts both the FastAPI backend (port 8000) and Next.js frontend (port 3000) simultaneously.
+# Run both backend and frontend
+npm run dev
+```
 
-3. **Or Run Services Individually:**
+This will:
+- Start **backend first** on `http://localhost:8000`
+- Then start **frontend** on `http://localhost:3000`
+- Auto-reload both on file changes
 
-   - **Backend only:**
-     ```bash
-     npm run dev:backend
-     ```
+#### **Individual Services**
 
-   - **Frontend only:**
-     ```bash
-     npm run dev:frontend
-     ```
+- **Backend only:**
+  ```bash
+  npm run dev:backend
+  # or manually: cd backend && uv run uvicorn app.main:app --reload
+  ```
 
-Visit `http://localhost:3000` in your browser.
+- **Frontend only:**
+  ```bash
+  npm run dev:frontend
+  # or manually: cd frontend && npm run dev
+  ```
+
+#### **First Time Setup**
+
+When you first run the backend:
+- ✅ Pinecone database is **automatically reset**
+- ✅ Required directories are created
+- ✅ API connections are validated
+
+Visit `http://localhost:3000` in your browser to start using NotStuck!
 
 ---
 
 ## Usage
 
-1. **Upload Documents:**
-   - Use the “Upload Documents” feature to send PDFs to the backend.
-   - The system processes files, splits them into chunks, generates embeddings using hybrid search (dense + sparse), and stores them in Pinecone.
+### **1. Select Your AI Model**
+- Click the model selector in the header
+- Choose from 10+ models (GPT-4o, Claude 3.5, Gemini Pro, Llama 3.1, etc.)
+- Model selection affects all subsequent queries
 
-2. **Ask Questions:**
-   - Use the chat interface to ask questions.
-   - The backend retrieves relevant document chunks via hybrid search, constructs a dynamic prompt, and calls GPT to generate context-aware responses.
-   - All interactions are stored in MongoDB for session persistence.
+### **2. Upload Documents**
+- Click the paperclip icon or drag & drop PDFs
+- Files are processed instantly:
+  - ✅ Semantic chunking (1000 chars, 200 overlap)
+  - ✅ Text cleaning and normalization
+  - ✅ LLM subject detection
+  - ✅ Hybrid embeddings (dense + sparse)
+  - ✅ Pinecone upsert with metadata
+- **No files saved locally** - uses temporary storage only
 
-3. **View Chat Sessions & PDFs:**
-   - Access chat histories and view the processed documents directly via the provided routes.
+### **3. Ask Questions**
+- Type your question in the chat input
+- Press Enter or click Send
+- Backend performs:
+  - ✅ Hybrid search (semantic + keyword)
+  - ✅ Adaptive filtering
+  - ✅ Context deduplication
+  - ✅ Smart prompt construction
+  - ✅ LLM generation with selected model
+- Receive answers with source citations
+
+### **4. View Sources**
+- Each answer includes relevant document chunks
+- Source metadata shows: filename, page number, extracted text
+- Click sources to see original context
+
+---
+
+## API Documentation
+
+Interactive API documentation is available when running the backend:
+
+- **Swagger UI:** `http://localhost:8000/docs`
+- **ReDoc:** `http://localhost:8000/redoc`
+
+### **Key Endpoints**
+
+```
+GET    /api/models              - List available AI models
+GET    /api/models/default      - Get default model
+POST   /api/ask                 - Ask a question (RAG)
+POST   /api/upload              - Upload PDF documents
+GET    /api/get-pdfs            - List processed PDFs
+DELETE /api/reset-pinecone-db   - Reset vector database
+GET    /api/health-check        - Backend health status
+```
+
+## Configuration
+
+All RAG parameters are configurable in `backend/app/config.py`:
+
+```python
+# Chunking
+CHUNK_SIZE = 1000           # Optimal for context
+CHUNK_OVERLAP = 200         # Ensures continuity
+CHUNK_MIN_SIZE = 100        # Filters tiny chunks
+
+# Retrieval
+TOP_K = 30                  # Better recall
+PINECONE_METRIC = "cosine"  # Better than dotproduct
+HYBRID_WEIGHT_RATIO = 0.7   # 70% semantic, 30% keyword
+
+# Generation
+TEMPERATURE = 0.3           # Focused answers
+MAX_TOKENS = 3000           # Response length
+MAX_CONTEXT_TOKENS = 8000   # Context window
+```
 
 ---
 
-## Production Deployment
+## Project Structure
 
-### Docker Images
+```
+notstuck/
+├── backend/
+│   ├── app/
+│   │   ├── clients/          # External API clients
+│   │   ├── core/             # RAG pipeline logic
+│   │   ├── routes/           # API endpoints
+│   │   ├── services/         # Business logic
+│   │   ├── vector_db/        # Pinecone operations
+│   │   ├── models.py         # Pydantic models
+│   │   ├── config.py         # Configuration
+│   │   └── main.py           # FastAPI app
+│   ├── tests/                # Test suite
+│   ├── pyproject.toml        # Dependencies (uv)
+│   ├── PIPELINE_FLOW.md      # Detailed docs
+│   └── README.md             # Backend docs
+├── frontend/
+│   ├── app/                  # Next.js app router
+│   │   ├── api/              # API routes
+│   │   └── page.tsx          # Main page
+│   ├── components/           # React components
+│   ├── hooks/                # Custom hooks
+│   └── package.json          # Dependencies
+├── package.json              # Root dev scripts
+└── README.md                 # This file
+```
 
-- **Backend:**
+## Performance Optimizations
 
-  ```bash
-  docker run -d --pull always -p 8000:8000 --env-file=backend/.env praneeth2510/notstuck-backend:latest
-  ```
+- ✅ **Batch embedding generation** - Process multiple chunks at once
+- ✅ **Concurrent PDF processing** - ThreadPoolExecutor for parallel processing
+- ✅ **Optimized chunking** - Semantic-aware separators
+- ✅ **Adaptive filtering** - Statistical thresholds reduce noise
+- ✅ **Context deduplication** - Jaccard similarity removes redundancy
+- ✅ **Token-aware truncation** - Respects model context limits
+- ✅ **Pinecone batch upsert** - 100 vectors per batch
+- ✅ **Cosine similarity** - More accurate than dot product
+- ✅ **Manual HTTP requests** - Avoids OpenAI SDK parsing overhead
 
-- **Frontend:**
+## Troubleshooting
 
-  ```bash
-  docker run -d --pull always -p 3000:3000 -e NEXT_PUBLIC_BACKEND_URL=http://backend:8000 praneeth2510/notstuck-frontend:latest
-  ```
+### Backend won't start
+- Check `.env` file has all required variables
+- Verify Pinecone API key and index name
+- Ensure OpenRouter API key is valid
+- Check Python version (3.11+)
 
-### CI/CD and Fly.io Deployment
+### Embeddings fail
+- OpenRouter API key must have credits
+- Check `OPENROUTER_BASE_URL` is correct
+- Verify model name format: `openai/text-embedding-3-large`
 
-- **GitHub Actions:**  
-  Automated CI/CD pipelines build and push Docker images.
-- **Fly.io:**  
-  Deployment workflows (via `fly.toml` files) deploy the backend and frontend containers.
+### Upload fails
+- Check file is PDF format
+- Ensure file size < 50MB
+- Verify Pinecone index exists
+- Check backend logs for details
 
----
+### Model selection doesn't work
+- Ensure backend is running first
+- Check network tab for `/api/models` call
+- Verify OpenRouter API key has access to models
 
 ## Contributing
 
-1. **Fork** the repository.
-2. Create a new **feature branch**.
-3. **Commit** your changes.
-4. Open a **pull request** against `main`.
+Contributions are welcome! Please:
 
-We welcome contributions on any aspect of the project—from improving hybrid search performance to enhancing the user interface.
+1. **Fork** the repository
+2. Create a **feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. Open a **Pull Request**
+
+### Areas for Contribution
+- Additional LLM providers
+- Advanced reranking algorithms
+- UI/UX improvements
+- Performance optimizations
+- Test coverage
+- Documentation
 
 ---
 
@@ -237,9 +434,40 @@ This project is licensed under the [MIT License](LICENSE). Feel free to use, mod
 
 ---
 
+## Roadmap
+
+- [ ] **Streaming responses** for real-time answer generation
+- [ ] **Multi-document conversations** with context management
+- [ ] **Advanced reranking** with cross-encoders
+- [ ] **Document management** UI (view, delete, organize)
+- [ ] **User authentication** and multi-user support
+- [ ] **Custom model configuration** per query
+- [ ] **Export conversations** as PDF/Markdown
+- [ ] **Vector database alternatives** (Qdrant, Weaviate)
+- [ ] **Image/OCR support** for scanned documents
+- [ ] **Citation linking** to original document locations
+
+## Acknowledgments
+
+Built with:
+- [FastAPI](https://fastapi.tiangolo.com/) by Sebastián Ramírez
+- [Next.js](https://nextjs.org/) by Vercel
+- [OpenRouter](https://openrouter.ai/) for multi-model API access
+- [Pinecone](https://www.pinecone.io/) for vector database
+- [LangChain](https://github.com/langchain-ai/langchain) for RAG utilities
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute.
+
 ## Contact & Support
 
 - **Author:** [@praneethravuri](https://github.com/praneethravuri)
-- If you encounter issues or have feature requests, please open a [GitHub Issue](https://github.com/praneethravuri/notstuck/issues).
+- **Issues:** [GitHub Issues](https://github.com/praneethravuri/notstuck/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/praneethravuri/notstuck/discussions)
 
-Thank you for using **NotStuck**! If this project helps you, please consider giving it a star on GitHub.
+---
+
+**⭐ If this project helps you, please give it a star on GitHub!**
+
+Thank you for using **NotStuck** - Your AI-powered document assistant!
