@@ -55,9 +55,9 @@ async def upload_documents(files: List[UploadFile] = File(...)):
                 temp_file.write(content)
                 temp_file_path = temp_file.name
 
-            # Process the document
+            # Process the document with original filename
             print(f"Processing file: {file.filename} (temp path: {temp_file_path})")
-            result = doc_processor._run(file_path=temp_file_path)
+            result = doc_processor._run(file_path=temp_file_path, original_filename=file.filename)
             print(f"Result: {result}")
 
             # Check if processing was successful
