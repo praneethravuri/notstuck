@@ -134,23 +134,46 @@ docker-compose up --build
 
 #### B. Manual Setup
 
-1. **Backend (FastAPI):**
+1. **Install Dependencies:**
 
    ```bash
+   # Backend
    cd backend
    python -m venv .venv
    source .venv/bin/activate   # or .venv\Scripts\activate on Windows
    pip install -r requirements.txt
-   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+   cd ..
+
+   # Frontend
+   cd frontend
+   npm install
+   cd ..
+
+   # Root (for unified dev command)
+   npm install
    ```
 
-2. **Frontend (Next.js):**
+2. **Run Both Services (Recommended):**
+
+   From the root directory:
 
    ```bash
-   cd ../frontend
-   npm install
    npm run dev
    ```
+
+   This starts both the FastAPI backend (port 8000) and Next.js frontend (port 3000) simultaneously.
+
+3. **Or Run Services Individually:**
+
+   - **Backend only:**
+     ```bash
+     npm run dev:backend
+     ```
+
+   - **Frontend only:**
+     ```bash
+     npm run dev:frontend
+     ```
 
 Visit `http://localhost:3000` in your browser.
 

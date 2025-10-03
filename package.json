@@ -1,1 +1,13 @@
-{}
+{
+  "name": "notstuck",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" --names \"frontend,backend\" --prefix-colors \"cyan,magenta\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && .venv\\Scripts\\uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
