@@ -7,22 +7,18 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# Install OS-level dependencies
-RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
+# Install OS-level dependencies and uv
+RUN apt-get update && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy requirements to /app
-COPY requirements.txt .
+# Copy dependency files
+COPY pyproject.toml .
+COPY .python-version .
 
-# Create a virtual environment and activate it
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Upgrade pip and install Python dependencies
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# Install dependencies using uv (no virtual env needed in Docker)
+RUN uv pip install --system -r pyproject.toml
 
 # Download needed NLTK data
-# Adjust the list (punkt, stopwords, wordnet, averaged_perceptron_tagger, etc.)
-# If you specifically need 'punkt_tab', include it as well:
 RUN python -m nltk.downloader punkt punkt_tab stopwords wordnet averaged_perceptron_tagger
 
 # Copy the rest of the backend code into /app
