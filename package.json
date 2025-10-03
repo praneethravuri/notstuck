@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" --names \"backend,frontend\" --prefix-colors \"magenta,cyan\"",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:backend": "cd backend && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    "dev:backend": "cd backend && uv run uvicorn backend.api.main:app --host 0.0.0.0 --port 8000 --reload --reload-exclude '.venv/*'"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

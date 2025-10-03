@@ -2,10 +2,13 @@
 import { ChatMessages } from "../components/common/ChatMessages";
 import { ChatInput } from "../components/common/ChatInput";
 import { ModelSelector } from "../components/common/ModelSelector";
+import LoadingPage from "../components/common/LoadingPage";
 import { MessageSquare } from "lucide-react";
 import { useChatLogic } from "../hooks/useChatLogic";
+import { useBackendHealth } from "../hooks/useBackendHealth";
 
 export default function HomePage() {
+  const { isBackendReady, error } = useBackendHealth();
   const {
     messages,
     isLoading,
@@ -15,6 +18,11 @@ export default function HomePage() {
     handleFileUpload,
     handleSendMessage,
   } = useChatLogic();
+
+  // Show loading screen until backend is ready
+  if (!isBackendReady) {
+    return <LoadingPage error={error} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex flex-col">

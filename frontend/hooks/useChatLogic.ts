@@ -34,11 +34,16 @@ export function useChatLogic() {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            console.log("Upload is successful:", response.data);
+            console.log("Upload response:", response.data);
+
+            // Show detailed results
+            const { message, files_processed, details } = response.data;
+            const hasErrors = details?.some((d: string) => d.includes("❌") || d.toLowerCase().includes("error"));
+
             toast({
-                title: "Upload Successful",
-                description: "Your document has been uploaded successfully.",
-                variant: "success",
+                title: hasErrors ? "Upload Completed with Issues" : "Upload Successful",
+                description: message + (details ? "\n" + details.join("\n") : ""),
+                variant: hasErrors ? "destructive" : "success",
             });
         } catch (error) {
             console.error("Upload failed:", error);

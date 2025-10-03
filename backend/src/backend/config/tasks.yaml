@@ -1,0 +1,22 @@
+answer_question_task:
+  description: >
+    Answer the user's question: {question}
+
+    Use your judgment to determine the best approach:
+
+    1. For general knowledge questions (like "what is a car" or "explain photosynthesis"),
+       use your own knowledge to provide a clear, accurate answer.
+
+    2. For questions that appear to be about specific documents, files, or uploaded content,
+       use the Pinecone Search tool to find relevant context from the knowledge base.
+
+    3. For questions requiring current information, recent events, or specific data not in
+       the knowledge base, use the Web Search tool.
+
+    Always cite your sources when using the knowledge base or web search.
+  expected_output: >
+    A clear, comprehensive answer to the user's question.
+    If using knowledge base context, include which documents/sources were used.
+    If using web search, mention that the answer is based on web research.
+    For general knowledge, provide a direct answer from your training.
+  agent: rag_assistant

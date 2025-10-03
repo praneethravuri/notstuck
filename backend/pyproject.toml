@@ -1,35 +1,32 @@
 [project]
-name = "notstuck-backend"
-version = "1.0.0"
-description = "AI-powered document assistant backend"
-requires-python = ">=3.11"
+name = "backend"
+version = "0.1.0"
+description = "backend using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
 dependencies = [
-    "python-dotenv",
-    "langchain",
-    "langchain-community",
-    "langchain-openai",
-    "pypdf",
-    "openai",
-    "fastapi",
-    "pydantic",
-    "uvicorn",
-    "python-multipart",
-    "pytest",
-    "pytest-asyncio",
-    "nltk",
-    "numpy",
-    "scikit-learn",
-    "pinecone-text",
-    "pinecone",
-    "requests",
+    "crewai[tools]>=0.193.2,<1.0.0",
+    "fastapi>=0.118.0",
+    "uvicorn>=0.37.0",
+    "pinecone>=5.0.0",
+    "openai>=1.0.0",
+    "python-multipart>=0.0.6",
+    "pypdf>=3.0.0",
+    "python-docx>=1.0.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
 ]
+
+[project.scripts]
+backend = "backend.main:run"
+run_crew = "backend.main:run"
+train = "backend.main:train"
+replay = "backend.main:replay"
+test = "backend.main:test"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["app"]
-
-[dependency-groups]
-dev = []
+[tool.crewai]
+type = "crew"
