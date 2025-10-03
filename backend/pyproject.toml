@@ -21,6 +21,7 @@ dependencies = [
     "scikit-learn",
     "pinecone-text",
     "pinecone",
+    "requests",
 ]
 
 [build-system]

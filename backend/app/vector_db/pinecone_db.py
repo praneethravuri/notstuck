@@ -150,16 +150,7 @@ def process_chunks_and_upsert(processed_documents: List[Dict], namespace: Option
                 logger.error(f"Error upserting vectors for '{pdf_name}': {e}", exc_info=True)
                 continue
 
-        # Move processed file
-        try:
-            src_path = os.path.join(RAW_DATA_PATH, pdf_name)
-            dest_path = os.path.join(PROCESSED_DATA_PATH, pdf_name)
-            if os.path.exists(src_path):
-                shutil.move(src_path, dest_path)
-                logger.debug(f"Moved processed PDF to: {dest_path}")
-            else:
-                logger.warning(f"Source file not found for moving: {src_path}")
-        except Exception as move_err:
-            logger.error(f"Error moving PDF '{pdf_name}' to processed dir: {move_err}", exc_info=True)
+        # Note: Files are not saved locally anymore, using temp files only
+        logger.debug(f"Completed processing '{pdf_name}' (temp file will be auto-cleaned)")
 
     logger.info(f"Processing complete. Total vectors upserted: {total_vectors_upserted}")

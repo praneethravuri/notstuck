@@ -1,46 +1,62 @@
-import os
 import logging
-from fastapi import HTTPException
+import tempfile
+import os
+from fastapi import HTTPException, UploadFile
+from typing import List
 from app.vector_db.pinecone_db import process_chunks_and_upsert
 from app.services.document_services import process_pdf_files
-from app.config import RAW_DATA_PATH, PROCESSED_DATA_PATH
 
 logger = logging.getLogger(__name__)
 
-def save_files(files):
+def process_and_upsert_direct(files: List[UploadFile], namespace: str = "my-namespace"):
     """
-    Save uploaded files to RAW_DATA_PATH and return a list of file paths.
-    """
-    os.makedirs(RAW_DATA_PATH, exist_ok=True)
-    os.makedirs(PROCESSED_DATA_PATH, exist_ok=True)
+    Process PDF files directly from upload without saving to disk.
+    Uses temporary files that are automatically cleaned up.
 
-    file_paths = []
-    for file in files:
-        file_path = os.path.join(RAW_DATA_PATH, file.filename)
-        try:
-            # For synchronous file reading; if using async, use: await file.read()
-            content = file.file.read()
-            with open(file_path, "wb") as f:
-                f.write(content)
-            logger.info("File saved successfully: %s", file_path)
-            file_paths.append(file_path)
-        except Exception as e:
-            logger.error("Error saving file %s: %s", file.filename, e, exc_info=True)
-            raise HTTPException(status_code=500, detail=f"Error saving file {file.filename}")
-    return file_paths
+    Args:
+        files: List of uploaded files
+        namespace: Pinecone namespace to upsert to
 
-def process_and_upsert(file_paths, namespace: str = "my-namespace"):
+    Returns:
+        Number of files processed
     """
-    Process PDFs and upsert the chunks to Pinecone.
-    Returns processed_documents for potential further use.
-    """
+    temp_files = []
     try:
-        logger.info("Starting PDF processing for %d file(s).", len(file_paths))
+        logger.info(f"Processing {len(files)} file(s) directly from upload")
+
+        # Create temporary files for processing
+        file_paths = []
+        for file in files:
+            # Create temp file
+            temp_file = tempfile.NamedTemporaryFile(mode='wb', suffix='.pdf', delete=False)
+            content = file.file.read()
+            temp_file.write(content)
+            temp_file.close()
+
+            temp_files.append(temp_file.name)
+            file_paths.append(temp_file.name)
+            logger.debug(f"Created temp file for '{file.filename}': {temp_file.name}")
+
+        # Process PDFs from temp files
+        logger.info("Starting PDF processing...")
         processed_documents = process_pdf_files(file_paths)
-        logger.info("Processing complete. Upserting data to Pinecone in namespace '%s'.", namespace)
+
+        logger.info(f"Processing complete. Upserting to Pinecone namespace '{namespace}'")
         process_chunks_and_upsert(processed_documents, namespace=namespace)
-        logger.info("Data upserted to Pinecone successfully.")
-        return processed_documents
+
+        logger.info(f"Successfully processed and upserted {len(files)} file(s)")
+        return len(processed_documents)
+
     except Exception as process_error:
-        logger.error("Error processing and upserting files: %s", process_error, exc_info=True)
+        logger.error(f"Error processing files: {process_error}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Processing failed: {process_error}")
+
+    finally:
+        # Clean up temporary files
+        for temp_file in temp_files:
+            try:
+                if os.path.exists(temp_file):
+                    os.unlink(temp_file)
+                    logger.debug(f"Cleaned up temp file: {temp_file}")
+            except Exception as cleanup_err:
+                logger.warning(f"Could not delete temp file {temp_file}: {cleanup_err}")

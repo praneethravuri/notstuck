@@ -48,6 +48,16 @@ async def startup_event():
     try:
         if pinecone_index:
             logger.info("✓ Pinecone index initialized successfully")
+
+            # Reset Pinecone database on startup
+            try:
+                from app.vector_db.pinecone_db import delete_all_data
+                from app.config import PINECONE_NAMESPACE
+                logger.info("Resetting Pinecone database...")
+                delete_all_data(namespace=PINECONE_NAMESPACE)
+                logger.info("✓ Pinecone database reset successfully")
+            except Exception as reset_err:
+                logger.warning(f"Could not reset Pinecone database: {reset_err}")
         else:
             logger.error("✗ Pinecone index not initialized")
     except Exception as e:

@@ -48,7 +48,11 @@ def detect_subjects(text: str, max_text_length: int = 3000) -> List[str]:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.4,
-            max_tokens=25
+            max_tokens=25,
+            extra_headers={
+                "HTTP-Referer": "https://notstuck.app",
+                "X-Title": "NotStuck"
+            }
         )
 
         raw = response.choices[0].message.content.lower().strip()
@@ -103,7 +107,11 @@ def classify_text(text: str, categories: List[str]) -> str:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.2,
-            max_tokens=10
+            max_tokens=10,
+            extra_headers={
+                "HTTP-Referer": "https://notstuck.app",
+                "X-Title": "NotStuck"
+            }
         )
 
         category = response.choices[0].message.content.strip().lower()

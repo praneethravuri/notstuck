@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form
-from app.services.upload_services import save_files, process_and_upsert
+from app.services.upload_services import process_and_upsert_direct
 from app.config import PINECONE_NAMESPACE
 import logging
 
@@ -18,6 +18,7 @@ async def upload_files(
 ):
     """
     Upload and process PDF files for RAG system.
+    Files are processed directly without saving to disk permanently.
 
     Args:
         files: List of PDF files to upload
@@ -63,25 +64,15 @@ async def upload_files(
 
         logger.info(f"Received upload request for {len(files)} valid file(s)")
 
-        # Save files to disk
-        file_paths = save_files(files)
-        logger.info(f"Files saved to disk: {file_paths}")
+        # Process PDFs directly and upsert to Pinecone (no disk saving)
+        count = process_and_upsert_direct(files, namespace=PINECONE_NAMESPACE)
 
-        # Process PDFs and upsert to Pinecone
-        try:
-            process_and_upsert(file_paths, namespace=PINECONE_NAMESPACE)
-            logger.info("Files processed and upserted to Pinecone successfully")
-            return {
-                "message": "Files uploaded and processed successfully",
-                "files": [f.filename for f in files],
-                "count": len(files)
-            }
-        except Exception as process_error:
-            logger.error(f"Error during processing and upsert: {process_error}", exc_info=True)
-            raise HTTPException(
-                status_code=500,
-                detail=f"Files uploaded but processing failed: {str(process_error)}"
-            )
+        logger.info(f"Successfully processed {count} file(s)")
+        return {
+            "message": "Files uploaded and processed successfully",
+            "files": [f.filename for f in files],
+            "count": count
+        }
 
     except HTTPException:
         raise

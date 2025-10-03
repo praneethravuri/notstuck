@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\" --names \"frontend,backend\" --prefix-colors \"cyan,magenta\"",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\" --names \"backend,frontend\" --prefix-colors \"magenta,cyan\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
   },
