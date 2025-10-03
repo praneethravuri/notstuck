@@ -2,7 +2,7 @@ import logging
 from typing import Dict, List, Optional, Tuple
 from pinecone_text.sparse import BM25Encoder
 from app.utils.text_cleaning import clean_text
-from app.config import BM25_JSON_PATH, HYBRID_WEIGHT_RATIO
+from app.config import BM25_JSON_PATH, HYBRID_WEIGHT_RATIO, MAX_CONTEXT_TOKENS
 
 logger = logging.getLogger(__name__)
 
@@ -57,13 +57,119 @@ def build_filter(subject_filter: Optional[str]) -> Optional[Dict]:
         return {"subjects": {"$in": [subject_filter.lower().strip()]}}
     return None
 
+def deduplicate_chunks(chunks: List[str], similarity_threshold: float = 0.85) -> List[str]:
+    """
+    Remove duplicate or highly similar chunks based on text overlap.
+
+    Args:
+        chunks: List of text chunks
+        similarity_threshold: Threshold for considering chunks as duplicates (0-1)
+
+    Returns:
+        Deduplicated list of chunks
+    """
+    if not chunks:
+        return []
+
+    def calculate_jaccard_similarity(text1: str, text2: str) -> float:
+        """Calculate Jaccard similarity between two texts."""
+        words1 = set(text1.lower().split())
+        words2 = set(text2.lower().split())
+        if not words1 or not words2:
+            return 0.0
+        intersection = len(words1.intersection(words2))
+        union = len(words1.union(words2))
+        return intersection / union if union > 0 else 0.0
+
+    deduplicated = []
+    for chunk in chunks:
+        is_duplicate = False
+        for existing_chunk in deduplicated:
+            similarity = calculate_jaccard_similarity(chunk, existing_chunk)
+            if similarity >= similarity_threshold:
+                logger.debug(f"Removing duplicate chunk (similarity: {similarity:.2f})")
+                is_duplicate = True
+                break
+        if not is_duplicate:
+            deduplicated.append(chunk)
+
+    logger.info(f"Deduplication: {len(chunks)} -> {len(deduplicated)} chunks")
+    return deduplicated
+
+def estimate_tokens(text: str) -> int:
+    """
+    Rough estimation of token count (approximately 4 characters per token).
+
+    Args:
+        text: Input text
+
+    Returns:
+        Estimated token count
+    """
+    return len(text) // 4
+
+def truncate_context(chunks: List[str], max_tokens: int = MAX_CONTEXT_TOKENS) -> List[str]:
+    """
+    Intelligently truncate context to fit within token limit.
+    Prioritizes earlier chunks (higher relevance) while respecting token limits.
+
+    Args:
+        chunks: List of context chunks (ordered by relevance)
+        max_tokens: Maximum tokens allowed
+
+    Returns:
+        Truncated list of chunks
+    """
+    truncated = []
+    total_tokens = 0
+
+    for chunk in chunks:
+        chunk_tokens = estimate_tokens(chunk)
+        if total_tokens + chunk_tokens <= max_tokens:
+            truncated.append(chunk)
+            total_tokens += chunk_tokens
+        else:
+            logger.info(f"Context truncated at {len(truncated)} chunks ({total_tokens} tokens)")
+            break
+
+    return truncated
+
 def build_context_text(filtered_matches: List[Dict]) -> Tuple[str, List[str]]:
     """
-    Build the context text and list of context chunks from the filtered matches.
+    Build optimized context text with deduplication and truncation.
+
+    Process:
+    1. Extract and clean text from matches
+    2. Deduplicate similar chunks
+    3. Truncate to fit token limits
+    4. Build final context string
+
+    Args:
+        filtered_matches: Filtered Pinecone matches
+
+    Returns:
+        Tuple of (context_text, context_chunks)
     """
-    context_chunks = [
+    # Extract and clean chunks
+    raw_chunks = [
         clean_text(match["metadata"].get("text", ""))
-        for match in filtered_matches if match.get("metadata", {}).get("text")
+        for match in filtered_matches
+        if match.get("metadata", {}).get("text")
     ]
-    context_text = "\n\n---\n\n".join(context_chunks)
-    return context_text, context_chunks
+
+    if not raw_chunks:
+        logger.warning("No text content found in matches")
+        return "", []
+
+    # Deduplicate
+    deduplicated_chunks = deduplicate_chunks(raw_chunks)
+
+    # Truncate to token limit
+    final_chunks = truncate_context(deduplicated_chunks)
+
+    # Build context text with clear separators
+    context_text = "\n\n---\n\n".join(final_chunks)
+
+    logger.info(f"Built context: {len(final_chunks)} chunks, ~{estimate_tokens(context_text)} tokens")
+
+    return context_text, final_chunks
