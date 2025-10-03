@@ -4,11 +4,14 @@ RAG (Retrieval-Augmented Generation) backend API with multi-model LLM support vi
 
 ## Features
 
-- **Multi-Model Support**: Use any LLM via OpenRouter (OpenAI, Anthropic, Google, Meta, etc.)
-- **Vector Search**: Pinecone integration for semantic search
-- **Hybrid Search**: Combines BM25 and vector similarity
-- **PDF Processing**: Extract and index PDF documents
-- **Modular Architecture**: Clean, maintainable code structure
+- **Multi-Model Support**: Choose from 10+ OpenRouter models dynamically (GPT-4, Claude, Gemini, Llama, etc.)
+- **Hybrid Search**: Advanced retrieval combining semantic (dense) and keyword (sparse/BM25) search
+- **Smart Chunking**: Semantic-aware text splitting with configurable overlap
+- **Advanced Filtering**: Adaptive threshold using statistical analysis
+- **Context Optimization**: Intelligent deduplication and truncation
+- **Type Safety**: Full Pydantic validation for all API endpoints
+- **PDF Processing**: Extract, chunk, clean, and index PDF documents
+- **Production Ready**: Comprehensive error handling, logging, and monitoring
 
 ## Setup
 
@@ -131,34 +134,33 @@ The backend uses OpenRouter for LLM access, which provides:
 
 ## API Endpoints
 
-### Health Check
-```
-GET /api/health-check
-```
+### Models
+- `GET /api/models` - List available OpenRouter models
+- `GET /api/models/default` - Get default model configuration
 
-### Ask Question
+### RAG (Question Answering)
 ```
 POST /api/ask
 Body: {
   "question": "Your question here",
-  "modelName": "openai/gpt-4-turbo-preview"
+  "modelName": "openai/gpt-4o",
+  "subject": "optional-subject-filter"
 }
 ```
 
-### Upload PDF
-```
-POST /api/upload
-```
+### Documents
+- `POST /api/upload` - Upload PDF documents
+- `GET /api/get-pdfs` - List processed PDFs
+- `GET /api/get-pdfs?filename=<name>` - Download specific PDF
 
-### Get PDFs
-```
-GET /api/pdfs
-```
+### Database
+- `DELETE /api/reset-pinecone-db` - Reset Pinecone database
 
-### Reset Database
-```
-POST /api/reset-pinecone-db
-```
+### Health
+- `GET /api/health-check` - Check backend status
+
+### API Documentation
+- Interactive docs at `http://localhost:8000/docs` when running
 
 ## Available Models
 
@@ -245,26 +247,60 @@ If migrating from direct OpenAI integration:
 3. Model names now use OpenRouter format: `openai/gpt-4` instead of `gpt-4`
 4. Update model names in your code or use `DEFAULT_LLM_MODEL`
 
+## 🔄 Complete RAG Pipeline
+
+See [PIPELINE_FLOW.md](./PIPELINE_FLOW.md) for detailed documentation of the entire pipeline.
+
+**Quick Overview:**
+1. **Upload** → PDF validation → Text extraction → Semantic chunking → Subject detection → Embedding (dense + sparse) → Pinecone upsert
+2. **Query** → Question embedding → Hybrid search → Adaptive filtering → Deduplication → Context building → Prompt construction → LLM generation
+
+## 📊 Key Improvements
+
+### Chunking Strategy
+- ✅ Increased chunk size to 1000 chars with 200 overlap
+- ✅ Semantic-aware separators (paragraphs, sentences)
+- ✅ Minimum chunk size filtering (100 chars)
+
+### Retrieval
+- ✅ Changed metric from dotproduct to **cosine** for better similarity
+- ✅ Increased TOP_K from 20 to **30** for better recall
+- ✅ Adaptive thresholding using statistical analysis
+
+### Context Building
+- ✅ Jaccard similarity-based deduplication (85% threshold)
+- ✅ Token-aware truncation (8000 max tokens)
+- ✅ Preserves highest relevance chunks
+
+### Prompts
+- ✅ Enhanced system prompt with clear responsibilities
+- ✅ Structured user prompt with context/question format
+- ✅ Fallback handling when no context found
+
 ## Best Practices
 
 1. **Model Selection**: Choose appropriate models for each task
-   - Fast models (GPT-3.5) for classification
-   - Powerful models (GPT-4, Claude) for complex reasoning
+   - Fast models (GPT-4o-mini, GPT-3.5) for simple questions
+   - Powerful models (GPT-4o, Claude 3.5) for complex reasoning
+   - Long context models (Gemini Pro 1.5) for large documents
 
-2. **Error Handling**: Always handle LLM errors gracefully
-   - Network failures
-   - Rate limits
-   - Model unavailability
+2. **Error Handling**: System handles errors gracefully
+   - Per-document error handling (continue on failure)
+   - Comprehensive validation with Pydantic
+   - Detailed logging for debugging
 
-3. **Logging**: Use structured logging for debugging
+3. **Logging**: Structured logging at all stages
    - Request/response logging
-   - Performance metrics
-   - Error tracking
+   - Processing metrics (chunks, scores, tokens)
+   - Performance monitoring
+   - Error tracking with stack traces
 
-4. **Security**: Never commit `.env` file
-   - Use `.env.example` for templates
-   - Rotate API keys regularly
-   - Use environment-specific configurations
+4. **Security**: Built-in security features
+   - File type validation (.pdf only)
+   - File size limits (50MB max)
+   - Input sanitization
+   - Error message sanitization
+   - Never commit `.env` file
 
 ## License
 

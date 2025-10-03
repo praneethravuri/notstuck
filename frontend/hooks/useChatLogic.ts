@@ -17,7 +17,7 @@ export function useChatLogic() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
-    const [modelName, setModelName] = useState("gpt-4o");
+    const [modelName, setModelName] = useState("openai/gpt-4o");
     const { toast } = useToast();
 
     const handleFileUpload = async (files: FileList) => {

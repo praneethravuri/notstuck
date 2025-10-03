@@ -13,7 +13,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.clients.openai_client import openai_client
 from app.clients.pinecone_client import pinecone_index
-from app.routes import ask, pdfs, upload, reset_pinecone_db
+from app.routes import ask, pdfs, upload, reset_pinecone_db, models
 from app.config import OPENROUTER_API_KEY, OPENROUTER_BASE_URL
 import app.logging_config
 
@@ -80,8 +80,9 @@ def health_check():
             status_code=503,
         )
 
-# Include your other routes
-app.include_router(ask.router, prefix="/api")
-app.include_router(pdfs.router, prefix="/api")
-app.include_router(upload.router, prefix="/api")
-app.include_router(reset_pinecone_db.router, prefix="/api")
+# Include all API routes
+app.include_router(models.router, prefix="/api", tags=["models"])
+app.include_router(ask.router, prefix="/api", tags=["rag"])
+app.include_router(pdfs.router, prefix="/api", tags=["documents"])
+app.include_router(upload.router, prefix="/api", tags=["documents"])
+app.include_router(reset_pinecone_db.router, prefix="/api", tags=["database"])
