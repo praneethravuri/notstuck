@@ -313,7 +313,7 @@ async def run_single_test(question: str, expected_keywords: List[str], threshold
         temperature=0.7,
         maxTokens=200,
         responseStyle="detailed",
-        modelName="gpt-3.5-turbo"
+        modelName="openai/gpt-3.5-turbo"  # OpenRouter format
     )
 
     result = await process_question(payload, chat_id="dummy-chat-id")

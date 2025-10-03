@@ -12,7 +12,7 @@ async def generate_chat_name_from_llm(question: str) -> str:
     )
     try:
         response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="openai/gpt-3.5-turbo",  # OpenRouter format
             messages=[
                 {
                     "role": "system",

@@ -24,16 +24,25 @@ os.makedirs(LOG_DIR, exist_ok=True)
 BM25_JSON_PATH = os.path.join(BM25_JSON_VALUES, "bm25_values.json")
 LOG_FILE_PATH = os.path.join(LOG_DIR, "application.log")
 
-# Pinecone
+# Pinecone Configuration
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 PINECONE_EMBEDDING_DIMENSIONS = 3072
 PINECONE_NAMESPACE = "my-namespace"
 
-# OpenAI
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-EMBEDDING_MODEL = "text-embedding-3-large"
+# OpenRouter Configuration (OpenAI-compatible API)
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+
+# Model Configuration
+DEFAULT_LLM_MODEL = os.getenv("DEFAULT_LLM_MODEL", "openai/gpt-4-turbo-preview")
+DEFAULT_EMBEDDING_MODEL = os.getenv("DEFAULT_EMBEDDING_MODEL", "openai/text-embedding-3-large")
+EMBEDDING_MODEL = DEFAULT_EMBEDDING_MODEL
+
+# Legacy OpenAI API Key support (for backward compatibility)
+# OpenRouter uses the same API key format as OpenAI
+OPENAI_API_KEY = OPENROUTER_API_KEY
 
 # Embedding Dimensions
 CHUNK_SIZE = 750
