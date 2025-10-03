@@ -4,23 +4,21 @@ const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export async function POST(req: NextRequest) {
     try {
-        // Parse incoming data from the client, now including an optional chatId.
+        // Parse incoming data from the client
         const {
             question,
-            modelName,
-            chatId
+            modelName
         } = await req.json();
 
-        // Forward the question and settings (including chatId, if available) to the FastAPI backend.
+        // Forward the question and settings to the FastAPI backend
         const backendResponse = await fetch(`${apiUrl}/api/ask`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 question,
                 modelName,
-                chatId,  // Forward the chat session ID
             }),
         });
 

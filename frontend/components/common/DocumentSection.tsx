@@ -20,29 +20,30 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
   );
 
   return (
-    <div className="p-4 overflow-y">
+    <div className="bg-slate-900/50 border border-slate-800/50 rounded-xl p-4 backdrop-blur-sm">
       <div className="flex items-center gap-3 mb-4">
-        <div className="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-          <Database className="h-4 w-4 text-green-600" />
+        <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500/20 to-purple-600/20 flex items-center justify-center border border-violet-500/20">
+          <Database className="h-4 w-4 text-violet-400" />
         </div>
         <div>
-          <h2 className="text-base font-medium text-gray-200">Knowledge Base</h2>
+          <h2 className="text-sm font-semibold text-white">Knowledge Base</h2>
+          <p className="text-xs text-slate-400">{files.length} documents</p>
         </div>
       </div>
-      <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+      <div className="relative mb-3">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
         <Input
           type="text"
           placeholder="Search documents..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-stone-800 border-gray-700 focus:ring-blue-500/20 focus:border-blue-500/40"
+          className="pl-10 bg-slate-800/50 border-slate-700/50 focus:ring-violet-500/20 focus:border-violet-500/40 text-white placeholder-slate-400"
         />
       </div>
-      <ScrollArea className="h-[280px]">
-        <div className="space-y-2 max-h-[calc(100vh-480px)] pr-2">
+      <ScrollArea className="h-[140px]">
+        <div className="space-y-1.5 pr-2">
           {filteredFiles.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-8 text-slate-400">
               <FileSearch className="h-8 w-8 mb-2 opacity-50" />
               <p className="text-sm">No matching files found</p>
             </div>
@@ -50,13 +51,13 @@ export const DocumentsSection = ({ files }: DocumentsSectionProps) => {
             filteredFiles.map((file, index) => (
               <div
                 key={index}
-                className="group flex items-center gap-3 p-2 rounded-lg hover:bg-stone-800 transition-colors"
+                className="group flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-800/50 transition-all duration-200 border border-transparent hover:border-slate-700/50"
               >
-                <div className="h-8 w-8 rounded bg-stone-800 group-hover:bg-stone-700 flex items-center justify-center">
-                  <File className="h-4 w-4 text-green-600" />
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-500/10 to-purple-600/10 group-hover:from-violet-500/20 group-hover:to-purple-600/20 flex items-center justify-center transition-all duration-200">
+                  <File className="h-4 w-4 text-violet-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-300 truncate">{file.name}</p>
+                  <p className="text-sm text-slate-200 truncate font-medium">{file.name}</p>
                 </div>
               </div>
             ))
