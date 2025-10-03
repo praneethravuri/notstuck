@@ -1,19 +1,34 @@
 import os
 import concurrent.futures
 import logging
-from typing import Union, List, Dict
+from typing import List, Dict
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from app.config import CHUNK_SIZE, CHUNK_OVERLAP
+from app.config import CHUNK_SIZE, CHUNK_OVERLAP, CHUNK_MIN_SIZE
 from app.utils.pdf_text_cleaner import clean_pdf_text
 from app.helpers.subjects_classifier import detect_subjects
 
 logger = logging.getLogger(__name__)
 
+# Optimized splitter with better separators for semantic coherence
 splitter = RecursiveCharacterTextSplitter(
     chunk_size=CHUNK_SIZE,
     chunk_overlap=CHUNK_OVERLAP,
-    length_function=len
+    length_function=len,
+    separators=[
+        "\n\n\n",  # Major section breaks
+        "\n\n",    # Paragraph breaks
+        "\n",      # Line breaks
+        ". ",      # Sentence breaks
+        "! ",
+        "? ",
+        "; ",
+        ", ",
+        " ",
+        ""
+    ],
+    keep_separator=True,  # Preserve context
+    strip_whitespace=True
 )
 
 def process_single_pdf(pdf_path: str) -> Dict:
@@ -47,7 +62,8 @@ def process_single_pdf(pdf_path: str) -> Dict:
             
             for chunk in page_chunks:
                 cleaned_text = clean_pdf_text(chunk.page_content)
-                if cleaned_text.strip():  # Only add non-empty chunks
+                # Only add non-empty chunks that meet minimum size
+                if cleaned_text.strip() and len(cleaned_text.strip()) >= CHUNK_MIN_SIZE:
                     chunks.append({
                         "chunk_data": cleaned_text,
                         "page_num": page_num

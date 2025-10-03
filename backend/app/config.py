@@ -44,15 +44,18 @@ EMBEDDING_MODEL = DEFAULT_EMBEDDING_MODEL
 # OpenRouter uses the same API key format as OpenAI
 OPENAI_API_KEY = OPENROUTER_API_KEY
 
-# Embedding Dimensions
-CHUNK_SIZE = 750
-CHUNK_OVERLAP = 100
+# Chunking Configuration
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 200
+CHUNK_MIN_SIZE = 100  # Minimum chunk size to prevent tiny chunks
 
 # Pinecone Constants
-TOP_K = 20
+TOP_K = 30  # Increased for better recall
+PINECONE_METRIC = "cosine"  # Changed from dotproduct to cosine for better similarity
 
 # RAG Constants
-HYBRID_WEIGHT_RATIO = 0.5
-SIMILARITY_THRESHOLD = 0.1
-TEMPERATURE = 0.7
-MAX_TOKENS = 5000
+HYBRID_WEIGHT_RATIO = 0.7  # Higher weight for dense embeddings (semantic)
+SIMILARITY_THRESHOLD = 0.65  # Adaptive threshold, will use avg in code
+TEMPERATURE = 0.3  # Lower for more focused answers
+MAX_TOKENS = 3000
+MAX_CONTEXT_TOKENS = 8000  # Maximum tokens for context

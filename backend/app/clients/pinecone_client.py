@@ -4,7 +4,8 @@ from app.config import (
     PINECONE_API_KEY,
     PINECONE_ENV,
     PINECONE_INDEX_NAME,
-    PINECONE_EMBEDDING_DIMENSIONS
+    PINECONE_EMBEDDING_DIMENSIONS,
+    PINECONE_METRIC
 )
 
 logger = logging.getLogger(__name__)
@@ -32,12 +33,14 @@ if pinecone_client is not None:
             pinecone_client.create_index(
                 name=PINECONE_INDEX_NAME,
                 dimension=PINECONE_EMBEDDING_DIMENSIONS,
-                metric="dotproduct",
+                metric=PINECONE_METRIC,
                 spec=ServerlessSpec(region=PINECONE_ENV, cloud="aws")
             )
-            logger.info(f"Created Pinecone index: {PINECONE_INDEX_NAME}.")
+            logger.info(f"Created Pinecone index '{PINECONE_INDEX_NAME}' with metric='{PINECONE_METRIC}'.")
         except Exception as e:
             logger.error(f"Failed to create Pinecone index {PINECONE_INDEX_NAME}.", exc_info=True)
+    else:
+        logger.info(f"Using existing Pinecone index '{PINECONE_INDEX_NAME}'. Note: If you changed PINECONE_METRIC, you need to recreate the index.")
 
     # Get the index object
     try:

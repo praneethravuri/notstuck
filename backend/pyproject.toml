@@ -4,8 +4,6 @@ version = "1.0.0"
 description = "AI-powered document assistant backend"
 requires-python = ">=3.11"
 dependencies = [
-    "docx2pdf",
-    "pillow",
     "python-dotenv",
     "langchain",
     "langchain-community",
