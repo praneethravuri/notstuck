@@ -5,20 +5,43 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    container_name: notstuck-backend
     ports:
       - "8000:8000"
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - /app/.venv
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - notstuck-network
 
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_BACKEND_URL: "http://backend:8000"
+        - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+    container_name: notstuck-frontend
     ports:
       - "3000:3000"
-    env_file:
-      - ./frontend/.env
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8000
+      - NODE_ENV=production
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - notstuck-network
+
+networks:
+  notstuck-network:
+    driver: bridge
