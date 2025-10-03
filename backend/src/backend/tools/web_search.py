@@ -37,9 +37,11 @@ class WebSearchTool(BaseTool):
             max_results: Maximum number of results to return
 
         Returns:
-            Formatted string with search results
+            Formatted string with search results including URLs
         """
         try:
+            from bs4 import BeautifulSoup
+
             # Use DuckDuckGo HTML API (no API key required)
             url = "https://html.duckduckgo.com/html/"
             params = {"q": query}
@@ -50,17 +52,57 @@ class WebSearchTool(BaseTool):
             response = requests.post(url, data=params, headers=headers, timeout=10)
 
             if response.status_code == 200:
-                # Simple parsing of DuckDuckGo results
-                # Note: This is a basic implementation. For production, consider using
-                # a proper HTML parser like BeautifulSoup or a dedicated search API
+                soup = BeautifulSoup(response.text, 'html.parser')
+                results_text = []
+
+                # Find all result divs
+                result_divs = soup.find_all('div', class_='result__body')
+
+                for i, result_div in enumerate(result_divs[:max_results], 1):
+                    # Extract title and URL
+                    title_link = result_div.find('a', class_='result__a')
+                    snippet_elem = result_div.find('a', class_='result__snippet')
+
+                    if title_link:
+                        title = title_link.get_text(strip=True)
+                        result_url = title_link.get('href', '')
+                        snippet = snippet_elem.get_text(strip=True) if snippet_elem else ""
+
+                        # Format with URL
+                        result_text = f"[Result {i}]\nTitle: {title}\nURL: {result_url}\nSnippet: {snippet}"
+                        results_text.append(result_text)
+
+                if results_text:
+                    return "\n\n".join(results_text)
+                else:
+                    return f"Web search completed for '{query}' but no clear results were extracted. " \
+                           f"Consider rephrasing the question or noting that current information may be limited."
+            else:
+                return f"Web search failed with status code: {response.status_code}"
+
+        except ImportError:
+            # Fallback if BeautifulSoup is not available
+            return self._run_fallback(query, max_results)
+        except Exception as e:
+            return f"Error performing web search: {str(e)}. Unable to retrieve web information at this time."
+
+    def _run_fallback(self, query: str, max_results: int = 5) -> str:
+        """Fallback method without BeautifulSoup."""
+        try:
+            url = "https://html.duckduckgo.com/html/"
+            params = {"q": query}
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            }
+
+            response = requests.post(url, data=params, headers=headers, timeout=10)
+
+            if response.status_code == 200:
                 results_text = []
                 content = response.text
-
-                # Basic extraction of result snippets
-                # This is a simplified version - in production you'd want to use BeautifulSoup
                 snippets = content.split('result__snippet')
+
                 for i, snippet in enumerate(snippets[1:max_results+1], 1):
-                    # Extract text between > and <
                     try:
                         text_start = snippet.find('>') + 1
                         text_end = snippet.find('</a>', text_start)
@@ -73,14 +115,10 @@ class WebSearchTool(BaseTool):
 
                 if results_text:
                     return "\n\n".join(results_text)
-                else:
-                    return f"Web search completed for '{query}' but no clear results were extracted. " \
-                           f"Consider rephrasing the question or noting that current information may be limited."
-            else:
-                return f"Web search failed with status code: {response.status_code}"
 
+            return f"Web search completed for '{query}' but no results found."
         except Exception as e:
-            return f"Error performing web search: {str(e)}. Unable to retrieve web information at this time."
+            return f"Error performing web search: {str(e)}"
 
 
 # Alternative: If you have a Serper API key, you can use this implementation instead

@@ -3,8 +3,10 @@ Ask endpoint for RAG-powered question answering using CrewAI.
 """
 
 import os
-from typing import List, Optional
+import json
+from typing import List, Optional, AsyncGenerator
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from backend.crew import Backend
@@ -32,10 +34,10 @@ class AskResponse(BaseModel):
     sources_metadata: List[SourceMetadata] = []
 
 
-@router.post("/ask", response_model=AskResponse)
+@router.post("/ask")
 async def ask_question(request: AskRequest):
     """
-    Answer a question using RAG pipeline with CrewAI.
+    Answer a question using RAG pipeline with CrewAI (streaming).
 
     The crew will:
     1. Analyze the question
@@ -47,38 +49,50 @@ async def ask_question(request: AskRequest):
         request: AskRequest containing question and model name
 
     Returns:
-        AskResponse with answer and source citations
+        Streaming response with answer chunks
     """
-    try:
-        # Set the model via environment variable (CrewAI will use this)
-        # Note: This assumes the model uses OpenRouter format
-        if request.modelName:
-            os.environ["OPENAI_MODEL_NAME"] = request.modelName
+    async def generate_stream() -> AsyncGenerator[str, None]:
+        try:
+            # Set the model via environment variable (CrewAI will use this)
+            if request.modelName:
+                os.environ["OPENAI_MODEL_NAME"] = request.modelName
 
-        # Initialize the crew
-        backend_crew = Backend()
+            # Get sources first
+            sources = await _extract_sources(request.question)
 
-        # Prepare inputs for the crew
-        inputs = {
-            "question": request.question
+            # Send sources first
+            yield f"data: {json.dumps({'type': 'sources', 'data': [s.model_dump() for s in sources]})}\n\n"
+
+            # Initialize the crew
+            backend_crew = Backend()
+
+            # Prepare inputs for the crew
+            inputs = {"question": request.question}
+
+            # Run the crew (non-streaming for now, as CrewAI streaming is complex)
+            result = backend_crew.crew().kickoff(inputs=inputs)
+            answer = str(result)
+
+            # Stream the answer in chunks
+            chunk_size = 50
+            for i in range(0, len(answer), chunk_size):
+                chunk = answer[i:i + chunk_size]
+                yield f"data: {json.dumps({'type': 'content', 'data': chunk})}\n\n"
+
+            # Send completion signal
+            yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'data': str(e)})}\n\n"
+
+    return StreamingResponse(
+        generate_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
         }
-
-        # Run the crew
-        result = backend_crew.crew().kickoff(inputs=inputs)
-
-        # Get the answer from the crew result
-        answer = str(result)
-
-        # Get sources from Pinecone search
-        sources = await _extract_sources(request.question)
-
-        return AskResponse(
-            answer=answer,
-            sources_metadata=sources
-        )
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing question: {str(e)}")
+    )
 
 
 async def _extract_sources(question: str) -> List[SourceMetadata]:

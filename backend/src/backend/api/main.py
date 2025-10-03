@@ -46,6 +46,24 @@ app.include_router(ask.router, prefix="/api", tags=["ask"])
 app.include_router(models.router, prefix="/api", tags=["models"])
 
 
+@app.on_event("startup")
+async def startup_event():
+    """Reset Pinecone database on startup."""
+    print("🔄 Resetting Pinecone database on startup...")
+    try:
+        from backend.clients.pinecone_client import get_pinecone_client
+
+        pinecone_client = get_pinecone_client()
+        index = pinecone_client.get_index()
+
+        # Delete all vectors in the index
+        index.delete(delete_all=True)
+
+        print("✅ Pinecone database reset complete")
+    except Exception as e:
+        print(f"⚠️ Warning: Could not reset Pinecone database: {e}")
+
+
 @app.get("/")
 async def root():
     """Root endpoint."""

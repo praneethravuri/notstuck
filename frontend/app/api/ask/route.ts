@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 const apiUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -27,9 +27,14 @@ export async function POST(req: NextRequest) {
             throw new Error("Error returned by FastAPI");
         }
 
-        // Return the backend's JSON response to the client.
-        const data = await backendResponse.json();
-        return NextResponse.json(data);
+        // Forward the streaming response directly to the client
+        return new Response(backendResponse.body, {
+            headers: {
+                "Content-Type": "text/event-stream",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+            },
+        });
 
     } catch (error: unknown) {
         console.error(error);
@@ -37,6 +42,9 @@ export async function POST(req: NextRequest) {
         if (error instanceof Error) {
             errorMessage = error.message;
         }
-        return NextResponse.json({ error: errorMessage }, { status: 500 });
+        return new Response(JSON.stringify({ error: errorMessage }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" }
+        });
     }
 }

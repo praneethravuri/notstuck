@@ -61,20 +61,63 @@ export function useChatLogic() {
         if (!message.trim()) return;
         setMessages((prev) => [...prev, { role: "user", text: message }]);
         setIsLoading(true);
+
         try {
             const res = await fetch("/api/ask", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ question: message, modelName }),
             });
+
             if (!res.ok) {
                 throw new Error(`Failed to get answer. Status: ${res.status}`);
             }
-            const data = await res.json();
-            setMessages((prev) => [
-                ...prev,
-                { role: "ai", text: data.answer, sources: data.sources_metadata },
-            ]);
+
+            // Handle streaming response
+            const reader = res.body?.getReader();
+            const decoder = new TextDecoder();
+
+            if (!reader) {
+                throw new Error("No reader available");
+            }
+
+            let aiMessageIndex = -1;
+            let accumulatedText = "";
+            let sources: any[] = [];
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split("\n");
+
+                for (const line of lines) {
+                    if (line.startsWith("data: ")) {
+                        const data = JSON.parse(line.substring(6));
+
+                        if (data.type === "sources") {
+                            sources = data.data;
+                        } else if (data.type === "content") {
+                            accumulatedText += data.data;
+
+                            // Add or update AI message
+                            setMessages((prev) => {
+                                if (aiMessageIndex === -1) {
+                                    aiMessageIndex = prev.length;
+                                    return [...prev, { role: "ai", text: accumulatedText, sources }];
+                                } else {
+                                    const updated = [...prev];
+                                    updated[aiMessageIndex] = { role: "ai", text: accumulatedText, sources };
+                                    return updated;
+                                }
+                            });
+                        } else if (data.type === "error") {
+                            throw new Error(data.data);
+                        }
+                    }
+                }
+            }
         } catch (error) {
             console.error("Error fetching from /api/ask:", error);
             setMessages((prev) => [
