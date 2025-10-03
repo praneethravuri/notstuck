@@ -24,11 +24,6 @@ os.makedirs(LOG_DIR, exist_ok=True)
 BM25_JSON_PATH = os.path.join(BM25_JSON_VALUES, "bm25_values.json")
 LOG_FILE_PATH = os.path.join(LOG_DIR, "application.log")
 
-# MongoDB
-MONGODB_URI = os.getenv("MONGODB_URI")
-MONGO_DATABASE_NAME = "unstuck"
-MONGO_COLLECTION_NAME = "chats"
-
 # Pinecone
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENV = os.getenv("PINECONE_ENV")

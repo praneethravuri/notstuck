@@ -8,8 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.clients.openai_client import openai_client
 from app.clients.pinecone_client import pinecone_index
-from app.clients.mongodb_client import mongodb_client
-from app.routes import ask, pdfs, upload, reset_pinecone_db, chats, reset_mongodb
+from app.routes import ask, pdfs, upload, reset_pinecone_db
 import app.logging_config
 
 logger = logging.getLogger(__name__)
@@ -28,14 +27,6 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     global IS_READY
-
-    # Validate MongoDB connection
-    try:
-        await mongodb_client.admin.command("ping")
-        logger.info("MongoDB connection successful.")
-    except Exception as e:
-        logger.error("MongoDB connection error: %s", e, exc_info=True)
-        # Optionally: raise Exception("MongoDB failed to connect.")
 
     # Validate Pinecone (if you have extra checks, you can add them here)
     try:
@@ -70,5 +61,3 @@ app.include_router(ask.router, prefix="/api")
 app.include_router(pdfs.router, prefix="/api")
 app.include_router(upload.router, prefix="/api")
 app.include_router(reset_pinecone_db.router, prefix="/api")
-app.include_router(chats.router, prefix="/api")
-app.include_router(reset_mongodb.router, prefix="/api")

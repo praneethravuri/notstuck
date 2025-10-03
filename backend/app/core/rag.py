@@ -1,6 +1,6 @@
 import logging
 from typing import Dict, Optional
-from app.core.prompt_builder import build_user_prompt_with_chat, build_system_prompt
+from app.core.prompt_builder import build_user_prompt, build_system_prompt
 from app.core.query_llm import query_llm
 from app.config import TEMPERATURE, MAX_TOKENS
 from app.core.rag_utils import generate_queries, apply_hybrid_weighting, build_filter, build_context_text
@@ -12,8 +12,7 @@ async def answer_question(
     question: str,
     namespace: str,
     model_name: str,
-    subject_filter: Optional[str] = None,
-    chat_id: Optional[str] = None
+    subject_filter: Optional[str] = None
 ) -> Dict:
     """
     Performs a hybrid search query and uses retrieved context to answer the given question.
@@ -49,16 +48,14 @@ async def answer_question(
         system_prompt = build_system_prompt()
         if not filtered_matches:
             fallback_note = "No relevant context was found for this query. Please answer using your general knowledge."
-            user_prompt = await build_user_prompt_with_chat(
+            user_prompt = build_user_prompt(
                 context_text=fallback_note,
-                question=question,
-                chat_id=chat_id
+                question=question
             )
         else:
-            user_prompt = await build_user_prompt_with_chat(
+            user_prompt = build_user_prompt(
                 context_text=context_text,
-                question=question,
-                chat_id=chat_id
+                question=question
             )
 
         messages = [
